@@ -1,0 +1,364 @@
+<script setup>
+/**
+ * ============================================================================
+ * ไฟล์: src/components/dashboard/WidgetLibraryModal.vue
+ * วัตถุประสงค์: หน้าต่างคลังวิดเจ็ต (Widget Library Modal) สำหรับเลือกเพิ่ม/ปิดวิดเจ็ต
+ * สอดคล้องกับ WidgetLibrary ของระบบต้นฉบับ (http://10.225.120.221:1161/)
+ * ธีมดำเทาไททาเนียม (Obsidian Charcoal & Titanium Slate) ฟอนต์ Prompt 100%
+ * ============================================================================
+ */
+import { ref, computed } from 'vue'
+import {
+  X,
+  Plus,
+  Check,
+  Search,
+  Globe2,
+  Clock,
+  ArrowUp,
+  Sun,
+  Users,
+  Calendar,
+  Compass,
+  LineChart,
+  RotateCcw,
+  Sparkles
+} from 'lucide-vue-next'
+
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false
+  },
+  activeWidgetIds: {
+    type: Array,
+    default: () => []
+  }
+})
+
+const emit = defineEmits(['update:modelValue', 'toggleWidget', 'resetLayout'])
+
+const activeCategory = ref('all') // 'all' | 'general' | 'satellite'
+const searchQuery = ref('')
+
+// รายการวิดเจ็ตทั้งหมดที่มีให้ใช้งานในระบบ
+const ALL_WIDGETS = [
+  {
+    id: 'orbit-tracker',
+    title: 'Orbit Tracker (แผนที่วงโคจรสด)',
+    category: 'general',
+    description: 'แผนที่ 2D Leaflet ติดตามตำแหน่งพิกัดดาวเทียมแบบเรียลไทม์ สถานีภาคพื้นดิน BMA และรัศมีสัญญาณ',
+    icon: Globe2,
+    color: 'text-cyan-400',
+    bgColor: 'bg-cyan-950/40',
+    borderColor: 'border-cyan-700/50'
+  },
+  {
+    id: 'pass-countdown',
+    title: 'Pass Countdown (นับถอยหลังรอบพาส)',
+    category: 'satellite',
+    description: 'นาฬิกาดิจิทัลนับถอยหลังสดเข้าสู่รอบพาสถัดไป หรือนับเวลาคงเหลือในรอบพาส (AOS/LOS)',
+    icon: Clock,
+    color: 'text-sky-400',
+    bgColor: 'bg-sky-950/40',
+    borderColor: 'border-sky-700/50'
+  },
+  {
+    id: 'altitude',
+    title: 'Altitude & Orbital Stats (ความสูงและวงโคจร)',
+    category: 'satellite',
+    description: 'ระดับความสูงปัจจุบันจากการคำนวณ TLE พร้อมพารามิเตอร์ Apogee, Perigee, และ Inclination',
+    icon: ArrowUp,
+    color: 'text-emerald-400',
+    bgColor: 'bg-emerald-950/40',
+    borderColor: 'border-emerald-700/50'
+  },
+  {
+    id: 'attitude',
+    title: 'Spacecraft Attitude (การทรงตัวของดาวเทียม)',
+    category: 'satellite',
+    description: 'สถานะโหมดการวางแนวของยานอวกาศ (Nadir-Pointing, Sun-Pointing) และมุม Roll, Pitch, Yaw',
+    icon: Compass,
+    color: 'text-yellow-400',
+    bgColor: 'bg-yellow-950/40',
+    borderColor: 'border-yellow-700/50'
+  },
+  {
+    id: 'weather',
+    title: 'Space Weather (สภาพอวกาศ)',
+    category: 'general',
+    description: 'ระดับสภาพอวกาศ NOAA Scales (Radio Blackout, Solar Radiation, Geomagnetic Storm)',
+    icon: Sun,
+    color: 'text-amber-400',
+    bgColor: 'bg-amber-950/40',
+    borderColor: 'border-amber-700/50'
+  },
+  {
+    id: 'passes',
+    title: 'Today\'s Passes (ตารางรอบพาสประจำวัน)',
+    category: 'satellite',
+    description: 'รายการรอบพาสช่วงกลางวันและกลางคืน พร้อมระยะเวลาและมุมยกสูงสุดประจำวัน',
+    icon: Calendar,
+    color: 'text-indigo-400',
+    bgColor: 'bg-indigo-950/40',
+    borderColor: 'border-indigo-700/50'
+  },
+  {
+    id: 'operators',
+    title: 'Mission Operators (รายชื่อเจ้าหน้าที่เวร)',
+    category: 'general',
+    description: 'รายชื่อเจ้าหน้าที่ปฏิบัติหน้าที่ประจำศูนย์: MD, FMO และ GSO',
+    icon: Users,
+    color: 'text-slate-300',
+    bgColor: 'bg-slate-800/60',
+    borderColor: 'border-slate-700/60'
+  },
+  // --- กราฟโทรมาตร 8 กราฟแยกเดี่ยว อิสระ ---
+  {
+    id: 'chart-altitude',
+    title: 'กราฟ Altitude (ระดับความสูงวงโคจร)',
+    category: 'telemetry',
+    description: 'กราฟแนวโน้มระดับความสูงเฉลี่ย 7 วันย้อนหลังของ NAPA-2 N (กิโลเมตร)',
+    icon: LineChart,
+    color: 'text-slate-300',
+    bgColor: 'bg-slate-800/50',
+    borderColor: 'border-slate-600/60'
+  },
+  {
+    id: 'chart-velocity',
+    title: 'กราฟ Velocity (ความเร็วในการโคจร)',
+    category: 'telemetry',
+    description: 'กราฟแนวโน้มความเร็วในการโคจรรอบโลก 7 วันย้อนหลัง (km/s)',
+    icon: LineChart,
+    color: 'text-cyan-400',
+    bgColor: 'bg-cyan-950/40',
+    borderColor: 'border-cyan-700/50'
+  },
+  {
+    id: 'chart-inclination',
+    title: 'กราฟ Inclination (มุมเอียงของวงโคจร)',
+    category: 'telemetry',
+    description: 'กราฟการเปลี่ยนแปลงมุมเอียงระนาบวงโคจร 7 วันย้อนหลัง (องศา)',
+    icon: LineChart,
+    color: 'text-amber-400',
+    bgColor: 'bg-amber-950/40',
+    borderColor: 'border-amber-700/50'
+  },
+  {
+    id: 'chart-period',
+    title: 'กราฟ Orbital Period (คาบการโคจร)',
+    category: 'telemetry',
+    description: 'กราฟเวลาที่ใช้ในการโคจรรอบโลก 1 รอบ 7 วันย้อนหลัง (นาที)',
+    icon: LineChart,
+    color: 'text-emerald-400',
+    bgColor: 'bg-emerald-950/40',
+    borderColor: 'border-emerald-700/50'
+  },
+  {
+    id: 'chart-tleAge',
+    title: 'กราฟ TLE Age (อายุชุดข้อมูลวงโคจร)',
+    category: 'telemetry',
+    description: 'กราฟอายุของชุดข้อมูล TLE ที่นำมาใช้คำนวณวงโคจร (ชั่วโมง)',
+    icon: LineChart,
+    color: 'text-teal-400',
+    bgColor: 'bg-teal-950/40',
+    borderColor: 'border-teal-700/50'
+  },
+  {
+    id: 'chart-meanMotion',
+    title: 'กราฟ Mean Motion (จำนวนรอบต่อวัน)',
+    category: 'telemetry',
+    description: 'กราฟค่าเฉลี่ยจำนวนรอบการโคจรรอบโลกในแต่ละวัน (rev/day)',
+    icon: LineChart,
+    color: 'text-purple-400',
+    bgColor: 'bg-purple-950/40',
+    borderColor: 'border-purple-700/50'
+  },
+  {
+    id: 'chart-eccentricity',
+    title: 'กราฟ Eccentricity (ความรีของวงโคจร)',
+    category: 'telemetry',
+    description: 'กราฟค่าความเยื้องศูนย์กลางของวงโคจร (ความรีของวงโคจร)',
+    icon: LineChart,
+    color: 'text-slate-100',
+    bgColor: 'bg-slate-800/50',
+    borderColor: 'border-slate-600/60'
+  },
+  {
+    id: 'chart-anomalies',
+    title: 'กราฟ Mission Anomalies (ข้อขัดข้อง)',
+    category: 'telemetry',
+    description: 'แผนภูมิแท่งบันทึกจำนวนครั้งของเหตุขัดข้องหรือปัญหาในภารกิจ 7 วันย้อนหลัง',
+    icon: LineChart,
+    color: 'text-rose-400',
+    bgColor: 'bg-rose-950/40',
+    borderColor: 'border-rose-700/50'
+  }
+]
+
+const filteredWidgets = computed(() => {
+  let list = ALL_WIDGETS
+  if (activeCategory.value !== 'all') {
+    list = list.filter(w => w.category === activeCategory.value)
+  }
+  if (searchQuery.value.trim()) {
+    const q = searchQuery.value.trim().toLowerCase()
+    list = list.filter(w => w.title.toLowerCase().includes(q) || w.description.toLowerCase().includes(q))
+  }
+  return list
+})
+
+const isWidgetActive = (id) => props.activeWidgetIds.includes(id)
+</script>
+
+<template>
+  <div
+    v-if="modelValue"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all"
+    @click.self="emit('update:modelValue', false)"
+  >
+    <div class="w-full max-w-2xl bg-space-850 rounded-3xl border border-space-700 shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-[#0d1117] border-b border-space-700 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white shadow-xs">
+            <Sparkles class="w-5 h-5 text-amber-400" />
+          </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-bold font-prompt text-white">
+              Widget Library (คลังวิดเจ็ต)
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 font-prompt font-medium">
+              เลือกเปิด/ปิด หรือปรับแต่งวิดเจ็ตที่ต้องการให้แสดงบนหน้าแดชบอร์ด
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+          @click="emit('update:modelValue', false)"
+        >
+          <X class="w-5 h-5" />
+        </button>
+      </div>
+
+      <!-- Controls: Category Pills & Search -->
+      <div class="px-6 py-3 bg-[#111622] border-b border-space-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <!-- Category Selector -->
+        <div class="inline-flex rounded-xl bg-[#090b0f] p-1 border border-space-700 flex-wrap">
+          <button
+            type="button"
+            class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold font-prompt rounded-lg transition-colors cursor-pointer"
+            :class="activeCategory === 'all' ? 'bg-zinc-700 text-white font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+            @click="activeCategory = 'all'"
+          >
+            ทั้งหมด (All)
+          </button>
+          <button
+            type="button"
+            class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold font-prompt rounded-lg transition-colors cursor-pointer"
+            :class="activeCategory === 'general' ? 'bg-zinc-700 text-white font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+            @click="activeCategory = 'general'"
+          >
+            ทั่วไป (General)
+          </button>
+          <button
+            type="button"
+            class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold font-prompt rounded-lg transition-colors cursor-pointer"
+            :class="activeCategory === 'satellite' ? 'bg-zinc-700 text-white font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+            @click="activeCategory = 'satellite'"
+          >
+            ดาวเทียม (Satellite)
+          </button>
+          <button
+            type="button"
+            class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold font-prompt rounded-lg transition-colors cursor-pointer"
+            :class="activeCategory === 'telemetry' ? 'bg-zinc-700 text-white font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+            @click="activeCategory = 'telemetry'"
+          >
+            กราฟโทรมาตร (Telemetry)
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative w-full sm:w-64">
+          <Search class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="ค้นหาวิดเจ็ต..."
+            class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-space-700 bg-[#090b0f] text-white placeholder-slate-400 font-prompt focus:outline-none focus:border-cyan-500"
+          />
+        </div>
+      </div>
+
+      <!-- Widgets List (Scrollable) -->
+      <div class="p-6 overflow-y-auto space-y-3 flex-1">
+        <div
+          v-for="widget in filteredWidgets"
+          :key="widget.id"
+          class="p-4 rounded-2xl border transition-all flex items-start justify-between gap-4"
+          :class="isWidgetActive(widget.id) ? 'bg-[#121824] border-zinc-500 shadow-md' : 'bg-[#0a0e16]/80 border-space-700/80 opacity-80 hover:opacity-100'"
+        >
+          <div class="flex items-start gap-3.5">
+            <div
+              class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 border mt-0.5"
+              :class="[widget.bgColor, widget.borderColor, widget.color]"
+            >
+              <component :is="widget.icon" class="w-5 h-5" />
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-sm sm:text-base font-bold font-prompt text-white">
+                  {{ widget.title }}
+                </h4>
+                <span
+                  class="text-xs px-2.5 py-0.5 rounded-full font-prompt font-bold uppercase tracking-wider"
+                  :class="widget.category === 'satellite' ? 'bg-sky-950/90 text-sky-300 border border-sky-600' : 'bg-zinc-800 text-slate-200 border border-zinc-600'"
+                >
+                  {{ widget.category }}
+                </span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-300 font-prompt mt-1 leading-relaxed font-medium">
+                {{ widget.description }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Add / Remove Toggle Button -->
+          <button
+            type="button"
+            class="flex-shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-prompt flex items-center gap-1.5 transition-all cursor-pointer"
+            :class="isWidgetActive(widget.id) ? 'bg-zinc-700 text-white hover:bg-rose-900/80 hover:text-rose-200 border border-zinc-500 shadow-xs' : 'bg-zinc-800 text-slate-100 hover:bg-zinc-700 border border-zinc-600'"
+            @click="emit('toggleWidget', widget.id)"
+          >
+            <Check v-if="isWidgetActive(widget.id)" class="w-4 h-4 text-emerald-400" />
+            <Plus v-else class="w-4 h-4" />
+            <span>{{ isWidgetActive(widget.id) ? 'แสดงอยู่' : 'เพิ่มบนจอ' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Footer Bar -->
+      <div class="px-6 py-4 bg-[#0d1117] border-t border-space-700 flex items-center justify-between gap-3">
+        <button
+          type="button"
+          class="inline-flex items-center gap-1.5 text-xs sm:text-sm text-slate-300 hover:text-white font-prompt font-semibold transition-colors cursor-pointer"
+          @click="emit('resetLayout')"
+        >
+          <RotateCcw class="w-4 h-4" />
+          <span>คืนค่าเริ่มต้นแดชบอร์ด</span>
+        </button>
+
+        <button
+          type="button"
+          class="px-6 py-2.5 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white text-xs sm:text-sm font-bold font-prompt border border-zinc-500/70 shadow transition-all cursor-pointer"
+          @click="emit('update:modelValue', false)"
+        >
+          เรียบร้อย
+        </button>
+      </div>
+    </div>
+  </div>
+</template>

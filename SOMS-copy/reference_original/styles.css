@@ -1,0 +1,42 @@
+/* The original theme lives in legacy-theme.css. These rules only support the
+   separated application's accessible controls and original login layout. */
+.auth-page { padding-top: 0; min-height: 100vh; }
+.auth-page #app { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 12px; }
+.login-card { background: rgba(31,41,55,.85); border: 1px solid var(--space-border); border-radius: 1rem; padding: 2rem; width: 100%; max-width: 420px; backdrop-filter: blur(8px); box-shadow: 0 0 25px rgba(0,0,0,.4); }
+.login-title { text-align: center; color: var(--accent-cyan); font-weight: 700; margin-bottom: 1.5rem; }
+.btn-login { background: var(--accent-cyan); border: none; color: #000; font-weight: 600; width: 100%; padding: .6rem; transition: .2s; }
+.btn-login:hover { background: var(--accent-cyan); box-shadow: 0 0 12px rgba(0,229,255,.7); }
+.login-footer { text-align: center; margin-top: 1rem; font-size: .85rem; color: var(--text-secondary); }
+.setup-card { width: 100%; max-width: 420px; background: #1f2937; padding: 2rem; border-radius: 16px; border: 1px solid #374151; }
+.setup-page { background: #0b0f19; }
+.error { color: #ffb6bb; white-space: pre-wrap; }
+.error:empty, [hidden] { display: none !important; }
+.field { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
+.field > span { color: #dc3545; }
+.page-heading { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #495057; padding-bottom: 1rem; margin-bottom: 1.5rem; gap: 1rem; }
+.page-heading h1 { font-size: 1.75rem; margin-bottom: .25rem; }
+.page-heading p { color: var(--text-secondary); margin-bottom: 0; }
+.panel { background: rgba(31,41,55,.7); border: 1px solid var(--space-border); border-radius: .375rem; padding: 1rem; margin-bottom: 1.5rem; }
+.panel h2 { font-size: 1rem; }
+.table-wrap { overflow-x: auto; }
+.table-wrap > table { width: 100%; }
+.table-wrap th, .table-wrap td { padding: .5rem; }
+.form-grid, .details { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; }
+.form-actions { display: flex; gap: .5rem; margin-top: 1rem; }
+.details dd { overflow-wrap: anywhere; white-space: pre-wrap; }
+.details dt { color: var(--text-secondary); }
+.log-row { display: grid; grid-template-columns: 1.2fr 1.5fr 1fr auto; gap: .75rem; align-items: end; }
+.empty { text-align: center; color: var(--text-secondary); padding: 1rem; }
+.skip { position: fixed; top: -100px; left: 10px; z-index: 1100; padding: .5rem; background: #fff; color: #000; }
+.skip:focus { top: 10px; }
+.btn:focus-visible, a:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
+@media(max-width: 767.98px) { .form-grid, .details, .log-row { grid-template-columns: 1fr; } .page-heading { flex-wrap: wrap; } }
+.auth-page { --text-primary: #e5e7eb; color: var(--text-primary); }
+.auth-page .form-control, .auth-page .form-control:focus { color: #e5e7eb !important; }
+.auth-page .form-control::placeholder { color: #9ca3af; }
+.auth-page .form-control:focus { border-color: #00e5ff; box-shadow: 0 0 6px rgba(0,229,255,.5); }
+.setup-page { --text-primary: #fff; --space-border: #374151; }
+.setup-page .form-control:focus { color: #fff !important; border-color: #86b7fe !important; box-shadow: 0 0 0 .25rem rgba(13,110,253,.25) !important; }
+
+.setup-page .form-control { color: #fff !important; border-color: #374151 !important; }
+

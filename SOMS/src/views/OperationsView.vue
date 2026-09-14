@@ -1,0 +1,336 @@
+<script setup>
+/**
+ * ============================================================================
+ * ไฟล์: src/views/OperationsView.vue
+ * วัตถุประสงค์: หน้าจอตารางเวรผู้ปฏิบัติหน้าที่รายเดือน (Operator Duty Roster)
+ * แสดงรายชื่อ MD, FMO, GSO ประจำแต่ละวัน พร้อมปุ่มเพิ่ม/แก้ไข/ลบเวร
+ * ============================================================================
+ */
+import { ref, onMounted, computed } from 'vue'
+import { api } from '@/api/client'
+import { useDataStore } from '@/stores/data'
+import { useAppStore } from '@/stores/app'
+import { Users, Plus, Pencil, Trash2, Calendar } from 'lucide-vue-next'
+import DataTable from '@/components/common/DataTable.vue'
+import BaseModal from '@/components/common/BaseModal.vue'
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
+
+const dataStore = useDataStore()
+const appStore = useAppStore()
+
+const loading = ref(false)
+const operations = ref([])
+
+// Form Modal State
+const showModal = ref(false)
+const modalTitle = ref('บันทึกเวรปฏิบัติการ')
+const isEditing = ref(false)
+const formData = ref({
+  operation_id: null,
+  operation_date: new Date().toISOString().slice(0, 10),
+  rbac_id: '',
+  rbac_role: 'MD',
+  operation_note: ''
+})
+
+// Delete Dialog State
+const showDeleteDialog = ref(false)
+const deleteTarget = ref(null)
+
+const columns = [
+  { key: 'date_label', label: 'วันที่ (DATE)', sortable: true, width: '150px' },
+  { key: 'md_name', label: 'Mission Director (MD)', width: '220px' },
+  { key: 'fmo_name', label: 'Flight & Mission Operator (FMO)', width: '220px' },
+  { key: 'gso_name', label: 'Ground Station Operator (GSO)', width: '220px' },
+  { key: 'note', label: 'หมายเหตุ/ภารกิจเวร' }
+]
+
+const fetchOperations = async () => {
+  loading.value = true
+  try {
+    const data = await api.get('/operations')
+    operations.value = data || []
+  } catch (err) {
+    console.error('โหลดตารางเวรผิดพลาด:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(async () => {
+  await dataStore.fetchLookups()
+  await fetchOperations()
+})
+
+// สร้างรายการวันทั้งหมดในเดือนปัจจุบัน
+const todayStr = new Date().toISOString().slice(0, 10)
+
+const monthCalendarRows = computed(() => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth() // 0-indexed
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+  const list = []
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+    const duties = operations.value.filter(op => op.operation_date === dateStr)
+
+    const md = duties.find(op => op.rbac_role === 'MD')
+    const fmo = duties.find(op => op.rbac_role === 'FMO')
+    const gso = duties.find(op => op.rbac_role === 'GSO')
+
+    list.push({
+      date: dateStr,
+      date_label: dateStr.split('-').reverse().join('/'),
+      isToday: dateStr === todayStr,
+      md_name: md?.rbac_fullname || '—',
+      fmo_name: fmo?.rbac_fullname || '—',
+      gso_name: gso?.rbac_fullname || '—',
+      note: md?.operation_note || fmo?.operation_note || gso?.operation_note || '—',
+      rawDuties: duties
+    })
+  }
+
+  return list
+})
+
+// เปิด Modal เพิ่มเวร
+const openAddModal = (defaultDate = '') => {
+  isEditing.value = false
+  modalTitle.value = 'เพิ่มรายชื่อผู้ปฏิบัติเวร'
+  formData.value = {
+    operation_id: null,
+    operation_date: defaultDate || new Date().toISOString().slice(0, 10),
+    rbac_id: dataStore.lookups.users[0]?.rbac_id || '',
+    rbac_role: 'MD',
+    operation_note: ''
+  }
+  showModal.value = true
+}
+
+// เปิด Modal แก้ไขเวร
+const openEditModal = (duty) => {
+  isEditing.value = true
+  modalTitle.value = 'แก้ไขข้อมูลผู้ปฏิบัติเวร'
+  formData.value = {
+    operation_id: duty.operation_id,
+    operation_date: duty.operation_date,
+    rbac_id: duty.rbac_id,
+    rbac_role: duty.rbac_role,
+    operation_note: duty.operation_note || ''
+  }
+  showModal.value = true
+}
+
+// บันทึกฟอร์ม
+const handleSubmit = async () => {
+  try {
+    if (isEditing.value && formData.value.operation_id) {
+      await api.put(`/operations/${formData.value.operation_id}`, formData.value)
+      appStore.showToast('สำเร็จ', 'แก้ไขข้อมูลการปฏิบัติเวรเรียบร้อย')
+    } else {
+      await api.post('/operations', formData.value)
+      appStore.showToast('สำเร็จ', 'บันทึกรายชื่อผู้ปฏิบัติเวรใหม่แล้ว')
+    }
+    showModal.value = false
+    await fetchOperations()
+  } catch (err) {
+    appStore.showToast('ข้อผิดพลาด', err.message, 'error')
+  }
+}
+
+// ยืนยันลบเวร
+const confirmDelete = (duty) => {
+  deleteTarget.value = duty
+  showDeleteDialog.value = true
+}
+
+const handleDelete = async () => {
+  if (!deleteTarget.value) return
+  try {
+    await api.delete(`/operations/${deleteTarget.value.operation_id}`)
+    appStore.showToast('สำเร็จ', 'ลบข้อมูลเวรเรียบร้อย')
+    showDeleteDialog.value = false
+    deleteTarget.value = null
+    await fetchOperations()
+  } catch (err) {
+    appStore.showToast('ลบล้มเหลว', err.message, 'error')
+  }
+}
+</script>
+
+<template>
+  <div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-space-700">
+      <div>
+        <div class="flex items-center gap-2">
+          <Users class="w-6 h-6 text-blue-600 dark:text-blue-400" />
+          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-slate-900 dark:text-white">
+            ตารางผู้ปฏิบัติเวร (Operator List)
+          </h1>
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          การจัดเวรประจำวันของเจ้าหน้าที่อำนวยการบินและควบคุมสถานีภาคพื้นดิน
+        </p>
+      </div>
+
+      <div>
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors"
+          @click="openAddModal()"
+        >
+          <Plus class="w-4 h-4" />
+          <span>บันทึกเวรปฏิบัติการ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Calendar Table -->
+    <DataTable
+      :columns="columns"
+      :data="monthCalendarRows"
+      search-placeholder="ค้นหาวันที่, ชื่อเจ้าหน้าที่ หรือตำแหน่ง..."
+      :default-page-size="50"
+    >
+      <template #cell(date_label)="{ row, value }">
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-xs font-semibold text-slate-800 dark:text-slate-100">{{ value }}</span>
+          <span v-if="row.isToday" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/50 dark:text-rose-400">
+            TODAY
+          </span>
+        </div>
+      </template>
+
+      <template #cell(md_name)="{ value }">
+        <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ value }}</span>
+      </template>
+
+      <template #cell(fmo_name)="{ value }">
+        <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ value }}</span>
+      </template>
+
+      <template #cell(gso_name)="{ value }">
+        <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ value }}</span>
+      </template>
+
+      <template #actions="{ row }">
+        <div class="flex items-center justify-center gap-1.5">
+          <button
+            v-if="row.rawDuties.length > 0"
+            type="button"
+            class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-space-700 dark:text-slate-300 dark:hover:bg-space-800 text-xs transition-colors"
+            title="แก้ไขเวรของวันนี้"
+            @click="openEditModal(row.rawDuties[0])"
+          >
+            <Pencil class="w-3.5 h-3.5" />
+          </button>
+          <button
+            type="button"
+            class="p-1.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-300 text-xs transition-colors"
+            title="เพิ่มผู้เข้าเวรในวันนี้"
+            @click="openAddModal(row.date)"
+          >
+            <Plus class="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </template>
+    </DataTable>
+
+    <!-- Add/Edit Duty Modal -->
+    <BaseModal
+      v-model="showModal"
+      :title="modalTitle"
+      size="md"
+    >
+      <form id="duty-form" class="space-y-4" @submit.prevent="handleSubmit">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            วันที่ปฏิบัติหน้าที่ <span class="text-rose-500">*</span>
+          </label>
+          <input
+            v-model="formData.operation_date"
+            type="date"
+            required
+            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            ผู้ปฏิบัติเวร <span class="text-rose-500">*</span>
+          </label>
+          <select
+            v-model="formData.rbac_id"
+            required
+            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          >
+            <option value="" disabled>-- เลือกเจ้าหน้าที่ --</option>
+            <option
+              v-for="user in dataStore.lookups.users"
+              :key="user.rbac_id"
+              :value="user.rbac_id"
+            >
+              {{ user.rbac_fullname }} ({{ user.rbac_role }})
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            หน้าที่ในเวร (Role) <span class="text-rose-500">*</span>
+          </label>
+          <select
+            v-model="formData.rbac_role"
+            required
+            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          >
+            <option value="MD">Mission Director (MD)</option>
+            <option value="FMO">Flight and Mission Operator (FMO)</option>
+            <option value="GSO">Ground Station Operator (GSO)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            หมายเหตุ/บันทึกการปฏิบัติ
+          </label>
+          <textarea
+            v-model="formData.operation_note"
+            rows="3"
+            placeholder="รายละเอียดงานหรือเหตุการณ์ในเวร"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          ></textarea>
+        </div>
+      </form>
+
+      <template #footer>
+        <button
+          type="button"
+          class="px-4 py-2 text-xs font-medium rounded-xl border border-slate-300 dark:border-space-600 hover:bg-slate-100 dark:hover:bg-space-700 text-slate-700 dark:text-slate-200"
+          @click="showModal = false"
+        >
+          ยกเลิก
+        </button>
+        <button
+          type="submit"
+          form="duty-form"
+          class="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+        >
+          บันทึกข้อมูล
+        </button>
+      </template>
+    </BaseModal>
+
+    <!-- Delete Confirmation -->
+    <ConfirmDialog
+      v-model="showDeleteDialog"
+      title="ยืนยันการลบเวรปฏิบัติการ"
+      message="ท่านต้องการลบข้อมูลการปฏิบัติเวรนี้ใช่หรือไม่?"
+      confirm-text="ลบข้อมูล"
+      @confirm="handleDelete"
+    />
+  </div>
+</template>

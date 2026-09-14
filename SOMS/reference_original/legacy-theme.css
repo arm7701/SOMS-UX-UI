@@ -1,0 +1,302 @@
+/* ===============================
+   DEEP SPACE TACTICAL THEME
+================================ */
+
+    :root {
+      --space-black: #0b0f19;
+      --space-navy: #111827;
+      --space-surface: #1f2937;
+      --space-border: #2d3748;
+
+      --accent-cyan: #00e5ff;
+      --accent-purple: #7c3aed;
+      --accent-blue: #2563eb;
+
+      --text-primary: #FFFFFF;
+      --text-secondary: #9ca3af;
+    }
+
+    body {
+      font-family: 'Noto Sans Thai', sans-serif;
+      background: radial-gradient(circle at 20% 20%, #111827, #0b0f19 70%);
+      color: var(--text-primary);
+      padding-top: 70px;
+    }
+
+    /* ===============================
+   NAVBAR
+================================ */
+
+    .brand-top {
+      background: linear-gradient(90deg, #0b0f19, #111827);
+      border-bottom: 1px solid var(--space-border);
+      backdrop-filter: blur(8px);
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      color: var(--accent-cyan) !important;
+      text-shadow: 0 0 6px rgba(0, 229, 255, .6);
+    }
+
+    .btn-mono-primary {
+      background: transparent;
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .btn-mono-primary:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      box-shadow: 0 0 10px rgba(0, 229, 255, .6);
+    }
+
+    /*.btn-mono-outline{
+  border:1px solid var(--space-border);
+  color:#fff;
+}
+
+.btn-mono-outline:hover{
+  background:rgba(0,229,255,.1);
+}*/
+
+    .btn-mono-danger {
+      background: transparent;
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .btn-mono-danger:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      box-shadow: 0 0 10px rgba(0, 229, 255, .6);
+    }
+
+    /* ===============================
+   SIDEBAR
+================================ */
+
+    .sidebar {
+      background: var(--space-navy);
+      border-right: 1px solid var(--space-border);
+      min-height: 100vh;
+    }
+
+    .sidebar .nav-link {
+      color: var(--text-secondary);
+      font-weight: 600;
+      transition: .2s;
+    }
+
+    .sidebar .nav-link:hover {
+      background: rgba(0, 229, 255, .08);
+      color: var(--accent-cyan);
+      border-left: 3px solid var(--accent-cyan);
+    }
+
+    .sidebar .nav-link.active {
+      background: rgba(124, 58, 237, .15);
+      color: var(--accent-purple);
+      border-left: 3px solid var(--accent-purple);
+    }
+
+    /* ===============================
+   CARD
+================================ */
+
+    .card {
+      background: rgba(31, 41, 55, .7);
+      border: 1px solid var(--space-border);
+      backdrop-filter: blur(6px);
+      color: var(--text-primary);
+    }
+
+    .card-soft {
+      background: rgba(17, 24, 39, .6);
+    }
+
+    /* ===============================
+   METRIC
+================================ */
+
+    .metric {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 8px rgba(0, 229, 255, .6);
+    }
+
+    .metric-label {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* ===============================
+   TABLE
+================================ */
+
+    table {
+      color: var(--text-primary);
+    }
+
+    thead {
+      background: #111827;
+      color: var(--accent-cyan);
+    }
+
+    tbody tr {
+      border-color: var(--space-border);
+    }
+
+    tbody tr:hover {
+      background: rgba(0, 229, 255, .05);
+    }
+
+    .today-row {
+      background: rgba(124, 58, 237, .15) !important;
+      border-left: 4px solid var(--accent-purple);
+      font-weight: 600;
+    }
+
+    .table-light {
+      --bs-table-bg: #111827 !important;
+      --bs-table-color: var(--accent-cyan) !important;
+      --bs-table-border-color: var(--space-border) !important;
+    }
+
+    .table td {
+      background-color: transparent !important;
+      color: var(--text-primary) !important;
+      border-color: var(--space-border) !important;
+    }
+
+    /* ===============================
+   BUTTON ACCENT
+================================ */
+
+    .btn-accent {
+      background: var(--accent-cyan);
+      border: none;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .btn-accent:hover {
+      box-shadow: 0 0 12px rgba(0, 229, 255, .7);
+    }
+
+    /* ===============================
+   OFFCANVAS
+================================ */
+
+    .offcanvas {
+      background: var(--space-navy);
+      color: var(--text-primary);
+    }
+
+    .offcanvas .nav-link {
+      color: var(--text-secondary);
+    }
+
+    .offcanvas .nav-link:hover {
+      color: var(--accent-cyan);
+    }
+
+    /* ===============================
+   DARK MODAL OVERRIDE
+================================ */
+
+    .modal-content {
+      background: var(--space-surface);
+      color: var(--text-primary);
+      border: 1px solid var(--space-border);
+    }
+
+    .modal-header {
+      background: #111827;
+      border-bottom: 1px solid var(--space-border);
+      color: var(--accent-cyan);
+    }
+
+    .modal-body {
+      background: var(--space-surface);
+    }
+
+    .modal-footer {
+      background: #111827;
+      border-top: 1px solid var(--space-border);
+    }
+
+    /* ปุ่มปิด (X) ให้มองเห็นบนพื้นเข้ม */
+    .btn-close {
+      filter: invert(1);
+    }
+
+    /* ปุ่ม Close ด้านล่าง */
+    .modal-footer .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--space-border);
+      color: var(--text-primary);
+    }
+
+    .modal-footer .btn-secondary:hover {
+      background: var(--accent-cyan);
+      color: #000;
+    }
+
+    /* =========================
+   DARK SELECT FIX
+========================= */
+
+    .form-select {
+      background-color: var(--space-navy) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--space-border) !important;
+    }
+
+    .form-select:focus {
+      background-color: var(--space-navy) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--accent-cyan) !important;
+      box-shadow: 0 0 6px rgba(0, 229, 255, .5) !important;
+    }
+
+    /* ลูกศร dropdown ให้มองเห็นบนพื้นเข้ม */
+    .form-select {
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e5e7eb'%3E%3Cpath d='M7.247 11.14 2.451 5.658C2.03 5.18 2.37 4.5 2.95 4.5h10.1c.58 0 .92.68.5 1.158L8.753 11.14a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right .75rem center;
+      background-size: 16px 12px;
+    }
+
+    /* =========================
+   DARK INPUT FIX
+========================= */
+
+    .form-control {
+      background-color: var(--space-navy) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--space-border) !important;
+    }
+
+    .form-control::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .form-control:focus {
+      background-color: var(--space-navy) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--accent-cyan) !important;
+      box-shadow: 0 0 6px rgba(0, 229, 255, .5) !important;
+    }
+
+    .low-el {
+      background-color: #801D1D !important;
+      color: #ffc107 !important;
+    }
+
+    .low-el td {
+      border-color: #4d3f00 !important;
+    }

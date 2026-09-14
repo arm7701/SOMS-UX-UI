@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   CSS Variables & Global Theme Styles (Satellite Operations Information System)
+   ธีมไล่ฟ้าสว่าง (Bright Sky & Celestial Azure Gradient)
+   ฟอนต์ระบบทั้งหมด: Prompt (จัดระยะบรรทัดและช่องไฟตัวอักษรให้อ่านง่าย สบายตา)
+   ========================================================================== */
+
+:root, .dark {
+  /* โทนมืดฟ้าไล่สว่าง สว่างขึ้น มีมิติและโปร่งสบายตา */
+  --bg-app: #0a2342;
+  --bg-surface: #133560;
+  --bg-surface-elevated: #1a4175;
+  --border-color: #235492;
+  --border-focus: #38bdf8;
+
+  --text-primary: #ffffff;
+  --text-secondary: #e0f2fe;
+  --text-muted: #93c5fd;
+
+  --brand-primary: #38bdf8;
+  --brand-hover: #7dd3fc;
+
+  --shadow-card: 0 4px 20px 0 rgba(2, 132, 199, 0.22);
+  --shadow-elevated: 0 8px 32px 0 rgba(14, 165, 233, 0.30);
+}
+
+/* Global Font & Spacing Overrides (ใช้ฟอนต์ Prompt ทั้งระบบ พร้อมปรับระยะบรรทัดและช่องไฟ) */
+* {
+  font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+html, body {
+  font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: 0.018em;
+  line-height: 1.68;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Prompt', sans-serif !important;
+  letter-spacing: 0.012em;
+  line-height: 1.38;
+  font-weight: 600;
+}
+
+p, span, div, td, th, label, input, button, select, textarea {
+  letter-spacing: 0.018em;
+}
+
+/* Typography Helpers (ให้ทุกคลาสใช้ Prompt ทั้งหมดอย่างสมบูรณ์) */
+.font-prompt,
+.font-sarabun,
+.font-sans {
+  font-family: 'Prompt', sans-serif !important;
+}
+
+/* Custom Utilities for Bright Sky Theme */
+.bg-gradient-sky {
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 50%, #38bdf8 100%);
+}
+
+.bg-gradient-sky-subtle {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.1) 0%, rgba(14, 165, 233, 0.06) 100%);
+}
+
+.sky-gradient-text {
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .sky-gradient-text {
+  background: linear-gradient(135deg, #38bdf8 0%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bae6fd;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #15335e;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7dd3fc;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #1e4273;
+}
+
+/* Table Utilities */
+.table-container {
+  @apply overflow-x-auto rounded-xl border border-sky-200/80 dark:border-sky-800/40 bg-white/95 dark:bg-space-850/95 shadow-sm;
+}
+
+/* Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* ==========================================================================
+   High-Contrast Typography Overrides (แก้ปัญหาสีฟอนต์กลืนกับพื้นหลัง 100%)
+   ปรับเฉดสีข้อความรองและป้ายกำกับให้อ่านง่าย ชัดเจน ไม่โดนพื้นหลังกลืน
+   ========================================================================== */
+.dark .text-slate-400,
+.dark .text-slate-500,
+.text-slate-400,
+.text-slate-500 {
+  color: #bae6fd !important; /* สีนภาสว่าง (Luminous Sky Blue) สบายตา คมชัด */
+}
+
+.dark .text-slate-600 {
+  color: #e0f2fe !important; /* สีฟ้าสว่างใส */
+}
+
+.dark .text-slate-700,
+.dark .text-slate-800 {
+  color: #f8fafc !important; /* ขาวนวล คมชัด */
+}
+
+/* ปรับสีหัวตารางและข้อความกำกับให้อ่านได้ทันที */
+.dark thead th,
+thead th {
+  color: #bae6fd !important;
+  font-weight: 600 !important;
+}
+
+.dark tbody td {
+  color: #f1f5f9 !important;
+}
+
+.dark label {
+  color: #e0f2fe !important;
+}
+
+/* ปรับสี Placeholder และ Hint ข้อความ */
+::placeholder {
+  color: #7dd3fc !important;
+  opacity: 0.75;
+}
+

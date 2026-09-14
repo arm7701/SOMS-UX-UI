@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SAT PASS PLANNER v3 — RTAF Space Operations</title>
+<script>
+  if (window.self !== window.top) {
+    document.documentElement.classList.add('is-embedded');
+  }
+</script>
+<link rel="stylesheet" href="./vendor/leaflet.min.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./planner.css">
+</head>
+<body class="theme-obsidian">
+
+<div id="hdr">
+  <div class="dot"></div>
+  <h1>SAT PASS PLANNER</h1>
+  <span class="sub">Mission Planning Portal · RTAF Space Operations · v3</span>
+  <span id="clk"></span>
+</div>
+
+<div id="main">
+  <aside id="sb">
+
+    <!-- 1. Satellites -->
+    <div>
+      <div class="ac-hdr" onclick="acToggle('ac-sats')">
+        <div style="display:flex;align-items:center;gap:7px">
+          <span class="ac-title">Satellites</span>
+          <button class="btns" onclick="event.stopPropagation();fetchAllTLEs()" style="font-size:9px;padding:2px 6px">⬇ Fetch All</button>
+        </div>
+        <span class="ac-tog" id="tog-ac-sats">−</span>
+      </div>
+      <div class="ac-body" id="ac-sats">
+        <div id="satlist"></div>
+      </div>
+    </div>
+
+    <!-- 2. Add Satellite -->
+    <div>
+      <div class="ac-hdr" onclick="acToggle('ac-add')">
+        <span class="ac-title">Add Satellite</span>
+        <div style="display:flex;gap:2px;align-items:center" onclick="event.stopPropagation()">
+          <button class="addtab act" id="at-norad" onclick="switchAddTab('norad')">NORAD ID</button>
+          <button class="addtab" id="at-tle" onclick="switchAddTab('tle')">Paste TLE</button>
+          <span class="ac-tog" id="tog-ac-add" style="margin-left:4px" onclick="event.stopPropagation();acToggle('ac-add')">−</span>
+        </div>
+      </div>
+      <div class="ac-body" id="ac-add">
+        <div id="add-norad">
+          <input type="text" id="add-norad-id" placeholder="NORAD ID เช่น 25544" style="width:100%;margin-bottom:4px"/>
+          <input type="text" id="add-norad-name" placeholder="ชื่อ (optional)" style="width:100%;margin-bottom:4px"/>
+          <button class="btn btnp" style="padding:5px" onclick="addByNorad()">⬇ Fetch & Add</button>
+        </div>
+        <div id="add-tle" style="display:none">
+          <textarea id="custom-tle" rows="2" placeholder="Name (opt.)&#10;1 NNNNN...&#10;2 NNNNN..."></textarea>
+          <button class="btn btnp" style="padding:5px;margin-top:4px" onclick="addCustomTLE()">+ Add</button>
+        </div>
+        <div id="custom-note" style="font-size:10px;margin-top:4px;color:#94a3b8"></div>
+      </div>
+    </div>
+
+    <!-- 3. Sensor Specs -->
+    <div id="specbox" style="display:none">
+      <div class="ac-hdr" onclick="acToggle('ac-spec')">
+        <span class="ac-title">Sensor Specs</span>
+        <div style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">
+          <select id="specsel" onchange="loadSpec()" style="width:auto;padding:2px 5px;font-size:10px"></select>
+          <button class="btns" onclick="saveSpec()" title="บันทึกค่า">💾</button>
+          <span class="ac-tog" id="tog-ac-spec" onclick="event.stopPropagation();acToggle('ac-spec')">−</span>
+        </div>
+      </div>
+      <div class="ac-body" id="ac-spec">
+        <div class="sg">
+          <label>Max Roll (°)</label><input type="number" id="s-roll" value="20" min="0" max="60" step="1"/>
+          <label>Swath Width (km)</label><input type="number" id="s-swath" value="19" min="1" max="300" step="0.1"/>
+          <label>Image Duration (s)</label><input type="number" id="s-dur" value="4.775" min="0.1" max="60" step="0.001"/>
+          <label>Pre-roll Time (s)</label><input type="number" id="s-pre" value="3.0" min="0" max="30" step="0.1"/>
+          <label>Gnd Speed (km/s)</label><input type="number" id="s-gs" value="6.18" min="4" max="9" step="0.01"/>
+          <label>Nadir GSD (m)</label><input type="number" id="s-gsd" value="1.0" min="0.1" max="100" step="0.1"/>
+        </div>
+        <div id="specmsg" style="font-size:10px;color:#94a3b8;margin-top:3px"></div>
+      </div>
+    </div>
+
+    <!-- 4. Saved Targets -->
+    <div>
+      <div class="ac-hdr" onclick="acToggle('ac-tgts')">
+        <span class="ac-title">Saved Targets</span>
+        <div style="display:flex;gap:5px;align-items:center">
+          <button class="btns" onclick="event.stopPropagation();saveTarget()" style="font-size:9px;padding:2px 6px">+ Save</button>
+          <span class="ac-tog" id="tog-ac-tgts">−</span>
+        </div>
+      </div>
+      <div class="ac-body" id="ac-tgts">
+        <div id="targetlist" style="display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:10px;color:#94a3b8;padding:4px 0">ยังไม่มี target — คลิกแผนที่แล้วกด Save</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Target Location -->
+    <div>
+      <div class="ac-hdr" onclick="acToggle('ac-loc')">
+        <span class="ac-title">Target Location</span>
+        <span class="ac-tog" id="tog-ac-loc">−</span>
+      </div>
+      <div class="ac-body" id="ac-loc">
+        <div class="row">
+          <div><label style="display:block;margin-bottom:2px">Lat (°N)</label><input type="number" id="lat" value="13.9125" step="0.0001"/></div>
+          <div><label style="display:block;margin-bottom:2px">Lon (°E)</label><input type="number" id="lon" value="100.6067" step="0.0001"/></div>
+        </div>
+        <div style="margin-top:3px;font-size:10px;color:#94a3b8;font-weight:500">↑ คลิกบนแผนที่เพื่อเลือกพิกัดเป้าหมาย</div>
+      </div>
+    </div>
+
+    <!-- 6. Parameters -->
+    <div>
+      <div class="ac-hdr" onclick="acToggle('ac-params')">
+        <span class="ac-title">Parameters</span>
+        <span class="ac-tog" id="tog-ac-params">−</span>
+      </div>
+      <div class="ac-body" id="ac-params">
+        <div class="row">
+          <div><label style="display:block;margin-bottom:2px">Min Elev (°)</label><input type="number" id="minel" value="10" min="0" max="45" step="1"/></div>
+        </div>
+        <div class="row" style="margin-top:6px">
+          <div><label style="display:block;margin-bottom:2px">Start Date</label><input type="date" id="date-start"/></div>
+          <div><label style="display:block;margin-bottom:2px">End Date</label><input type="date" id="date-end"/></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btnp" onclick="calc()" style="margin-top:2px;padding:10px;font-size:12px;font-weight:600;letter-spacing:1px">▶  Calculate Passes</button>
+
+    <!-- 7. Summary -->
+    <div id="stats" style="display:none">
+      <div class="ac-hdr" onclick="acToggle('ac-summary')">
+        <span class="ac-title">Summary</span>
+        <span class="ac-tog" id="tog-ac-summary">−</span>
+      </div>
+      <div class="ac-body" id="ac-summary">
+        <div id="sbody"></div>
+      </div>
+    </div>
+
+  </aside>
+  <div id="sb-resize" title="ลากเพื่อปรับความกว้าง"></div>
+  <div id="mwrap">
+    <div id="map"></div>
+    <div id="minfo">คลิกบนแผนที่เพื่อเลือกพื้นที่เป้าหมาย</div>
+    <div id="spin">
+      <span class="r">⟳</span>
+      <span class="msg" id="spinmsg">กำลังคำนวณ...</span>
+    </div>
+  </div>
+</div>
+
+<div id="panel-resize"></div>
+<div id="panel">
+  <div id="filterbar">
+    <div style="display:flex;gap:4px;margin-right:8px">
+      <button class="ptab act" id="tab-passes" onclick="switchTab('passes')">📋 Passes</button>
+      <button class="ptab" id="tab-timeline" onclick="switchTab('timeline')">📅 Timeline</button>
+    </div>
+    <span style="color:#475569;margin-right:6px">|</span>
+    <span>Filter</span>
+    <button class="fbtn act" onclick="setFilter('all',this)">All</button>
+    <button class="fbtn" onclick="setFilter('good',this)">Good ✓</button>
+    <button class="fbtn" onclick="setFilter('feasible',this)">Feasible</button>
+    <button class="fbtn" onclick="setFilter('day',this)">Daytime</button>
+    <span id="rescount"></span>
+  </div>
+
+  <!-- Passes tab -->
+  <div id="view-passes">
+    <div id="tblwrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Satellite</th><th>AOS (UTC+7)</th><th>Duration</th>
+            <th>Max Elev</th><th>Off-Nadir</th><th>Mode</th><th>Feasible</th>
+            <th>GSD (m)</th>
+            <th>Img Start (UTC+7)</th><th>Target TS (UTC+7)</th><th>Img End (UTC+7)</th>
+            <th>Along-km</th><th>Sun°</th><th>Cloud ☁</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbl">
+          <tr><td colspan="16" style="text-align:center;padding:28px;color:#94a3b8">เลือกดาวเทียม กด Fetch All TLEs แล้วคลิกบนแผนที่</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Timeline tab -->
+  <div id="view-timeline" style="display:none;height:185px;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-bottom:1px solid #283548;background:#151c27;flex-shrink:0">
+      <span style="font-size:10px;color:#e2e8f0;font-weight:600;text-transform:uppercase;letter-spacing:.4px">Target</span>
+      <select id="tl-target" onchange="drawTimeline()" style="width:160px;padding:2px 6px;font-size:11px"></select>
+      <span style="font-size:10px;color:#94a3b8;margin-left:6px">Good ✓ = border สีขาว</span>
+    </div>
+    <canvas id="tlcanvas" style="width:100%;display:block"></canvas>
+  </div>
+</div>
+
+<script src="./vendor/leaflet.min.js"></script>
+<script src="./vendor/satellite.min.js"></script>
+<script src="./planner.js"></script>
+</body>
+</html>

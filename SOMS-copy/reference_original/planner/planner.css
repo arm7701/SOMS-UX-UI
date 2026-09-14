@@ -1,0 +1,781 @@
+/* SAT PASS PLANNER v3 — Sapphire Navy & Radiant Sky Theme */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0a2342 0%, #103b6e 60%, #185396 100%);
+  color: #f0f9ff;
+  font-size: 13px;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  letter-spacing: 0.015em;
+}
+
+#hdr {
+  background: #0b2548;
+  border-bottom: 1px solid #235492;
+  padding: 0 16px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+#hdr h1 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.sub {
+  color: #bae6fd;
+  font-size: 11.5px;
+  font-weight: 400;
+}
+
+#clk {
+  margin-left: auto;
+  font-family: 'Prompt', monospace;
+  font-size: 11.5px;
+  color: #38bdf8;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00e5ff;
+  box-shadow: 0 0 8px #00e5ff;
+  flex-shrink: 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+@keyframes spinR {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+
+#main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+#sb {
+  width: 310px;
+  min-width: 220px;
+  max-width: 480px;
+  background: #0d2a52;
+  border-right: 1px solid #235492;
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+#sb-resize {
+  width: 5px;
+  background: transparent;
+  cursor: col-resize;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: 0.15s;
+}
+
+#sb-resize:hover, #sb-resize.dragging {
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+}
+
+#mwrap {
+  flex: 1;
+  position: relative;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+#panel {
+  background: #0e2b50;
+  border-top: 1px solid #235492;
+  flex-shrink: 0;
+}
+
+#tblwrap {
+  height: 185px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.st {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #7dd3fc;
+  margin-bottom: 5px;
+}
+
+label {
+  font-size: 11.5px;
+  color: #e0f2fe;
+  font-weight: 500;
+}
+
+input[type=number], input[type=text], input[type=date], select, textarea {
+  width: 100%;
+  background: #091d38;
+  border: 1px solid #235492;
+  color: #ffffff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'Prompt', sans-serif !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type=number]:focus, input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+}
+
+input::placeholder, textarea::placeholder {
+  color: #94a3b8;
+}
+
+input[type=date]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8) brightness(1.2);
+  cursor: pointer;
+}
+
+select {
+  cursor: pointer;
+  background-color: #091d38;
+}
+
+select option {
+  background: #0b2548;
+  color: #ffffff;
+}
+
+textarea {
+  font-family: 'Prompt', monospace !important;
+  font-size: 11px;
+  resize: none;
+  line-height: 1.45;
+}
+
+.row {
+  display: flex;
+  gap: 6px;
+}
+
+.row > div {
+  flex: 1;
+}
+
+.btn {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: 0.15s;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+.btnp {
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.35);
+}
+
+.btnp:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.5);
+}
+
+.btns {
+  background: #133560;
+  color: #bae6fd;
+  border: 1px solid #235492;
+  font-size: 10.5px;
+  padding: 3px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-weight: 600;
+  transition: 0.15s;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+.btns:hover {
+  background: #1c4576;
+  color: #ffffff;
+  border-color: #38bdf8;
+}
+
+.sg {
+  display: grid;
+  grid-template-columns: 1fr 72px;
+  gap: 4px 8px;
+  align-items: center;
+}
+
+.sg label {
+  font-size: 11px;
+  color: #e0f2fe;
+  margin: 0;
+  display: block;
+  font-weight: 500;
+}
+
+.sg input {
+  padding: 3px 6px;
+  font-size: 11px;
+  text-align: right;
+}
+
+.bd {
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 9.5px;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+.bg { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #86efac; }
+.ba { background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #fde047; }
+.br { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; }
+.bi { background: rgba(14, 165, 233, 0.2); border: 1px solid #0ea5e9; color: #7dd3fc; }
+
+.srow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 4px 0;
+  border-bottom: 1px solid #1c4576;
+}
+
+.srow:last-child {
+  border-bottom: none;
+}
+
+.sl {
+  color: #93c5fd;
+  font-weight: 500;
+}
+
+.sv {
+  font-family: 'Prompt', monospace;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+thead th {
+  background: #081d38;
+  padding: 6px 10px;
+  text-align: left;
+  font-weight: 700;
+  color: #7dd3fc;
+  position: sticky;
+  top: 0;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-bottom: 1px solid #235492;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+tbody tr {
+  border-bottom: 1px solid rgba(35, 84, 146, 0.45);
+  cursor: pointer;
+  transition: 0.1s;
+  color: #f0f9ff;
+}
+
+tbody tr:hover, tr.ar {
+  background: #18457d !important;
+}
+
+tbody td {
+  padding: 5px 10px;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.addtab {
+  background: #0d284f;
+  border: 1px solid #235492;
+  color: #bae6fd;
+  padding: 3px 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-family: 'Prompt', sans-serif !important;
+  transition: 0.15s;
+}
+
+.addtab:hover {
+  color: #ffffff;
+  border-color: #38bdf8;
+}
+
+.addtab.act {
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(14, 165, 233, 0.35);
+}
+
+.sat-drag {
+  color: #38bdf8;
+  cursor: grab;
+  font-size: 14px;
+  padding: 0 2px;
+  flex-shrink: 0;
+  line-height: 1;
+  user-select: none;
+  opacity: 0.6;
+}
+
+.sat-drag:hover {
+  opacity: 1;
+}
+
+.sat-item.dragging {
+  opacity: 0.4;
+  border-style: dashed;
+}
+
+.sat-item.drag-over {
+  border-color: #38bdf8;
+  background: #143d6e;
+}
+
+.sat-edit {
+  background: none;
+  border: none;
+  color: #93c5fd;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+.sat-edit:hover {
+  color: #38bdf8;
+}
+
+.tgt-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #1c4576;
+  background: #092244;
+  cursor: pointer;
+  transition: 0.15s;
+  margin-bottom: 4px;
+}
+
+.tgt-item:hover {
+  border-color: #38bdf8;
+  background: #12335f;
+}
+
+.tgt-item.active {
+  border-color: #38bdf8;
+  background: #1a4782;
+}
+
+.tgt-name {
+  font-size: 11px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.tgt-coord {
+  font-size: 9.5px;
+  color: #93c5fd;
+  font-family: 'Prompt', monospace;
+  white-space: nowrap;
+}
+
+.tgt-del {
+  background: none;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0 2px;
+  flex-shrink: 0;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+
+.tgt-del:hover {
+  opacity: 1;
+  color: #ef4444;
+}
+
+#minfo {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(9, 29, 56, 0.94);
+  border: 1px solid #38bdf8;
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-size: 11.5px;
+  font-weight: 500;
+  z-index: 999;
+  color: #e0f2fe;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  font-family: 'Prompt', sans-serif !important;
+}
+
+#spin {
+  position: absolute;
+  inset: 0;
+  background: rgba(9, 29, 56, 0.88);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  font-size: 13px;
+  color: #38bdf8;
+  gap: 8px;
+  flex-direction: column;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+#spin .r {
+  animation: spinR 1s linear infinite;
+  display: inline-block;
+  font-size: 24px;
+}
+
+#spin .msg {
+  font-size: 12px;
+  color: #bae6fd;
+  font-weight: 500;
+}
+
+/* Satellite checkboxes */
+.sat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #1c4576;
+  background: #092244;
+  cursor: pointer;
+  transition: 0.15s;
+  margin-bottom: 4px;
+  user-select: none;
+}
+
+.sat-item:hover {
+  border-color: #38bdf8;
+  background: #12335f;
+}
+
+.sat-item input[type=checkbox] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  accent-color: #0284c7;
+}
+
+.sat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sat-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  flex: 1;
+  color: #ffffff;
+}
+
+.sat-status {
+  font-size: 9.5px;
+  color: #bae6fd;
+  font-family: 'Prompt', monospace;
+}
+
+.sat-fetch {
+  background: none;
+  border: none;
+  color: #93c5fd;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.sat-fetch:hover {
+  background: #133560;
+  color: #38bdf8;
+}
+
+.sat-fetch.loading {
+  animation: pulse 0.8s infinite;
+}
+
+.sat-fetch.ok {
+  color: #4ade80;
+}
+
+.sat-fetch.err {
+  color: #f87171;
+}
+
+/* Filter bar */
+#filterbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-bottom: 1px solid #235492;
+  background: #0c274c;
+  flex-shrink: 0;
+}
+
+#filterbar span {
+  font-size: 10px;
+  color: #bae6fd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  margin-right: 2px;
+}
+
+.fbtn {
+  background: #133560;
+  border: 1px solid #235492;
+  color: #bae6fd;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 10.5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.15s;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+.fbtn:hover, .fbtn.act {
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(14, 165, 233, 0.35);
+}
+
+#rescount {
+  margin-left: auto;
+  font-size: 10.5px;
+  color: #7dd3fc;
+  font-family: 'Prompt', monospace;
+  font-weight: 600;
+}
+
+.ptab {
+  background: none;
+  border: none;
+  color: #bae6fd;
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: 0.15s;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+.ptab:hover {
+  color: #ffffff;
+  background: #133560;
+}
+
+.ptab.act {
+  color: #ffffff;
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  box-shadow: 0 2px 6px rgba(14, 165, 233, 0.35);
+}
+
+/* Accordion */
+.ac-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 6px 0;
+  user-select: none;
+  border-bottom: 1px solid #1c4576;
+  margin-bottom: 6px;
+}
+
+.ac-hdr:hover .ac-tog {
+  color: #38bdf8;
+  border-color: #38bdf8;
+}
+
+.ac-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #7dd3fc;
+}
+
+.ac-tog {
+  width: 17px;
+  height: 17px;
+  border: 1px solid #235492;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #38bdf8;
+  background: #091e38;
+  flex-shrink: 0;
+  font-family: 'Prompt', monospace;
+  line-height: 1;
+  transition: 0.15s;
+}
+
+.ac-body.collapsed {
+  display: none !important;
+}
+
+/* Panel resize handle */
+#panel-resize {
+  height: 5px;
+  background: transparent;
+  cursor: row-resize;
+  flex-shrink: 0;
+  transition: 0.15s;
+}
+
+#panel-resize:hover, #panel-resize.dragging {
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+}
+
+/* Map Layer Switch */
+.ls-btn {
+  background: rgba(10, 35, 66, 0.92);
+  border: 1px solid #235492;
+  color: #bae6fd;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-family: 'Prompt', sans-serif !important;
+  transition: 0.15s;
+  backdrop-filter: blur(4px);
+}
+
+.ls-btn:hover {
+  border-color: #38bdf8;
+  color: #38bdf8;
+  background: rgba(19, 53, 96, 0.95);
+}
+
+.ls-btn.ls-act {
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
+}
+
+/* Leaflet Controls Theme */
+.leaflet-bar {
+  border: 1px solid #235492 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+.leaflet-bar a {
+  background-color: #0e2b50 !important;
+  color: #bae6fd !important;
+  border-bottom: 1px solid #235492 !important;
+  transition: 0.15s;
+}
+
+.leaflet-bar a:hover {
+  background-color: #18457d !important;
+  color: #ffffff !important;
+}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: #0e2b50 !important;
+  color: #f0f9ff !important;
+  border: 1px solid #235492 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+.leaflet-container {
+  font-family: 'Prompt', sans-serif !important;
+}
