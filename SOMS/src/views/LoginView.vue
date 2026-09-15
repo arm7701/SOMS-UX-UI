@@ -27,6 +27,7 @@ const rememberMe = ref(true)
 const errorMessage = ref('')
 const loading = ref(false)
 const cardMinimized = ref(false)
+const isZoomingIn = ref(false)
 
 const handleLogin = async () => {
   if (!username.value.trim()) {
@@ -39,16 +40,26 @@ const handleLogin = async () => {
 
   try {
     const result = await authStore.login(username.value.trim(), password.value)
-    if (result.setupRequired) {
-      router.push('/setup-password')
-    } else {
-      appStore.showToast('ยินดีต้อนรับ', `เข้าสู่ระบบสำเร็จในฐานะ ${authStore.displayName}`)
-      router.push('/dashboard')
+    // ข้อมูลถูกต้อง -> กระตุ้นอนิเมชันมุมกล้องซูมเข้าสู่โลก (Cinematic Earth Zoom) และการ์ดจางหาย
+    isZoomingIn.value = true
+    if (earthGlobe) {
+      earthGlobe.triggerZoom()
     }
+
+    // ซูมพุ่งทะยานเข้าสู่โลก 1.25 วินาที ก่อนเปลี่ยนหน้าเข้าสู่ระบบภายใน
+    setTimeout(() => {
+      if (result.setupRequired) {
+        router.push('/setup-password')
+      } else {
+        appStore.showToast('ยินดีต้อนรับ', `เข้าสู่ระบบสำเร็จในฐานะ ${authStore.displayName}`)
+        router.push('/dashboard')
+      }
+    }, 1250)
   } catch (err) {
-    errorMessage.value = err.message || 'ไม่สามารถเข้าสู่ระบบได้ กรุณาตรวจสอบข้อมูล'
-  } finally {
+    // ข้อมูลไม่ถูกต้อง -> แจ้งเตือนแบบทั่วไป ไม่ทำการซูม
+    isZoomingIn.value = false
     loading.value = false
+    errorMessage.value = err.message || 'ไม่สามารถเข้าสู่ระบบได้ กรุณาตรวจสอบข้อมูล'
   }
 }
 
@@ -433,7 +444,19 @@ class EarthGlobe {
       trail: []
     }
 
+    // สถานะกล้องซูมเข้าหาโลก (Cinematic Earth Zoom Transition)
+    this.isZooming = false
+    this.zoom = 1.0
+    this.zoomSpeed = 0
+    this.zoomProgress = 0
+    this.entryFlashAlpha = 0
+
     this.initGeometry()
+  }
+
+  triggerZoom() {
+    this.isZooming = true
+    this.zoomSpeed = 0.006
   }
 
   initGeometry() {
@@ -469,7 +492,23 @@ class EarthGlobe {
 
   update(parallaxX = 0, parallaxY = 0) {
     this.frameCount++
-    this.rotY += this.rotSpeed
+
+    if (this.isZooming) {
+      this.zoomProgress = Math.min(1, this.zoomProgress + 0.016)
+      this.zoomSpeed += 0.0035
+      this.zoom += this.zoomSpeed
+
+      // คำนวณแสงแฟลชเข้าสู่ชั้นบรรยากาศ (Atmospheric Entry Bloom)
+      if (this.zoomProgress > 0.45) {
+        this.entryFlashAlpha = Math.min(1, (this.zoomProgress - 0.45) * 2.2)
+      }
+
+      // หมุนโลกปรับมุมมองเข้าหาพิกัดประเทศไทยเมื่อซูม
+      const targetRotY = (Math.PI * 0.5) - (100.51 * DEG2RAD)
+      this.rotY += (targetRotY - this.rotY) * 0.09
+    } else {
+      this.rotY += this.rotSpeed
+    }
 
     // อัปเดตตำแหน่งดาวเทียม 1 (Satellite 01)
     this.sat1.angle += this.sat1.speed
@@ -902,14 +941,34 @@ const initSpaceCanvas = () => {
 
     // 4. เรนเดอร์ลูกโลก 3 มิติเชิงยุทธการ (Tactical 3D Earth Globe)
     if (earthGlobe) {
-      const globeCx = width / 2 + mouseX * 0.12
-      const globeCy = height / 2 + mouseY * 0.12
-      const globeRadius = Math.max(160, Math.min(Math.min(width, height) * 0.36, 420))
+      const baseRadius = Math.max(160, Math.min(Math.min(width, height) * 0.36, 420))
+      const globeRadius = baseRadius * earthGlobe.zoom
+
+      // ปรับมุมกล้องแพนเข้าหาศูนย์กลางพิกัดไทยเมื่อซูม
+      const bkk = projectPoint(13.75 * DEG2RAD, 100.51 * DEG2RAD, earthGlobe.rotY, earthGlobe.tiltZ, earthGlobe.pitchX)
+      const targetOffsetX = -bkk.x * (globeRadius - baseRadius) * 0.85
+      const targetOffsetY = -bkk.y * (globeRadius - baseRadius) * 0.85
+
+      const globeCx = width / 2 + mouseX * 0.12 * (1 - earthGlobe.zoomProgress) + targetOffsetX * earthGlobe.zoomProgress
+      const globeCy = height / 2 + mouseY * 0.12 * (1 - earthGlobe.zoomProgress) + targetOffsetY * earthGlobe.zoomProgress
 
       earthGlobe.update(mouseX, mouseY)
       earthGlobe.drawBack(ctx, globeCx, globeCy, globeRadius)
       earthGlobe.drawGlobe(ctx, globeCx, globeCy, globeRadius)
       earthGlobe.drawFront(ctx, globeCx, globeCy, globeRadius)
+
+      // แสงแฟลชเข้าสู่ชั้นบรรยากาศเมื่อซูมเข้าสู่โลก (Atmospheric Entry Bloom)
+      if (earthGlobe.entryFlashAlpha > 0) {
+        ctx.save()
+        ctx.fillStyle = `rgba(56, 189, 248, ${earthGlobe.entryFlashAlpha * 0.45})`
+        ctx.fillRect(0, 0, width, height)
+        if (earthGlobe.zoomProgress > 0.82) {
+          const fadeDark = (earthGlobe.zoomProgress - 0.82) * 5.5
+          ctx.fillStyle = `rgba(3, 8, 22, ${Math.min(1, fadeDark)})`
+          ctx.fillRect(0, 0, width, height)
+        }
+        ctx.restore()
+      }
     }
 
     animId = requestAnimationFrame(animate)
@@ -951,22 +1010,33 @@ onUnmounted(() => {
     <!-- 3. Tactical Orbital Rings & Grid (เส้นโครงข่ายพิกัดวงโคจรในอวกาศ) -->
     <div class="absolute inset-0 bg-[linear-gradient(to_right,#38bdf80c_1px,transparent_1px),linear-gradient(to_bottom,#38bdf80c_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0"></div>
 
-    <!-- 4. Background Tactical Emblem Watermark (โปร่งแสงเบาบาง เพื่อขับให้ลูกโลก 3D โดดเด่น) -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0 flex items-center justify-center">
-      <div class="relative w-[340px] h-[340px] sm:w-[420px] sm:h-[420px] flex items-center justify-center">
-        <img
-          src="/src/assets/png-isr.png"
-          alt="SPACE ISR Crest Insignia"
-          class="w-44 sm:w-52 h-auto object-contain opacity-[0.07] filter drop-shadow-[0_0_40px_rgba(56,189,248,0.3)] contrast-125"
-        />
+    <!-- 4. Top-Left Tactical Command Seal (ตราสัญลักษณ์มุมบนซ้าย ชัดเจน ไม่โดนการ์ดล็อกอินบัง) -->
+    <div
+      :class="[
+        'fixed top-5 left-5 z-20 hidden sm:flex items-center gap-3 px-3.5 py-2 rounded-2xl bg-[#061426]/75 border border-sky-400/35 backdrop-blur-md shadow-lg pointer-events-none select-none transition-all duration-500',
+        isZoomingIn ? 'opacity-0 -translate-y-4' : 'opacity-100 translate-y-0'
+      ]"
+    >
+      <img
+        src="/src/assets/png-isr.png"
+        alt="SPACE ISR Seal"
+        class="h-9 w-auto object-contain filter drop-shadow-[0_0_12px_rgba(56,189,248,0.6)]"
+      />
+      <div class="flex flex-col">
+        <span class="text-[11px] font-bold tracking-wider text-cyan-300 uppercase">Royal Thai Air Force</span>
+        <span class="text-[10px] font-semibold text-slate-300 tracking-wide">Space Operations Command</span>
       </div>
     </div>
 
-    <!-- 5. Main Login Card Container (การ์ดเข้าสู่ระบบ ยกระดับมิติความลึกด้วย Glassmorphism) -->
+    <!-- 5. Main Login Card Container (การ์ดเข้าสู่ระบบ จางหายไปเมื่อล็อกอินสำเร็จ) -->
     <div
       :class="[
-        'relative z-10 w-full max-w-[480px] transition-all duration-500',
-        cardMinimized ? 'opacity-10 scale-95 pointer-events-none' : 'opacity-100 scale-100'
+        'relative z-10 w-full max-w-[480px] transition-all duration-700 ease-out',
+        isZoomingIn
+          ? 'opacity-0 scale-75 -translate-y-12 filter blur-md pointer-events-none'
+          : cardMinimized
+            ? 'opacity-10 scale-95 pointer-events-none'
+            : 'opacity-100 scale-100'
       ]"
     >
       <div class="bg-[#07172c]/90 backdrop-blur-2xl rounded-3xl p-7 sm:p-9 border-2 border-sky-400/40 shadow-[0_20px_60px_rgba(1,8,20,0.95),0_0_40px_rgba(56,189,248,0.2)] transition-all font-prompt">
@@ -1103,8 +1173,25 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- 6. Interactive Globe View Toggle Button (ปุ่มสลับมุมมองชมลูกโลก 3D เต็มจอ) -->
+    <!-- 6. Cinematic Camera Zoom HUD (แสดงสถานะขณะมุมกล้องซูมเข้าหาโลกเข้าสู่ระบบภายใน) -->
+    <div
+      v-if="isZoomingIn"
+      class="fixed inset-0 z-20 flex flex-col items-center justify-center pointer-events-none select-none font-prompt transition-opacity duration-300"
+    >
+      <div class="text-center space-y-3 animate-pulse">
+        <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-cyan-500/25 border border-cyan-400/60 text-cyan-200 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-[0_0_25px_rgba(34,211,238,0.5)] backdrop-blur-md">
+          <Orbit class="w-4 h-4 animate-spin-slow text-cyan-300" />
+          <span>เข้าสู่ระบบสำเร็จ • กำลังเชื่อมต่อระบบดาวเทียม</span>
+        </div>
+        <p class="text-2xl sm:text-3xl font-black text-white tracking-[0.2em] drop-shadow-[0_0_20px_rgba(56,189,248,0.9)]">
+          INITIALIZING SOIS DASHBOARD
+        </p>
+      </div>
+    </div>
+
+    <!-- 7. Interactive Globe View Toggle Button (ปุ่มสลับมุมมองชมลูกโลก 3D เต็มจอ) -->
     <button
+      v-if="!isZoomingIn"
       type="button"
       @click="cardMinimized = !cardMinimized"
       class="fixed bottom-5 right-5 z-30 px-4 py-2.5 rounded-xl bg-[#081b33]/90 hover:bg-[#0c284a] border-2 border-sky-400/50 hover:border-cyan-300 text-cyan-300 hover:text-white text-xs sm:text-sm font-bold flex items-center gap-2.5 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.7)] transition-all cursor-pointer select-none group"
