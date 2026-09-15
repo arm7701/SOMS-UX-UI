@@ -14,7 +14,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useAppStore } from '@/stores/app'
-import { LogIn, Eye, EyeOff, User, Lock, Sparkles, Orbit } from 'lucide-vue-next'
+import { LogIn, Eye, EyeOff, User, Lock, Sparkles, Orbit, Globe } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -26,6 +26,7 @@ const showPassword = ref(false)
 const rememberMe = ref(true)
 const errorMessage = ref('')
 const loading = ref(false)
+const cardMinimized = ref(false)
 
 const handleLogin = async () => {
   if (!username.value.trim()) {
@@ -64,6 +65,7 @@ const spaceCanvasRef = ref(null)
 let animId = null
 let stars = []
 let meteors = []
+let earthGlobe = null
 let mouseX = 0
 let mouseY = 0
 let targetMouseX = 0
@@ -174,6 +176,699 @@ class Meteor {
   }
 }
 
+// ============================================================================
+// ข้อมูลภูมิศาสตร์และพิกัดทวีปสำหรับเรนเดอร์ลูกโลก 3 มิติ (Earth Globe Dataset)
+// ============================================================================
+const DEG2RAD = Math.PI / 180
+
+// เวกเตอร์โครงร่างทวีปหลัก (Continental Outlines [lat, lon])
+const CONTINENTS = [
+  // ยูเรเชีย & เอเชีย & ยุโรป & ตะวันออกกลาง
+  [
+    [71, 28], [70, 60], [73, 80], [76, 105], [77, 135], [72, 145], [65, 170], [60, 163],
+    [54, 156], [50, 143], [43, 132], [38, 128], [35, 129], [34, 120], [39, 118], [31, 122],
+    [23, 117], [22, 114], [21, 108], [11, 109], [10, 104], [13, 100], [8, 100], [1, 104],
+    [7, 99], [16, 96], [22, 91], [21, 87], [13, 80], [8, 77], [16, 73], [24, 69],
+    [25, 62], [24, 57], [17, 54], [13, 45], [13, 43], [28, 34], [31, 35], [36, 36],
+    [37, 28], [41, 28], [40, 23], [37, 22], [41, 14], [44, 12], [43, 4], [36, -5],
+    [39, -9], [43, -9], [44, -1], [49, -2], [53, 5], [54, 9], [58, 11], [58, 16],
+    [64, 21], [66, 24], [71, 28]
+  ],
+  // อินโดจีน & เอเชียตะวันออกเฉียงใต้ (ไทย, พม่า, ลาว, กัมพูชา, เวียดนาม, มาเลเซีย)
+  [
+    [22, 100], [21, 104], [21, 108], [18, 106], [16, 108], [12, 109], [10, 107], [10, 104],
+    [13.7, 100.5], [11, 99], [6, 100], [2, 103], [1.3, 104], [4, 101], [8, 98], [14, 98],
+    [16, 96], [20, 93], [22, 98], [22, 100]
+  ],
+  // เกาะอังกฤษ
+  [
+    [58, -3], [58, -5], [55, -5], [51, -5], [50, -1], [51, 1], [54, 0], [56, -2], [58, -3]
+  ],
+  // ประเทศญี่ปุ่น
+  [
+    [45, 142], [43, 145], [40, 140], [35, 140], [33, 135], [31, 131], [34, 131], [37, 137],
+    [41, 141], [45, 142]
+  ],
+  // อินโดนีเซีย / สุมาตรา
+  [
+    [5, 95], [3, 98], [-1, 103], [-5, 106], [-6, 103], [-3, 100], [1, 98], [5, 95]
+  ],
+  // อินโดนีเซีย / ชวา
+  [
+    [-6, 106], [-7, 110], [-8, 114], [-8, 112], [-7, 107], [-6, 106]
+  ],
+  // บอร์เนียว
+  [
+    [7, 117], [5, 119], [1, 118], [-3, 116], [-4, 113], [-1, 110], [2, 110], [4, 114], [7, 117]
+  ],
+  // ฟิลิปปินส์
+  [
+    [18, 121], [16, 122], [13, 124], [9, 126], [6, 125], [8, 123], [12, 121], [15, 120], [18, 121]
+  ],
+  // ทวีปแอฟริกา
+  [
+    [37, 10], [36, 11], [32, 24], [31, 32], [28, 34], [22, 37], [12, 44], [11, 51],
+    [3, 48], [-4, 40], [-11, 40], [-17, 38], [-25, 33], [-34, 26], [-35, 20], [-30, 17],
+    [-23, 14], [-16, 12], [-5, 12], [4, 9], [6, 2], [5, -4], [5, -9], [12, -16],
+    [15, -17], [21, -17], [28, -13], [33, -8], [36, -5], [36, 1], [37, 10]
+  ],
+  // มาดากัสการ์
+  [
+    [-12, 49], [-16, 50], [-25, 47], [-25, 44], [-20, 44], [-15, 47], [-12, 49]
+  ],
+  // ทวีปอเมริกาเหนือ
+  [
+    [71, -156], [70, -130], [68, -100], [60, -65], [47, -53], [44, -65], [35, -75], [25, -80],
+    [29, -89], [29, -95], [26, -97], [20, -97], [16, -93], [14, -88], [9, -79], [8, -82],
+    [16, -95], [20, -105], [23, -110], [32, -117], [37, -122], [48, -125], [54, -130], [59, -140],
+    [60, -150], [58, -160], [65, -168], [71, -156]
+  ],
+  // ทวีปอเมริกาใต้
+  [
+    [12, -72], [11, -63], [7, -58], [-2, -44], [-6, -35], [-13, -39], [-23, -42], [-33, -51],
+    [-42, -64], [-53, -68], [-55, -66], [-50, -75], [-40, -74], [-30, -72], [-18, -71], [-5, -81],
+    [1, -79], [9, -77], [12, -72]
+  ],
+  // ทวีปออสเตรเลีย
+  [
+    [-11, 142], [-15, 145], [-23, 151], [-32, 153], [-38, 147], [-38, 140], [-32, 132], [-35, 117],
+    [-32, 115], [-22, 114], [-17, 122], [-14, 127], [-12, 131], [-12, 136], [-11, 142]
+  ],
+  // นิวซีแลนด์
+  [
+    [-35, 174], [-39, 178], [-41, 175], [-46, 168], [-44, 169], [-41, 173], [-37, 175], [-35, 174]
+  ],
+  // ทวีปแอนตาร์กติกา (ขั้วโลกใต้)
+  [
+    [-65, -60], [-68, -30], [-70, 0], [-66, 30], [-66, 60], [-66, 90], [-65, 120], [-66, 150],
+    [-72, 170], [-76, -170], [-74, -140], [-70, -100], [-65, -60]
+  ]
+]
+
+// เมืองหลักสำหรับแสดงแสงไฟยามค่ำคืน (City Night Lights)
+const MAJOR_CITIES = [
+  { name: 'Bangkok', lat: 13.75, lon: 100.51, isHQ: true },
+  { name: 'Chiang Mai', lat: 18.79, lon: 98.98 },
+  { name: 'Phuket', lat: 7.88, lon: 98.39 },
+  { name: 'Tokyo', lat: 35.68, lon: 139.76 },
+  { name: 'Singapore', lat: 1.35, lon: 103.82 },
+  { name: 'Seoul', lat: 37.56, lon: 126.97 },
+  { name: 'Beijing', lat: 39.9, lon: 116.4 },
+  { name: 'Shanghai', lat: 31.23, lon: 121.47 },
+  { name: 'Hong Kong', lat: 22.31, lon: 114.16 },
+  { name: 'Delhi', lat: 28.61, lon: 77.2 },
+  { name: 'Dubai', lat: 25.2, lon: 55.27 },
+  { name: 'London', lat: 51.5, lon: -0.12 },
+  { name: 'Paris', lat: 48.85, lon: 2.35 },
+  { name: 'New York', lat: 40.71, lon: -74.0 },
+  { name: 'Los Angeles', lat: 34.05, lon: -118.24 },
+  { name: 'Sydney', lat: -33.86, lon: 151.2 }
+]
+
+// ตรวจสอบว่าพิกัดอยู่ในทวีปหรือไม่
+function isPointInPoly(pt, poly) {
+  let inside = false
+  const x = pt[1]
+  const y = pt[0]
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const xi = poly[i][1], yi = poly[i][0]
+    const xj = poly[j][1], yj = poly[j][0]
+    const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)
+    if (intersect) inside = !inside
+  }
+  return inside
+}
+
+// ย่อยเส้นขอบทวีปให้โค้งรับรูปทรงกลมอย่างเรียบเนียน
+function subdividePoly(poly, maxDeg = 7) {
+  const result = []
+  for (let i = 0; i < poly.length; i++) {
+    const p1 = poly[i]
+    const p2 = poly[(i + 1) % poly.length]
+    result.push(p1)
+
+    const dLat = p2[0] - p1[0]
+    let dLon = p2[1] - p1[1]
+    if (dLon > 180) dLon -= 360
+    if (dLon < -180) dLon += 360
+
+    const dist = Math.hypot(dLat, dLon)
+    if (dist > maxDeg) {
+      const steps = Math.ceil(dist / maxDeg)
+      for (let s = 1; s < steps; s++) {
+        const frac = s / steps
+        result.push([p1[0] + dLat * frac, p1[1] + dLon * frac])
+      }
+    }
+  }
+  return result
+}
+
+// การฉายพิกัด 3D แบบ Orthographic
+function projectPoint(latRad, lonRad, rotY, tiltZ = 0.409, pitchX = 0.18) {
+  const lon = lonRad + rotY
+  const cosLat = Math.cos(latRad)
+  const x1 = cosLat * Math.sin(lon)
+  const y1 = -Math.sin(latRad)
+  const z1 = cosLat * Math.cos(lon)
+
+  // Pitch around X axis
+  const y2 = y1 * Math.cos(pitchX) - z1 * Math.sin(pitchX)
+  const z2 = y1 * Math.sin(pitchX) + z1 * Math.cos(pitchX)
+  const x2 = x1
+
+  // Tilt around Z axis (Earth axial tilt ~23.4 deg)
+  const x3 = x2 * Math.cos(tiltZ) - y2 * Math.sin(tiltZ)
+  const y3 = x2 * Math.sin(tiltZ) + y2 * Math.cos(tiltZ)
+  const z3 = z2
+
+  return { x: x3, y: y3, z: z3 }
+}
+
+// ตัดเส้นขอบฟ้า (Horizon Clipping at z = 0) ป้องกันเส้นพาดหลังลูกโลก
+function clipSegment(p1, p2) {
+  if (p1.z >= 0 && p2.z >= 0) {
+    return [{ x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y }]
+  }
+  if (p1.z < 0 && p2.z < 0) {
+    return []
+  }
+  const t = (0 - p1.z) / (p2.z - p1.z)
+  let ix = p1.x + t * (p2.x - p1.x)
+  let iy = p1.y + t * (p2.y - p1.y)
+  const len = Math.hypot(ix, iy) || 1
+  ix /= len
+  iy /= len
+
+  if (p1.z >= 0) {
+    return [{ x1: p1.x, y1: p1.y, x2: ix, y2: iy }]
+  } else {
+    return [{ x1: ix, y1: iy, x2: p2.x, y2: p2.y }]
+  }
+}
+
+// ฉายพิกัดวงโคจรในอวกาศ (3D Orbit Projection)
+function projectOrbitPoint(theta, rMult, inc, node, tiltZ = 0.409, pitchX = 0.18) {
+  const xOrb = Math.cos(theta) * rMult
+  const yOrb = Math.sin(theta) * Math.cos(inc) * rMult
+  const zOrb = Math.sin(theta) * Math.sin(inc) * rMult
+
+  const cosNode = Math.cos(node), sinNode = Math.sin(node)
+  const xNode = xOrb * cosNode + zOrb * sinNode
+  const yNode = yOrb
+  const zNode = -xOrb * sinNode + zOrb * cosNode
+
+  const cosPitch = Math.cos(pitchX), sinPitch = Math.sin(pitchX)
+  const yPitch = yNode * cosPitch - zNode * sinPitch
+  const zPitch = yNode * sinPitch + zNode * cosPitch
+  const xPitch = xNode
+
+  const cosTilt = Math.cos(tiltZ), sinTilt = Math.sin(tiltZ)
+  const xFinal = xPitch * cosTilt - yPitch * sinTilt
+  const yFinal = xPitch * sinTilt + yPitch * cosTilt
+  const zFinal = zPitch
+
+  return { x: xFinal, y: yFinal, z: zFinal }
+}
+
+// ============================================================================
+// คลาสลูกโลก 3 มิติ (Earth Globe Engine)
+// ============================================================================
+class EarthGlobe {
+  constructor() {
+    this.rotY = 0.75 // หมุนเริ่มที่ภูมิภาคเอเชีย / ประเทศไทย
+    this.rotSpeed = 0.0016 // ความเร็วหมุนรอบตัวเองอย่างนุ่มนวล
+    this.tiltZ = 0.409 // แกนโลกเอียง 23.4 องศา
+    this.pitchX = 0.20 // มุมมองลาดเอียงเล็กน้อยให้เห็นมิติทรงกลม
+    this.frameCount = 0
+
+    // เวกเตอร์ทิศทางแสงอาทิตย์ (Sun Light Direction in Space)
+    this.sun = { x: -0.65, y: -0.45, z: 0.61 }
+    const sunLen = Math.hypot(this.sun.x, this.sun.y, this.sun.z)
+    this.sun.x /= sunLen
+    this.sun.y /= sunLen
+    this.sun.z /= sunLen
+
+    // ดาวเทียมนภา-1 (NAPA-1: LEO วงโคจรต่ำ ความสูง 500 กม.)
+    this.sat1 = {
+      name: 'NAPA-1 (RTAF-SAT-1)',
+      type: 'LEO Recon',
+      rMult: 1.34,
+      inc: 0.82,
+      node: 0.45,
+      angle: 0.3,
+      speed: 0.0068,
+      color: '#38bdf8',
+      trail: []
+    }
+
+    // ดาวเทียมนภา-2 (NAPA-2: SSO Polar วงโคจรสัมพันธ์กับดวงอาทิตย์ 520 กม.)
+    this.sat2 = {
+      name: 'NAPA-2 (RTAF-SAT-2)',
+      type: 'SSO Optical ISR',
+      rMult: 1.46,
+      inc: 1.68,
+      node: 2.15,
+      angle: 2.2,
+      speed: 0.0052,
+      color: '#34d399',
+      trail: []
+    }
+
+    this.initGeometry()
+  }
+
+  initGeometry() {
+    // 1. ตารางจุดข้อมูลแผ่นดินทวีป (High-density Land Dot Matrix)
+    this.landPoints = []
+    for (let lat = -76; lat <= 76; lat += 3.4) {
+      const cosLat = Math.cos(lat * DEG2RAD)
+      const lonStep = cosLat > 0.2 ? Math.max(3.4, 3.4 / cosLat) : 14
+      for (let lon = -180; lon < 180; lon += lonStep) {
+        for (const poly of CONTINENTS) {
+          if (isPointInPoly([lat, lon], poly)) {
+            this.landPoints.push({
+              latRad: lat * DEG2RAD,
+              lonRad: lon * DEG2RAD,
+              isCity: false
+            })
+            break
+          }
+        }
+      }
+    }
+
+    // 2. เส้นขอบทวีปที่ปรับความละเอียดแล้ว
+    this.subdividedCoastlines = CONTINENTS.map(poly => subdividePoly(poly, 7))
+
+    // 3. จุดพิกัดเมืองไฟราตรี
+    this.cities = MAJOR_CITIES.map(c => ({
+      ...c,
+      latRad: c.lat * DEG2RAD,
+      lonRad: c.lon * DEG2RAD
+    }))
+  }
+
+  update(parallaxX = 0, parallaxY = 0) {
+    this.frameCount++
+    this.rotY += this.rotSpeed
+
+    // อัปเดตตำแหน่งดาวเทียม 1 (NAPA-1)
+    this.sat1.angle += this.sat1.speed
+    const pSat1 = projectOrbitPoint(this.sat1.angle, this.sat1.rMult, this.sat1.inc, this.sat1.node, this.tiltZ, this.pitchX)
+    this.sat1.pos = pSat1
+    this.sat1.trail.push(pSat1)
+    if (this.sat1.trail.length > 28) this.sat1.trail.shift()
+
+    // อัปเดตตำแหน่งดาวเทียม 2 (NAPA-2)
+    this.sat2.angle += this.sat2.speed
+    const pSat2 = projectOrbitPoint(this.sat2.angle, this.sat2.rMult, this.sat2.inc, this.sat2.node, this.tiltZ, this.pitchX)
+    this.sat2.pos = pSat2
+    this.sat2.trail.push(pSat2)
+    if (this.sat2.trail.length > 28) this.sat2.trail.shift()
+  }
+
+  // วาดเลเยอร์หลังลูกโลก (วงโคจรซีกหลัง, ละอองแสงบรรยากาศภายนอก)
+  drawBack(ctx, cx, cy, R) {
+    ctx.save()
+    // 1. วงแหวนบรรยากาศเรืองแสงชั้นนอก (Atmospheric Corona / Fresnel Scattering)
+    const outerGlow = ctx.createRadialGradient(cx, cy, R * 0.94, cx, cy, R * 1.34)
+    outerGlow.addColorStop(0, 'rgba(56, 189, 248, 0.45)')
+    outerGlow.addColorStop(0.35, 'rgba(14, 165, 233, 0.16)')
+    outerGlow.addColorStop(0.7, 'rgba(2, 132, 199, 0.05)')
+    outerGlow.addColorStop(1, 'rgba(2, 6, 23, 0)')
+    ctx.fillStyle = outerGlow
+    ctx.beginPath()
+    ctx.arc(cx, cy, R * 1.34, 0, Math.PI * 2)
+    ctx.fill()
+
+    // 2. ขีดวัดพิกัดวงโคจรเชิงยุทธการชั้นนอกสุด (Tactical Outer Ring Compass)
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.18)'
+    ctx.lineWidth = 1
+    ctx.setLineDash([4, 12])
+    ctx.beginPath()
+    ctx.arc(cx, cy, R * 1.22, 0, Math.PI * 2)
+    ctx.stroke()
+    ctx.setLineDash([])
+
+    // 3. เส้นวงโคจรดาวเทียมซีกหลังลูกโลก (z < 0)
+    this.drawOrbitArc(ctx, cx, cy, R, this.sat1, true)
+    this.drawOrbitArc(ctx, cx, cy, R, this.sat2, true)
+
+    // วาดดาวเทียมหากอยู่ด้านหลังและไม่อยู่หลังทรงกลมลูกโลก
+    if (this.sat1.pos && this.sat1.pos.z < 0) {
+      this.drawSatellite(ctx, cx, cy, R, this.sat1, true)
+    }
+    if (this.sat2.pos && this.sat2.pos.z < 0) {
+      this.drawSatellite(ctx, cx, cy, R, this.sat2, true)
+    }
+
+    ctx.restore()
+  }
+
+  // วาดตัวลูกโลก 3 มิติ (Ocean, Coastlines, Land Matrix, Day/Night Shading, Cities)
+  drawGlobe(ctx, cx, cy, R) {
+    ctx.save()
+
+    // ตัดขอบเขตเรนเดอร์เฉพาะทรงกลมลูกโลก
+    ctx.beginPath()
+    ctx.arc(cx, cy, R, 0, Math.PI * 2)
+    ctx.clip()
+
+    // 1. มหาสมุทรอวกาศสีน้ำเงินลึก (Deep Space Ocean Base Gradient)
+    const oceanGrad = ctx.createRadialGradient(cx - R * 0.38, cy - R * 0.38, R * 0.08, cx, cy, R)
+    oceanGrad.addColorStop(0, '#0c2748')
+    oceanGrad.addColorStop(0.5, '#071830')
+    oceanGrad.addColorStop(1, '#020914')
+    ctx.fillStyle = oceanGrad
+    ctx.fillRect(cx - R, cy - R, R * 2, R * 2)
+
+    // 2. เส้นโครงข่ายพิกัดละติจูด & ลองจิจูด (Graticule Grid Lines)
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.12)'
+    ctx.lineWidth = 0.85
+
+    // ลองจิจูด (ทุก 30 องศา)
+    for (let lon = -180; lon < 180; lon += 30) {
+      ctx.beginPath()
+      let started = false
+      for (let lat = -80; lat <= 80; lat += 5) {
+        const p = projectPoint(lat * DEG2RAD, lon * DEG2RAD, this.rotY, this.tiltZ, this.pitchX)
+        if (p.z > 0) {
+          const sx = cx + p.x * R
+          const sy = cy + p.y * R
+          if (!started) {
+            ctx.moveTo(sx, sy)
+            started = true
+          } else {
+            ctx.lineTo(sx, sy)
+          }
+        } else {
+          started = false
+        }
+      }
+      ctx.stroke()
+    }
+
+    // ละติจูด (เส้นศูนย์สูตร, ทรอปิก, อาร์กติก)
+    const parallels = [-66.5, -45, -23.5, 0, 23.5, 45, 66.5]
+    for (const lat of parallels) {
+      ctx.beginPath()
+      let started = false
+      for (let lon = -180; lon <= 180; lon += 6) {
+        const p = projectPoint(lat * DEG2RAD, lon * DEG2RAD, this.rotY, this.tiltZ, this.pitchX)
+        if (p.z > 0) {
+          const sx = cx + p.x * R
+          const sy = cy + p.y * R
+          if (!started) {
+            ctx.moveTo(sx, sy)
+            started = true
+          } else {
+            ctx.lineTo(sx, sy)
+          }
+        } else {
+          started = false
+        }
+      }
+      ctx.stroke()
+    }
+
+    // 3. โครงข่ายจุดแผ่นดินทวีปเชิงยุทธการ (Tactical Land Dot Matrix)
+    for (let i = 0; i < this.landPoints.length; i++) {
+      const pt = this.landPoints[i]
+      const p = projectPoint(pt.latRad, pt.lonRad, this.rotY, this.tiltZ, this.pitchX)
+      if (p.z > 0) {
+        const sunFactor = p.x * this.sun.x + p.y * this.sun.y + p.z * this.sun.z
+        const sx = cx + p.x * R
+        const sy = cy + p.y * R
+
+        if (sunFactor > -0.05) {
+          const lightAlpha = Math.min(0.85, 0.35 + sunFactor * 0.55)
+          ctx.fillStyle = `rgba(56, 189, 248, ${lightAlpha})`
+          const dotSize = 1.35 * (0.8 + 0.35 * p.z)
+          ctx.beginPath()
+          ctx.arc(sx, sy, dotSize, 0, Math.PI * 2)
+          ctx.fill()
+        } else {
+          ctx.fillStyle = 'rgba(14, 116, 144, 0.28)'
+          ctx.beginPath()
+          ctx.arc(sx, sy, 0.95, 0, Math.PI * 2)
+          ctx.fill()
+        }
+      }
+    }
+
+    // 4. เส้นขอบฝั่งทวีปคมชัด (Illuminated Vector Coastlines)
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.58)'
+    ctx.lineWidth = 1.2
+    for (const poly of this.subdividedCoastlines) {
+      for (let i = 0; i < poly.length; i++) {
+        const p1Raw = poly[i]
+        const p2Raw = poly[(i + 1) % poly.length]
+        const p1 = projectPoint(p1Raw[0] * DEG2RAD, p1Raw[1] * DEG2RAD, this.rotY, this.tiltZ, this.pitchX)
+        const p2 = projectPoint(p2Raw[0] * DEG2RAD, p2Raw[1] * DEG2RAD, this.rotY, this.tiltZ, this.pitchX)
+
+        const segs = clipSegment(p1, p2)
+        for (const seg of segs) {
+          ctx.beginPath()
+          ctx.moveTo(cx + seg.x1 * R, cy + seg.y1 * R)
+          ctx.lineTo(cx + seg.x2 * R, cy + seg.y2 * R)
+          ctx.stroke()
+        }
+      }
+    }
+
+    // 5. แสงไฟเมืองยามค่ำคืน (Twinkling Night City Lights)
+    for (const city of this.cities) {
+      const p = projectPoint(city.latRad, city.lonRad, this.rotY, this.tiltZ, this.pitchX)
+      if (p.z > 0) {
+        const sunFactor = p.x * this.sun.x + p.y * this.sun.y + p.z * this.sun.z
+        if (sunFactor < 0.25) {
+          const sx = cx + p.x * R
+          const sy = cy + p.y * R
+          ctx.fillStyle = city.isHQ ? '#facc15' : '#fbbf24'
+          ctx.shadowBlur = city.isHQ ? 8 : 4
+          ctx.shadowColor = '#f59e0b'
+          ctx.beginPath()
+          ctx.arc(sx, sy, city.isHQ ? 2.6 : 1.8, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.shadowBlur = 0
+        }
+      }
+    }
+
+    // 6. เงาแสงอาทิตย์ตกกระทบ (Day/Night Terminator Shading)
+    const termGrad = ctx.createLinearGradient(
+      cx + this.sun.x * R * 0.9,
+      cy + this.sun.y * R * 0.9,
+      cx - this.sun.x * R * 0.9,
+      cy - this.sun.y * R * 0.9
+    )
+    termGrad.addColorStop(0, 'rgba(0, 0, 0, 0)')
+    termGrad.addColorStop(0.48, 'rgba(3, 10, 26, 0.25)')
+    termGrad.addColorStop(0.72, 'rgba(2, 6, 20, 0.72)')
+    termGrad.addColorStop(1, 'rgba(1, 4, 14, 0.92)')
+    ctx.fillStyle = termGrad
+    ctx.fillRect(cx - R, cy - R, R * 2, R * 2)
+
+    // 7. แสงสะท้อนริมขอบชั้นบรรยากาศ (Inner Fresnel Atmosphere Glow)
+    const rimGrad = ctx.createRadialGradient(cx, cy, R * 0.74, cx, cy, R)
+    rimGrad.addColorStop(0, 'rgba(56, 189, 248, 0)')
+    rimGrad.addColorStop(0.7, 'rgba(56, 189, 248, 0.18)')
+    rimGrad.addColorStop(1, 'rgba(56, 189, 248, 0.55)')
+    ctx.fillStyle = rimGrad
+    ctx.fillRect(cx - R, cy - R, R * 2, R * 2)
+
+    ctx.restore()
+  }
+
+  // วาดเลเยอร์หน้าลูกโลก (สถานีภาคพื้นดินไทย, วงโคจรซีกหน้า, ตัวดาวเทียม และ HUD)
+  drawFront(ctx, cx, cy, R) {
+    ctx.save()
+
+    // 1. สถานีภาคพื้นดินศูนย์ปฏิบัติการทางอวกาศ กองทัพอากาศ (RTAF SOC Bangkok Beacon)
+    const bkk = projectPoint(13.75 * DEG2RAD, 100.51 * DEG2RAD, this.rotY, this.tiltZ, this.pitchX)
+    if (bkk.z > 0.02) {
+      const bx = cx + bkk.x * R
+      const by = cy + bkk.y * R
+
+      // คลื่นเรดาร์แผ่ขยาย (3 Expanding Radar Rings)
+      for (let i = 0; i < 3; i++) {
+        const ringProg = ((this.frameCount * 0.7 + i * 14) % 42) / 42
+        const ringRadius = ringProg * 38 + 5
+        const ringAlpha = (1 - ringProg) * 0.75 * bkk.z
+        ctx.strokeStyle = `rgba(34, 211, 238, ${ringAlpha})`
+        ctx.lineWidth = 1.3
+        ctx.beginPath()
+        ctx.arc(bx, by, ringRadius, 0, Math.PI * 2)
+        ctx.stroke()
+      }
+
+      // จุดศูนย์กลางเรดาร์สีมรกตกระพริบ
+      ctx.fillStyle = '#34d399'
+      ctx.shadowBlur = 12
+      ctx.shadowColor = '#10b981'
+      ctx.beginPath()
+      ctx.arc(bx, by, 3.2, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.shadowBlur = 0
+
+      // เป้ากากบาทเรดาร์ (Tactical Reticle Crosshair)
+      ctx.strokeStyle = 'rgba(52, 211, 153, 0.85)'
+      ctx.lineWidth = 1.1
+      ctx.beginPath()
+      ctx.moveTo(bx - 8, by); ctx.lineTo(bx - 3, by)
+      ctx.moveTo(bx + 3, by); ctx.lineTo(bx + 8, by)
+      ctx.moveTo(bx, by - 8); ctx.lineTo(bx, by - 3)
+      ctx.moveTo(bx, by + 3); ctx.lineTo(bx, by + 8)
+      ctx.stroke()
+
+      // เส้นโยง Telemetry HUD Badge
+      const leaderEndX = bx + 45
+      const leaderEndY = by - 35
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.7)'
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.moveTo(bx, by)
+      ctx.lineTo(bx + 20, by - 35)
+      ctx.lineTo(leaderEndX + 115, leaderEndY)
+      ctx.stroke()
+
+      // กล่องข้อมูลสถานีภาคพื้นดินไทย
+      ctx.fillStyle = 'rgba(7, 24, 46, 0.88)'
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.65)'
+      ctx.lineWidth = 1
+      const cardW = 125, cardH = 28
+      ctx.beginPath()
+      ctx.roundRect(leaderEndX - 10, leaderEndY - cardH, cardW, cardH, 5)
+      ctx.fill()
+      ctx.stroke()
+
+      ctx.fillStyle = '#38bdf8'
+      ctx.font = 'bold 9px Prompt, sans-serif'
+      ctx.fillText('🇹🇭 RTAF SOC : BANGKOK', leaderEndX - 4, leaderEndY - 16)
+      ctx.fillStyle = '#67e8f9'
+      ctx.font = '8px Prompt, monospace'
+      ctx.fillText('13.75°N 100.51°E • ONLINE', leaderEndX - 4, leaderEndY - 6)
+    }
+
+    // 2. เส้นวงโคจรดาวเทียมซีกหน้าลูกโลก (z >= 0)
+    this.drawOrbitArc(ctx, cx, cy, R, this.sat1, false)
+    this.drawOrbitArc(ctx, cx, cy, R, this.sat2, false)
+
+    // 3. วาดตัวดาวเทียมด้านหน้า (เมื่อ z >= 0)
+    if (this.sat1.pos && this.sat1.pos.z >= 0) {
+      this.drawSatellite(ctx, cx, cy, R, this.sat1, false)
+    }
+    if (this.sat2.pos && this.sat2.pos.z >= 0) {
+      this.drawSatellite(ctx, cx, cy, R, this.sat2, false)
+    }
+
+    ctx.restore()
+  }
+
+  // วาดส่วนโค้งของวงโคจร (แยก z < 0 หลังโลก และ z >= 0 หน้าโลก)
+  drawOrbitArc(ctx, cx, cy, R, sat, isBack) {
+    const steps = 100
+    ctx.strokeStyle = isBack
+      ? `rgba(56, 189, 248, 0.16)`
+      : sat.color === '#38bdf8' ? 'rgba(56, 189, 248, 0.48)' : 'rgba(52, 211, 153, 0.45)'
+    ctx.lineWidth = isBack ? 1 : 1.3
+    ctx.setLineDash(isBack ? [2, 8] : [5, 6])
+
+    ctx.beginPath()
+    let started = false
+    for (let i = 0; i <= steps; i++) {
+      const th = (i / steps) * Math.PI * 2
+      const p = projectOrbitPoint(th, sat.rMult, sat.inc, sat.node, this.tiltZ, this.pitchX)
+      const matches = isBack ? p.z < 0 : p.z >= 0
+      if (matches) {
+        const sx = cx + p.x * R
+        const sy = cy + p.y * R
+        if (!started) {
+          ctx.moveTo(sx, sy)
+          started = true
+        } else {
+          ctx.lineTo(sx, sy)
+        }
+      } else {
+        started = false
+      }
+    }
+    ctx.stroke()
+    ctx.setLineDash([])
+  }
+
+  // วาดตัวดาวเทียม นภา-1 / นภา-2 พร้อมแผงโซลาร์เซลล์และป้าย HUD
+  drawSatellite(ctx, cx, cy, R, sat, isBack) {
+    const sx = cx + sat.pos.x * R
+    const sy = cy + sat.pos.y * R
+    const alpha = isBack ? 0.35 : 1.0
+
+    ctx.save()
+    ctx.globalAlpha = alpha
+
+    // ลำแสงเลเซอร์สื่อสารลงสู่พื้นโลก (Downlink Beam)
+    if (!isBack) {
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.28)'
+      ctx.lineWidth = 0.8
+      ctx.setLineDash([2, 4])
+      ctx.beginPath()
+      ctx.moveTo(sx, sy)
+      ctx.lineTo(cx + (sat.pos.x / sat.rMult) * R, cy + (sat.pos.y / sat.rMult) * R)
+      ctx.stroke()
+      ctx.setLineDash([])
+    }
+
+    // แผงโซลาร์เซลล์ซ้าย-ขวา
+    ctx.fillStyle = '#0284c7'
+    ctx.strokeStyle = sat.color
+    ctx.lineWidth = 1
+    // Solar wing left
+    ctx.fillRect(sx - 11, sy - 2.5, 6, 5)
+    ctx.strokeRect(sx - 11, sy - 2.5, 6, 5)
+    // Solar wing right
+    ctx.fillRect(sx + 5, sy - 2.5, 6, 5)
+    ctx.strokeRect(sx + 5, sy - 2.5, 6, 5)
+
+    // บอดี้ตัวดาวเทียมตรงกลาง
+    ctx.fillStyle = '#f8fafc'
+    ctx.shadowBlur = isBack ? 2 : 8
+    ctx.shadowColor = sat.color
+    ctx.fillRect(sx - 3, sy - 3.5, 6, 7)
+    ctx.shadowBlur = 0
+
+    // ไฟสัญญาณบอกตำแหน่งกระพริบ (Navigation Strobe)
+    const strobe = Math.floor(this.frameCount / 18) % 2 === 0
+    ctx.fillStyle = strobe ? (sat.color === '#38bdf8' ? '#38bdf8' : '#34d399') : '#f43f5e'
+    ctx.beginPath()
+    ctx.arc(sx, sy, 1.6, 0, Math.PI * 2)
+    ctx.fill()
+
+    // ป้าย HUD ชื่อดาวเทียม (เฉพาะเมื่ออยู่ด้านหน้า)
+    if (!isBack) {
+      ctx.fillStyle = 'rgba(6, 18, 38, 0.85)'
+      ctx.strokeStyle = sat.color
+      ctx.lineWidth = 0.8
+      const badgeW = 108, badgeH = 22
+      const badgeX = sx + 12
+      const badgeY = sy - 11
+      ctx.beginPath()
+      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 4)
+      ctx.fill()
+      ctx.stroke()
+
+      ctx.fillStyle = '#ffffff'
+      ctx.font = 'bold 8.5px Prompt, sans-serif'
+      ctx.fillText(`▲ ${sat.name}`, badgeX + 4, badgeY + 10)
+      ctx.fillStyle = sat.color
+      ctx.font = '7.5px Prompt, monospace'
+      ctx.fillText(`${sat.type} • ACTIVE`, badgeX + 4, badgeY + 18)
+    }
+
+    ctx.restore()
+  }
+}
+
 const handleMouseMove = (e) => {
   const cx = window.innerWidth / 2
   const cy = window.innerHeight / 2
@@ -201,6 +896,7 @@ const initSpaceCanvas = () => {
 
   stars = Array.from({ length: 140 }, () => new Star(width, height))
   meteors = []
+  earthGlobe = new EarthGlobe()
 
   let frameCount = 0
 
@@ -255,6 +951,18 @@ const initSpaceCanvas = () => {
       }
     }
 
+    // 4. เรนเดอร์ลูกโลก 3 มิติเชิงยุทธการ (Tactical 3D Earth Globe)
+    if (earthGlobe) {
+      const globeCx = width / 2 + mouseX * 0.12
+      const globeCy = height / 2 + mouseY * 0.12
+      const globeRadius = Math.max(160, Math.min(Math.min(width, height) * 0.36, 420))
+
+      earthGlobe.update(mouseX, mouseY)
+      earthGlobe.drawBack(ctx, globeCx, globeCy, globeRadius)
+      earthGlobe.drawGlobe(ctx, globeCx, globeCy, globeRadius)
+      earthGlobe.drawFront(ctx, globeCx, globeCy, globeRadius)
+    }
+
     animId = requestAnimationFrame(animate)
   }
 
@@ -294,30 +1002,25 @@ onUnmounted(() => {
     <!-- 3. Tactical Orbital Rings & Grid (เส้นโครงข่ายพิกัดวงโคจรในอวกาศ) -->
     <div class="absolute inset-0 bg-[linear-gradient(to_right,#38bdf80c_1px,transparent_1px),linear-gradient(to_bottom,#38bdf80c_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0"></div>
 
-    <!-- 4. Background Tactical Emblem with Orbital Compass (โลโก้ตราสัญลักษณ์อวกาศขนาดพอดี พร้อมวงโคจร) -->
+    <!-- 4. Background Tactical Emblem Watermark (โปร่งแสงเบาบาง เพื่อขับให้ลูกโลก 3D โดดเด่น) -->
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0 flex items-center justify-center">
       <div class="relative w-[340px] h-[340px] sm:w-[420px] sm:h-[420px] flex items-center justify-center">
-        <!-- Outer Dashed Tactical Orbit Ring -->
-        <div class="absolute inset-0 rounded-full border border-sky-400/20 border-dashed animate-spin-ultra-slow"></div>
-        <!-- Inner Scanning Orbit Ring -->
-        <div class="absolute inset-8 rounded-full border border-cyan-400/25 animate-spin-reverse"></div>
-        <!-- Secondary Orbital Ring -->
-        <div class="absolute inset-16 rounded-full border border-blue-400/20"></div>
-        <!-- Radar Pulse Glow Aura -->
-        <div class="absolute inset-20 rounded-full bg-gradient-to-tr from-sky-500/10 via-cyan-400/15 to-transparent blur-2xl animate-pulse-slow"></div>
-
-        <!-- Perfectly Proportioned Background Crest Watermark (ความกว้างสมส่วน 210px-240px ไม่เทอะทะ) -->
         <img
           src="/src/assets/png-isr.png"
           alt="SPACE ISR Crest Insignia"
-          class="w-48 sm:w-56 h-auto object-contain opacity-[0.22] filter drop-shadow-[0_0_35px_rgba(56,189,248,0.5)] contrast-125 animate-float"
+          class="w-44 sm:w-52 h-auto object-contain opacity-[0.07] filter drop-shadow-[0_0_40px_rgba(56,189,248,0.3)] contrast-125"
         />
       </div>
     </div>
 
     <!-- 5. Main Login Card Container (การ์ดเข้าสู่ระบบ ยกระดับมิติความลึกด้วย Glassmorphism) -->
-    <div class="relative z-10 w-full max-w-[480px]">
-      <div class="bg-[#08182f]/92 backdrop-blur-2xl rounded-3xl p-7 sm:p-9 border-2 border-sky-400/40 shadow-[0_20px_60px_rgba(1,8,20,0.9),0_0_40px_rgba(56,189,248,0.18)] transition-all font-prompt">
+    <div
+      :class="[
+        'relative z-10 w-full max-w-[480px] transition-all duration-500',
+        cardMinimized ? 'opacity-10 scale-95 pointer-events-none' : 'opacity-100 scale-100'
+      ]"
+    >
+      <div class="bg-[#07172c]/90 backdrop-blur-2xl rounded-3xl p-7 sm:p-9 border-2 border-sky-400/40 shadow-[0_20px_60px_rgba(1,8,20,0.95),0_0_40px_rgba(56,189,248,0.2)] transition-all font-prompt">
         <!-- Brand Header with Perfectly Sized Hero Emblem -->
         <div class="text-center mb-7">
           <!-- Hero Logo Container with Luminous Crest Pedestal -->
@@ -450,6 +1153,17 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- 6. Interactive Globe View Toggle Button (ปุ่มสลับมุมมองชมลูกโลก 3D เต็มจอ) -->
+    <button
+      type="button"
+      @click="cardMinimized = !cardMinimized"
+      class="fixed bottom-5 right-5 z-30 px-4 py-2.5 rounded-xl bg-[#081b33]/90 hover:bg-[#0c284a] border-2 border-sky-400/50 hover:border-cyan-300 text-cyan-300 hover:text-white text-xs sm:text-sm font-bold flex items-center gap-2.5 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.7)] transition-all cursor-pointer select-none group"
+      :title="cardMinimized ? 'แสดงกล่องเข้าสู่ระบบ' : 'ซ่อนหน้าต่างเพื่อชมลูกโลก 3 มิติเต็มจอ'"
+    >
+      <Globe class="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 group-hover:rotate-45 transition-transform duration-300" />
+      <span>{{ cardMinimized ? 'แสดงหน้าต่างเข้าสู่ระบบ' : 'ชมลูกโลก 3D เต็มจอ' }}</span>
+    </button>
   </div>
 </template>
 
