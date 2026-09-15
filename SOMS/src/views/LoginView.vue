@@ -409,10 +409,9 @@ class EarthGlobe {
     this.sun.y /= sunLen
     this.sun.z /= sunLen
 
-    // ดาวเทียมนภา-1 (NAPA-1: LEO วงโคจรต่ำ ความสูง 500 กม.)
+    // ดาวเทียมวงโคจรต่ำ (Satellite Unit 01 - LEO Orbit)
     this.sat1 = {
-      name: 'NAPA-1 (RTAF-SAT-1)',
-      type: 'LEO Recon',
+      id: 'SAT-01',
       rMult: 1.34,
       inc: 0.82,
       node: 0.45,
@@ -422,10 +421,9 @@ class EarthGlobe {
       trail: []
     }
 
-    // ดาวเทียมนภา-2 (NAPA-2: SSO Polar วงโคจรสัมพันธ์กับดวงอาทิตย์ 520 กม.)
+    // ดาวเทียมวงโคจรขั้วโลก (Satellite Unit 02 - Polar Orbit)
     this.sat2 = {
-      name: 'NAPA-2 (RTAF-SAT-2)',
-      type: 'SSO Optical ISR',
+      id: 'SAT-02',
       rMult: 1.46,
       inc: 1.68,
       node: 2.15,
@@ -473,14 +471,14 @@ class EarthGlobe {
     this.frameCount++
     this.rotY += this.rotSpeed
 
-    // อัปเดตตำแหน่งดาวเทียม 1 (NAPA-1)
+    // อัปเดตตำแหน่งดาวเทียม 1 (Satellite 01)
     this.sat1.angle += this.sat1.speed
     const pSat1 = projectOrbitPoint(this.sat1.angle, this.sat1.rMult, this.sat1.inc, this.sat1.node, this.tiltZ, this.pitchX)
     this.sat1.pos = pSat1
     this.sat1.trail.push(pSat1)
     if (this.sat1.trail.length > 28) this.sat1.trail.shift()
 
-    // อัปเดตตำแหน่งดาวเทียม 2 (NAPA-2)
+    // อัปเดตตำแหน่งดาวเทียม 2 (Satellite 02)
     this.sat2.angle += this.sat2.speed
     const pSat2 = projectOrbitPoint(this.sat2.angle, this.sat2.rMult, this.sat2.inc, this.sat2.node, this.tiltZ, this.pitchX)
     this.sat2.pos = pSat2
@@ -721,34 +719,6 @@ class EarthGlobe {
       ctx.moveTo(bx, by - 8); ctx.lineTo(bx, by - 3)
       ctx.moveTo(bx, by + 3); ctx.lineTo(bx, by + 8)
       ctx.stroke()
-
-      // เส้นโยง Telemetry HUD Badge
-      const leaderEndX = bx + 45
-      const leaderEndY = by - 35
-      ctx.strokeStyle = 'rgba(34, 211, 238, 0.7)'
-      ctx.lineWidth = 1
-      ctx.beginPath()
-      ctx.moveTo(bx, by)
-      ctx.lineTo(bx + 20, by - 35)
-      ctx.lineTo(leaderEndX + 115, leaderEndY)
-      ctx.stroke()
-
-      // กล่องข้อมูลสถานีภาคพื้นดินไทย
-      ctx.fillStyle = 'rgba(7, 24, 46, 0.88)'
-      ctx.strokeStyle = 'rgba(34, 211, 238, 0.65)'
-      ctx.lineWidth = 1
-      const cardW = 125, cardH = 28
-      ctx.beginPath()
-      ctx.roundRect(leaderEndX - 10, leaderEndY - cardH, cardW, cardH, 5)
-      ctx.fill()
-      ctx.stroke()
-
-      ctx.fillStyle = '#38bdf8'
-      ctx.font = 'bold 9px Prompt, sans-serif'
-      ctx.fillText('🇹🇭 RTAF SOC : BANGKOK', leaderEndX - 4, leaderEndY - 16)
-      ctx.fillStyle = '#67e8f9'
-      ctx.font = '8px Prompt, monospace'
-      ctx.fillText('13.75°N 100.51°E • ONLINE', leaderEndX - 4, leaderEndY - 6)
     }
 
     // 2. เส้นวงโคจรดาวเทียมซีกหน้าลูกโลก (z >= 0)
@@ -798,7 +768,7 @@ class EarthGlobe {
     ctx.setLineDash([])
   }
 
-  // วาดตัวดาวเทียม นภา-1 / นภา-2 พร้อมแผงโซลาร์เซลล์และป้าย HUD
+  // วาดตัวดาวเทียมจำลอง พร้อมแผงโซลาร์เซลล์และไฟสัญญาณกระพริบ
   drawSatellite(ctx, cx, cy, R, sat, isBack) {
     const sx = cx + sat.pos.x * R
     const sy = cy + sat.pos.y * R
@@ -843,27 +813,6 @@ class EarthGlobe {
     ctx.beginPath()
     ctx.arc(sx, sy, 1.6, 0, Math.PI * 2)
     ctx.fill()
-
-    // ป้าย HUD ชื่อดาวเทียม (เฉพาะเมื่ออยู่ด้านหน้า)
-    if (!isBack) {
-      ctx.fillStyle = 'rgba(6, 18, 38, 0.85)'
-      ctx.strokeStyle = sat.color
-      ctx.lineWidth = 0.8
-      const badgeW = 108, badgeH = 22
-      const badgeX = sx + 12
-      const badgeY = sy - 11
-      ctx.beginPath()
-      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 4)
-      ctx.fill()
-      ctx.stroke()
-
-      ctx.fillStyle = '#ffffff'
-      ctx.font = 'bold 8.5px Prompt, sans-serif'
-      ctx.fillText(`▲ ${sat.name}`, badgeX + 4, badgeY + 10)
-      ctx.fillStyle = sat.color
-      ctx.font = '7.5px Prompt, monospace'
-      ctx.fillText(`${sat.type} • ACTIVE`, badgeX + 4, badgeY + 18)
-    }
 
     ctx.restore()
   }
