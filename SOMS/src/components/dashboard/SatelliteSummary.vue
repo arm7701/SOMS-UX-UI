@@ -27,34 +27,34 @@ const formatAltitude = (val) => {
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- NAPA-1 Card -->
-    <div class="bg-white dark:bg-space-850 rounded-2xl p-5 border-2 border-slate-200 dark:border-space-700 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+    <div class="bg-[#08172f]/85 rounded-2xl p-5 border border-sky-400/25 shadow-lg hover:border-sky-400/50 transition-all flex flex-col justify-between">
       <div class="flex items-start justify-between">
         <div>
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]"></span>
-            <h3 class="text-lg font-bold font-prompt text-slate-900 dark:text-white">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_#34d399]"></span>
+            <h3 class="text-lg font-bold font-prompt text-white">
               NAPA-1 N (NORAD: 46320)
             </h3>
           </div>
-          <p class="text-sm font-semibold text-sky-200 dark:text-sky-200 mt-1">
+          <p class="text-sm font-semibold text-cyan-200 mt-1">
             ดาวเทียมสำรวจและตรวจการณ์พื้นที่ดวงแรก
           </p>
         </div>
-        <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-cyan-300 flex items-center justify-center border border-blue-200 dark:border-cyan-400/30">
+        <div class="w-12 h-12 rounded-xl bg-sky-950/70 text-cyan-300 flex items-center justify-center border border-sky-400/40 shadow-[0_0_12px_rgba(56,189,248,0.2)]">
           <Orbit class="w-6 h-6" />
         </div>
       </div>
 
-      <div class="mt-4 pt-4 border-t border-slate-100 dark:border-space-750 flex items-end justify-between">
+      <div class="mt-4 pt-4 border-t border-sky-500/20 flex items-end justify-between">
         <div>
-          <span class="text-sm text-sky-100 dark:text-sky-100 uppercase tracking-wider font-bold">ความสูงวงโคจร (Altitude)</span>
-          <div class="text-3xl font-extrabold font-mono text-blue-600 dark:text-cyan-300 mt-1">
-            {{ formatAltitude(getSatData(46320)?.altitude_km) }} <span class="text-base font-bold text-sky-300">KM</span>
+          <span class="text-sm text-sky-200 uppercase tracking-wider font-bold">ความสูงวงโคจร (Altitude)</span>
+          <div class="text-3xl font-extrabold font-mono text-cyan-300 mt-1 drop-shadow-sm">
+            {{ formatAltitude(getSatData(46320)?.altitude_km) }} <span class="text-base font-bold text-sky-200">KM</span>
           </div>
         </div>
-        <div class="text-right text-sm text-sky-200 dark:text-sky-200 font-semibold">
-          <span class="block text-xs font-bold text-sky-300 uppercase">บันทึกล่าสุด:</span>
-          <span class="font-mono font-bold text-slate-900 dark:text-white">
+        <div class="text-right text-sm text-sky-200 font-semibold">
+          <span class="block text-xs font-bold text-cyan-300 uppercase">บันทึกล่าสุด:</span>
+          <span class="font-mono font-bold text-white">
             {{ getSatData(46320)?.epoch_time ? `${getSatData(46320)?.epoch_date} ${getSatData(46320)?.epoch_time} UTC` : 'ยังไม่มีข้อมูล' }}
           </span>
         </div>
@@ -62,34 +62,34 @@ const formatAltitude = (val) => {
     </div>
 
     <!-- NAPA-2 Card -->
-    <div class="bg-white dark:bg-space-850 rounded-2xl p-5 border-2 border-slate-200 dark:border-space-700 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+    <div class="bg-[#08172f]/85 rounded-2xl p-5 border border-sky-400/25 shadow-lg hover:border-sky-400/50 transition-all flex flex-col justify-between">
       <div class="flex items-start justify-between">
         <div>
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]"></span>
-            <h3 class="text-lg font-bold font-prompt text-slate-900 dark:text-white">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_#34d399]"></span>
+            <h3 class="text-lg font-bold font-prompt text-white">
               NAPA-2 N (NORAD: 48963)
             </h3>
           </div>
-          <p class="text-sm font-semibold text-sky-200 dark:text-sky-200 mt-1">
+          <p class="text-sm font-semibold text-cyan-200 mt-1">
             ดาวเทียมตรวจการณ์ความละเอียดสูงดวงที่สอง
           </p>
         </div>
-        <div class="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/70 text-purple-600 dark:text-purple-300 flex items-center justify-center border border-purple-200 dark:border-purple-400/30">
+        <div class="w-12 h-12 rounded-xl bg-indigo-950/70 text-indigo-300 flex items-center justify-center border border-indigo-400/40 shadow-[0_0_12px_rgba(129,140,248,0.2)]">
           <Activity class="w-6 h-6" />
         </div>
       </div>
 
-      <div class="mt-4 pt-4 border-t border-slate-100 dark:border-space-750 flex items-end justify-between">
+      <div class="mt-4 pt-4 border-t border-sky-500/20 flex items-end justify-between">
         <div>
-          <span class="text-sm text-sky-100 dark:text-sky-100 uppercase tracking-wider font-bold">ความสูงวงโคจร (Altitude)</span>
-          <div class="text-3xl font-extrabold font-mono text-purple-600 dark:text-purple-300 mt-1">
-            {{ formatAltitude(getSatData(48963)?.altitude_km) }} <span class="text-base font-bold text-sky-300">KM</span>
+          <span class="text-sm text-sky-200 uppercase tracking-wider font-bold">ความสูงวงโคจร (Altitude)</span>
+          <div class="text-3xl font-extrabold font-mono text-indigo-300 mt-1 drop-shadow-sm">
+            {{ formatAltitude(getSatData(48963)?.altitude_km) }} <span class="text-base font-bold text-sky-200">KM</span>
           </div>
         </div>
-        <div class="text-right text-sm text-sky-200 dark:text-sky-200 font-semibold">
-          <span class="block text-xs font-bold text-sky-300 uppercase">บันทึกล่าสุด:</span>
-          <span class="font-mono font-bold text-slate-900 dark:text-white">
+        <div class="text-right text-sm text-sky-200 font-semibold">
+          <span class="block text-xs font-bold text-cyan-300 uppercase">บันทึกล่าสุด:</span>
+          <span class="font-mono font-bold text-white">
             {{ getSatData(48963)?.epoch_time ? `${getSatData(48963)?.epoch_date} ${getSatData(48963)?.epoch_time} UTC` : 'ยังไม่มีข้อมูล' }}
           </span>
         </div>

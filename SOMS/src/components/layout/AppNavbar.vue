@@ -89,15 +89,15 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <header class="sticky top-0 z-40 bg-white/90 dark:bg-space-900/90 backdrop-blur-md border-b border-sky-200/80 dark:border-sky-800/40 transition-colors shadow-2xs">
+  <header class="sticky top-0 z-40 bg-[#040e21]/95 backdrop-blur-xl border-b border-sky-500/25 transition-colors shadow-lg">
     <div class="px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
       <!-- Left: Sidebar Toggle Button (ปุ่มสามขีด) & Brand Logo -->
       <div class="flex items-center gap-2.5">
         <!-- ปุ่มสามขีดสำหรับกดเด้งเข้าเด้งออก Sidebar ทั้งบนจอมือถือและเดสก์ท็อป -->
         <button
           type="button"
-          class="p-2 rounded-xl text-slate-600 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-space-800 border border-sky-200/80 dark:border-sky-800/40 focus:outline-none transition-all duration-150 flex items-center justify-center shadow-2xs hover:scale-105 active:scale-95"
-          :class="appStore.sidebarOpen ? 'bg-sky-50 dark:bg-sky-950/50 text-sky-600 dark:text-sky-400 border-sky-300 dark:border-sky-700' : ''"
+          class="p-2 rounded-xl text-sky-200 hover:text-white bg-[#061833]/90 hover:bg-sky-500/20 border border-sky-400/30 focus:outline-hidden transition-all duration-150 flex items-center justify-center shadow-xs hover:scale-105 active:scale-95"
+          :class="appStore.sidebarOpen ? 'bg-sky-500/20 text-cyan-300 border-cyan-400 shadow-[0_0_12px_rgba(56,189,248,0.25)]' : ''"
           aria-label="เปิด/ปิดแถบเมนูเลือกหมวด (Sidebar)"
           title="เปิด/ปิดแถบเมนู (Sidebar)"
           @click="appStore.toggleSidebar"
@@ -109,14 +109,14 @@ const handleLogout = async () => {
           <img
             src="/src/assets/png-isr.png"
             alt="ISR Logo"
-            class="h-8 w-auto object-contain transition-transform group-hover:scale-105"
+            class="h-8 w-auto object-contain transition-transform group-hover:scale-105 filter drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]"
             onerror="this.style.display='none'"
           />
           <div>
-            <span class="text-base sm:text-lg font-bold font-prompt bg-gradient-to-r from-sky-600 via-sky-500 to-blue-600 dark:from-sky-400 dark:to-cyan-300 bg-clip-text text-transparent tracking-tight block leading-tight">
+            <span class="text-base sm:text-lg font-bold font-prompt bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-400 bg-clip-text text-transparent tracking-tight block leading-tight">
               SOIS
             </span>
-            <span class="hidden md:block text-xs uppercase tracking-wider text-sky-600 dark:text-cyan-200 font-bold">
+            <span class="hidden md:block text-xs uppercase tracking-wider text-cyan-200 font-bold">
               Satellite Operations Information System
             </span>
           </div>
@@ -124,14 +124,14 @@ const handleLogout = async () => {
       </div>
 
       <!-- Center: Operations Clock (UTC & Thai Local) -->
-      <div class="hidden md:flex items-center gap-4 px-4 py-2 rounded-xl bg-sky-50/90 dark:bg-space-850 border border-sky-300 dark:border-sky-700/70 text-sm font-mono font-bold shadow-xs">
-        <div class="flex items-center gap-2 text-sky-800 dark:text-cyan-300">
-          <Radio class="w-4 h-4 text-sky-500 animate-pulse" />
+      <div class="hidden md:flex items-center gap-4 px-4 py-2 rounded-xl bg-[#061833]/90 border border-sky-400/30 text-sm font-mono font-bold shadow-md shadow-sky-950/50">
+        <div class="flex items-center gap-2 text-cyan-300">
+          <Radio class="w-4 h-4 text-cyan-400 animate-pulse" />
           <span>{{ utcTime }}</span>
         </div>
-        <div class="w-px h-4 bg-sky-300 dark:bg-sky-700"></div>
-        <div class="flex items-center gap-2 text-slate-800 dark:text-sky-100">
-          <Clock class="w-4 h-4 text-sky-400" />
+        <div class="w-px h-4 bg-sky-500/40"></div>
+        <div class="flex items-center gap-2 text-white">
+          <Clock class="w-4 h-4 text-sky-300" />
           <span>{{ localTime }}</span>
         </div>
       </div>
@@ -141,22 +141,22 @@ const handleLogout = async () => {
         <!-- Command Palette Search Button (Ctrl+K) -->
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl border border-sky-300 dark:border-sky-700 bg-sky-50 dark:bg-space-850 hover:bg-sky-100 dark:hover:bg-space-800 text-sm text-slate-800 dark:text-cyan-200 transition-all shadow-2xs hover:scale-102 active:scale-98"
+          class="inline-flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl border border-sky-400/30 bg-[#061833]/90 hover:bg-sky-500/20 text-sm text-cyan-200 hover:text-white transition-all shadow-xs hover:scale-102 active:scale-98"
           title="ค้นหาเมนู, คำสั่งด่วน หรือดาวเทียม (Ctrl+K)"
           @click="appStore.commandPaletteOpen = true"
         >
-          <Search class="w-4 h-4 text-sky-500" />
+          <Search class="w-4 h-4 text-cyan-400" />
           <span class="hidden md:inline font-prompt font-bold">ค้นหา...</span>
-          <kbd class="hidden sm:inline-flex px-2 py-0.5 text-xs font-mono font-bold text-slate-700 bg-white dark:bg-space-800 rounded border border-slate-300 dark:border-space-700">Ctrl K</kbd>
+          <kbd class="hidden sm:inline-flex px-2 py-0.5 text-xs font-mono font-bold text-cyan-200 bg-[#040e21] rounded border border-sky-500/40">Ctrl K</kbd>
         </button>
 
         <!-- Audio Alert Toggle (เสียงเตือนรอบพาส AOS) -->
         <button
           type="button"
-          class="p-2.5 rounded-xl border-2 transition-all"
+          class="p-2.5 rounded-xl border-2 transition-all cursor-pointer"
           :class="appStore.audioAlertsEnabled
-            ? 'bg-sky-50 text-sky-600 border-sky-400 dark:bg-sky-950/70 dark:text-cyan-300 dark:border-sky-500 shadow-xs'
-            : 'bg-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border-transparent hover:border-slate-300 dark:hover:border-space-700'"
+            ? 'bg-sky-500/20 text-cyan-300 border-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.3)]'
+            : 'bg-[#061833]/60 text-slate-400 hover:text-slate-200 border-slate-700/60 hover:border-slate-600'"
           :title="appStore.audioAlertsEnabled ? 'เปิดเสียงเตือน AOS อยู่ (คลิกเพื่อปิด)' : 'ปิดเสียงเตือน AOS อยู่ (คลิกเพื่อเปิด)'"
           @click="appStore.toggleAudioAlerts"
         >
@@ -167,41 +167,41 @@ const handleLogout = async () => {
         <!-- Mock Data Toggle (สำหรับนักพัฒนา) -->
         <button
           type="button"
-          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all"
+          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all cursor-pointer"
           :class="appStore.mockMode
-            ? 'bg-amber-50 text-amber-800 border-amber-400 dark:bg-amber-950/50 dark:text-amber-200 dark:border-amber-500/70'
-            : 'bg-slate-50 text-slate-700 border-slate-300 dark:bg-space-800 dark:text-slate-200 dark:border-space-700 hover:bg-slate-100'"
+            ? 'bg-amber-950/60 text-amber-200 border-amber-400/80 shadow-[0_0_10px_rgba(251,191,36,0.2)]'
+            : 'bg-[#061833]/90 text-cyan-200 border-sky-400/40 hover:bg-sky-500/20'"
           title="สลับโหมดการเชื่อมต่อระหว่างข้อมูลจำลอง (Mock) และเซิร์ฟเวอร์จริง"
           @click="appStore.toggleMockMode"
         >
-          <Database class="w-4 h-4" />
+          <Database class="w-4 h-4 text-amber-300" />
           <span>{{ appStore.mockMode ? 'Mock Data' : 'Live API' }}</span>
         </button>
 
         <!-- Auto-Refresh Toggle Button (รอบรีเฟรชข้อมูลอัตโนมัติ) -->
         <button
           type="button"
-          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all"
+          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all cursor-pointer"
           :class="appStore.autoRefreshSeconds > 0
-            ? 'bg-emerald-50 text-emerald-800 border-emerald-400 dark:bg-emerald-950/50 dark:text-emerald-200 dark:border-emerald-500/70'
-            : 'bg-slate-50 text-slate-700 border-slate-300 dark:bg-space-800 dark:text-slate-200 dark:border-space-700 hover:bg-slate-100'"
+            ? 'bg-emerald-950/60 text-emerald-200 border-emerald-400/80 shadow-[0_0_10px_rgba(52,211,153,0.2)]'
+            : 'bg-[#061833]/90 text-slate-300 border-slate-700/60 hover:bg-slate-800'"
           :title="appStore.autoRefreshSeconds > 0 ? `อัปเดตอัตโนมัติทุก ${appStore.autoRefreshSeconds} วินาที (คลิกเพื่อเปลี่ยนรอบ)` : 'เปิดการอัปเดตข้อมูลอัตโนมัติ (คลิกเพื่อเปิด)'"
           @click="cycleAutoRefresh"
         >
-          <RefreshCw class="w-4 h-4" :class="appStore.autoRefreshSeconds > 0 ? 'text-emerald-500 animate-spin' : 'opacity-70'" style="animation-duration: 3s;" />
+          <RefreshCw class="w-4 h-4" :class="appStore.autoRefreshSeconds > 0 ? 'text-emerald-400 animate-spin' : 'opacity-70'" style="animation-duration: 3s;" />
           <span>Auto: {{ appStore.autoRefreshSeconds > 0 ? `${refreshCountdown}s` : 'ปิด' }}</span>
         </button>
 
         <!-- User Profile Information -->
-        <div v-if="authStore.user" class="flex items-center gap-2.5 pl-2.5 border-l border-slate-200 dark:border-space-700">
-          <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-cyan-200 flex items-center justify-center font-bold text-sm border-2 border-blue-300 dark:border-cyan-400/40 flex-shrink-0">
+        <div v-if="authStore.user" class="flex items-center gap-2.5 pl-2.5 border-l border-sky-500/30">
+          <div class="w-9 h-9 rounded-full bg-[#081f3d] text-cyan-200 flex items-center justify-center font-bold text-sm border-2 border-cyan-400/50 flex-shrink-0 shadow-xs">
             <User class="w-4 h-4" />
           </div>
           <div class="hidden lg:block text-left text-xs leading-tight">
-            <span class="font-bold text-sm text-slate-900 dark:text-white block truncate max-w-[140px]">
+            <span class="font-bold text-sm text-white block truncate max-w-[140px]">
               {{ authStore.displayName }}
             </span>
-            <span class="text-xs font-bold text-blue-600 dark:text-cyan-300 uppercase">
+            <span class="text-xs font-bold text-cyan-300 uppercase">
               Role: {{ authStore.userRole }}
             </span>
           </div>
@@ -209,7 +209,7 @@ const handleLogout = async () => {
           <!-- Sign Out Button -->
           <button
             type="button"
-            class="ml-1 p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 dark:hover:text-rose-300 border border-transparent hover:border-rose-200 dark:hover:border-rose-900 transition-colors"
+            class="ml-1 p-2 rounded-xl text-slate-400 hover:text-rose-200 hover:bg-rose-950/50 border border-transparent hover:border-rose-500/40 transition-colors cursor-pointer"
             title="ออกจากระบบ"
             @click="handleLogout"
           >

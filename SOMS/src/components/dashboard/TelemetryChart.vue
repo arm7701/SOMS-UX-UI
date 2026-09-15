@@ -35,7 +35,7 @@ const renderChart = () => {
 
   const isDark = appStore.isDark
   const textColor = isDark ? '#bae6fd' : '#1e293b'
-  const gridColor = isDark ? 'rgba(56, 189, 248, 0.2)' : 'rgba(226, 232, 240, 0.8)'
+  const gridColor = isDark ? 'rgba(56, 189, 248, 0.12)' : 'rgba(226, 232, 240, 0.8)'
 
   const ctx = canvasRef.value.getContext('2d')
   chartInstance = new Chart(ctx, {
@@ -66,10 +66,10 @@ const renderChart = () => {
           display: false
         },
         tooltip: {
-          backgroundColor: isDark ? '#061324' : '#0f172a',
+          backgroundColor: '#040d1a',
           titleColor: '#ffffff',
           bodyColor: '#e2e8f0',
-          borderColor: isDark ? '#38bdf8' : '#cbd5e1',
+          borderColor: '#38bdf8',
           borderWidth: 1.5,
           padding: 10,
           cornerRadius: 8,

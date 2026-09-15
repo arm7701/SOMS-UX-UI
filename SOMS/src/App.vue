@@ -33,15 +33,19 @@ const isAuthPage = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-gradient-to-br from-[#0a2342] via-[#103b6e] to-[#185396] text-slate-100 font-sans relative selection:bg-sky-500 selection:text-white overflow-x-hidden">
+  <div class="min-h-screen flex flex-col bg-[#030816] text-slate-100 font-sans relative selection:bg-sky-500 selection:text-white overflow-x-hidden">
     <!-- แถบเรืองแสงสีฟ้าสว่างด้านบนสุด (Top Sky Gradient Accent Line) -->
-    <div class="h-1 w-full bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-400 fixed top-0 left-0 right-0 z-50 pointer-events-none shadow-[0_0_16px_rgba(56,189,248,0.9)]"></div>
+    <div class="h-[2px] w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent fixed top-0 left-0 right-0 z-50 pointer-events-none shadow-[0_0_12px_rgba(56,189,248,0.8)]"></div>
 
-    <!-- แสงเรืองรองมืดฟ้าไล่สว่าง สว่างขึ้น มีชีวิตชีวา (Ambient Luminous Sky/Cyan Radial Glows) -->
+    <!-- แสงเรืองรองมิติอวกาศลึก สบายตา เหมาะสำหรับใช้งานในที่มืด/แสงน้อย ไม่แยงตา (Cosmic Ambient Deep Glows) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      <div class="absolute -top-32 -right-32 w-[650px] h-[650px] rounded-full bg-sky-400/25 blur-[120px]"></div>
-      <div class="absolute top-1/3 -left-32 w-[600px] h-[600px] rounded-full bg-blue-400/22 blur-[130px]"></div>
-      <div class="absolute -bottom-32 right-1/4 w-[700px] h-[700px] rounded-full bg-cyan-400/20 blur-[140px]"></div>
+      <!-- Deep Cosmic Nebula Glows -->
+      <div class="absolute -top-40 -right-40 w-[650px] h-[650px] rounded-full bg-cyan-700/10 blur-[160px]"></div>
+      <div class="absolute top-1/3 -left-40 w-[600px] h-[600px] rounded-full bg-blue-800/12 blur-[170px]"></div>
+      <div class="absolute -bottom-40 right-1/4 w-[700px] h-[700px] rounded-full bg-sky-600/8 blur-[180px]"></div>
+
+      <!-- Tactical Micro Coordinate Grid Pattern (สวยว้าว คมชัด ไม่ลายตา) -->
+      <div class="absolute inset-0 bg-[linear-gradient(to_right,#38bdf806_1px,transparent_1px),linear-gradient(to_bottom,#38bdf806_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none"></div>
     </div>
 
     <!-- Toast Notifications ลอยมุมขวาบน -->

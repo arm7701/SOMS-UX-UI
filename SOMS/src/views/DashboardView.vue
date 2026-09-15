@@ -121,10 +121,10 @@ const handleOpenLibrary = () => {
         <!-- Edit Layout Toggle Button -->
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 text-sm font-bold transition-all shadow-xs"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 text-sm font-bold transition-all shadow-xs cursor-pointer"
           :class="stageRef?.isEditing
-            ? 'bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/30'
-            : 'bg-[#0b213f] border-sky-500/40 text-sky-200 hover:text-white hover:bg-sky-900/60'"
+            ? 'bg-amber-500/25 border-amber-400 text-amber-200 ring-2 ring-amber-400/40 shadow-[0_0_12px_rgba(251,191,36,0.25)]'
+            : 'bg-[#061833] border-sky-400/40 text-cyan-200 hover:text-white hover:bg-sky-500/20'"
           title="เปิดโหมดจัดเรียง ลากย้าย และปรับขนาดวิดเจ็ตบนหน้าจอ"
           @click="handleToggleEdit"
         >
@@ -135,7 +135,7 @@ const handleOpenLibrary = () => {
         <!-- Widget Library Drawer Button -->
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-sky-500/40 bg-[#0b213f] text-sm font-bold text-sky-200 hover:text-white hover:bg-sky-900/60 shadow-xs transition-all"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-sky-400/40 bg-[#061833] text-sm font-bold text-cyan-200 hover:text-white hover:bg-sky-500/20 shadow-xs transition-all cursor-pointer"
           title="เปิดคลังวิดเจ็ตเพื่อเลือกเพิ่มวิดเจ็ตลงในแดชบอร์ด"
           @click="handleOpenLibrary"
         >
@@ -146,7 +146,7 @@ const handleOpenLibrary = () => {
         <!-- Shift Handover Briefing Modal Button -->
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-sm font-bold shadow-md shadow-sky-500/25 transition-all"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-sm font-bold shadow-md shadow-sky-500/30 transition-all cursor-pointer"
           title="เปิดเอกสารสรุปสถานะดาวเทียม สภาพอวกาศ และรอบพาสประจำวันเพื่อส่งมอบเวร"
           @click="showHandoverModal = true"
         >
@@ -158,7 +158,7 @@ const handleOpenLibrary = () => {
         <button
           type="button"
           :disabled="loading"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-sky-500/40 bg-[#0b213f] text-sm font-bold text-sky-200 hover:text-white hover:bg-sky-900/60 transition-colors shadow-xs"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-sky-400/40 bg-[#061833] text-sm font-bold text-cyan-200 hover:text-white hover:bg-sky-500/20 transition-colors shadow-xs cursor-pointer"
           @click="fetchDashboard(false)"
         >
           <RefreshCw class="w-4 h-4" :class="loading ? 'animate-spin text-cyan-300' : 'text-sky-300'" />

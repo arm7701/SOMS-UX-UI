@@ -858,7 +858,7 @@ const passLosFormatted = computed(() => {
 <template>
   <div
     ref="widgetWrapper"
-    class="relative flex flex-col rounded-2xl border-2 border-[#224870] bg-[#071322] shadow-2xl overflow-hidden font-prompt"
+    class="relative flex flex-col rounded-2xl border-2 border-sky-500/25 bg-[#051122] shadow-2xl overflow-hidden font-prompt"
     :class="isFullscreen ? 'fixed inset-0 z-50 rounded-none' : 'w-full h-full'"
   >
     <!-- 1. Top View Bar (3D Globe / 2D Map + Map Layer) -->
@@ -1196,8 +1196,8 @@ const passLosFormatted = computed(() => {
 <style scoped>
 /* สไตล์แท็บด้านบน */
 .orbit-view-bar {
-  background: #0a1728;
-  border-bottom: 2px solid #204060;
+  background: #06152b;
+  border-bottom: 1.5px solid rgba(56, 189, 248, 0.25);
   flex-shrink: 0;
   justify-content: space-between;
   align-items: center;
@@ -1208,7 +1208,8 @@ const passLosFormatted = computed(() => {
 }
 
 .orbit-view-tabs {
-  background: #050e1a;
+  background: #030a17;
+  border: 1px solid rgba(56, 189, 248, 0.25);
   border-radius: 8px;
   gap: 3px;
   padding: 3px;
@@ -1241,8 +1242,8 @@ const passLosFormatted = computed(() => {
 
 .orbit-map-layer select {
   color: #ffffff;
-  background: #0c1a2e;
-  border: 1.5px solid #38bdf8;
+  background: #081a36;
+  border: 1.5px solid rgba(56, 189, 248, 0.4);
   border-radius: 6px;
   padding: 4px 10px;
   font-size: 0.82rem;
@@ -1252,8 +1253,8 @@ const passLosFormatted = computed(() => {
 
 /* แถบเลือกดาวเทียมและสถานี */
 .globe-selection {
-  background: #0c1c30;
-  border-bottom: 2px solid #204060;
+  background: #06152b;
+  border-bottom: 1.5px solid rgba(56, 189, 248, 0.25);
   flex-shrink: 0;
   align-items: center;
   gap: 12px;
@@ -1264,8 +1265,8 @@ const passLosFormatted = computed(() => {
 
 .globe-selection select {
   color: #ffffff;
-  background: #081628;
-  border: 1.5px solid #326088;
+  background: #081a36;
+  border: 1.5px solid rgba(56, 189, 248, 0.4);
   border-radius: 6px;
   min-height: 32px;
   padding: 4px 10px;
@@ -1274,8 +1275,8 @@ const passLosFormatted = computed(() => {
 }
 
 .setting-btn {
-  background: #081628;
-  border: 1.5px solid #38bdf8;
+  background: #081a36;
+  border: 1.5px solid rgba(56, 189, 248, 0.4);
   color: #38bdf8;
   border-radius: 6px;
   padding: 5px 10px;
@@ -1297,8 +1298,8 @@ const passLosFormatted = computed(() => {
 /* แถบสรุปพาส */
 .tracker-pass-summary {
   color: #e0f2fe;
-  background: #092038;
-  border-bottom: 2px solid #204060;
+  background: #071933;
+  border-bottom: 1.5px solid rgba(56, 189, 248, 0.25);
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;

@@ -9,11 +9,11 @@
    ========================================================================== */
 
 :root, .dark {
-  /* โทนมืดฟ้าไล่สว่าง สว่างขึ้น มีมิติและโปร่งสบายตา */
-  --bg-app: #0a2342;
-  --bg-surface: #133560;
-  --bg-surface-elevated: #1a4175;
-  --border-color: #235492;
+  /* โทนมืดอวกาศล้ำสมัย สบายตา เหมาะสำหรับใช้งานในห้องควบคุมและที่แสงน้อย (Low-Light Dark Room Command Center) */
+  --bg-app: #030816;
+  --bg-surface: #08172f;
+  --bg-surface-elevated: #0d203e;
+  --border-color: rgba(56, 189, 248, 0.25);
   --border-focus: #38bdf8;
 
   --text-primary: #ffffff;
@@ -23,8 +23,8 @@
   --brand-primary: #38bdf8;
   --brand-hover: #7dd3fc;
 
-  --shadow-card: 0 4px 20px 0 rgba(2, 132, 199, 0.22);
-  --shadow-elevated: 0 8px 32px 0 rgba(14, 165, 233, 0.30);
+  --shadow-card: 0 8px 32px 0 rgba(1, 6, 20, 0.75);
+  --shadow-elevated: 0 14px 44px 0 rgba(1, 6, 20, 0.9);
 }
 
 /* Global Font & Spacing Overrides (ใช้ฟอนต์ Prompt ทั้งระบบ พร้อมปรับระยะบรรทัดและช่องไฟ) */
@@ -96,7 +96,7 @@ p, span, div, td, th, label, input, button, select, textarea {
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #15335e;
+  background: #10274a;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -104,7 +104,7 @@ p, span, div, td, th, label, input, button, select, textarea {
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #1e4273;
+  background: #1d4ed8;
 }
 
 /* Table Utilities */

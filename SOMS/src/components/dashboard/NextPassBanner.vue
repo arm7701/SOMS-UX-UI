@@ -144,13 +144,13 @@ const navigateToReport = () => {
 <template>
   <div
     v-if="currentOrNextPass"
-    class="relative overflow-hidden rounded-2xl border transition-all duration-300 shadow-md p-4 sm:p-5"
+    class="relative overflow-hidden rounded-2xl border transition-all duration-300 p-4 sm:p-5"
     :class="countdown.isActive
-      ? 'bg-gradient-to-r from-emerald-950/90 via-space-900 to-[#071c3b] border-emerald-500/50 text-white shadow-emerald-950/20'
-      : 'bg-gradient-to-r from-sky-900/90 via-[#0b2b5c] to-[#081e40] border-sky-400/40 text-white shadow-sky-950/30'"
+      ? 'bg-gradient-to-r from-emerald-950/95 via-[#031c1a]/95 to-[#041d2f]/95 border-2 border-emerald-400/60 text-white shadow-[0_0_30px_rgba(16,185,129,0.2)]'
+      : 'bg-gradient-to-r from-[#061833]/95 via-[#081f3f]/95 to-[#041226]/95 border border-sky-400/35 text-white shadow-2xl'"
   >
     <!-- Background Tactical Grid Pattern -->
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.1),transparent_70%)] pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.12),transparent_70%)] pointer-events-none"></div>
 
     <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
       <!-- Left: Satellite & Pass Details -->
@@ -159,7 +159,7 @@ const navigateToReport = () => {
           <!-- Active Status Badge -->
           <div
             v-if="countdown.isActive"
-            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold font-mono bg-emerald-500 text-slate-950 animate-pulse shadow-sm"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold font-mono bg-emerald-500 text-slate-950 animate-pulse shadow-[0_0_12px_#34d399]"
           >
             <Radio class="w-3.5 h-3.5" />
             <span>LIVE AOS IN-PASS (กำลังผ่านสถานี)</span>
@@ -167,9 +167,9 @@ const navigateToReport = () => {
 
           <div
             v-else
-            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold font-mono bg-blue-500/20 border border-blue-400/40 text-blue-300"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold font-mono bg-sky-500/20 border border-sky-400/40 text-cyan-200"
           >
-            <Clock class="w-3.5 h-3.5 text-blue-400" />
+            <Clock class="w-3.5 h-3.5 text-cyan-300" />
             <span>NEXT SCHEDULED PASS (รอบผ่านถัดไป)</span>
           </div>
 
@@ -183,11 +183,11 @@ const navigateToReport = () => {
             class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-bold border-2 transition-colors cursor-pointer"
             :class="appStore.audioAlertsEnabled
               ? 'bg-sky-500/25 border-sky-400/50 text-white'
-              : 'bg-black/30 border-white/20 text-sky-200 hover:text-white'"
+              : 'bg-black/40 border-white/20 text-sky-200 hover:text-white'"
             title="เปิด/ปิดเสียงเตือนอัตโนมัติเมื่อดาวเทียมเริ่มผ่านสถานี"
             @click="appStore.toggleAudioAlerts"
           >
-            <Bell v-if="appStore.audioAlertsEnabled" class="w-3.5 h-3.5 text-sky-300" />
+            <Bell v-if="appStore.audioAlertsEnabled" class="w-3.5 h-3.5 text-cyan-300" />
             <BellOff v-else class="w-3.5 h-3.5 opacity-70" />
             <span>{{ appStore.audioAlertsEnabled ? 'เสียงเตือน: เปิด' : 'เสียงเตือน: ปิด' }}</span>
           </button>
@@ -204,31 +204,32 @@ const navigateToReport = () => {
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs">
-          <div class="bg-black/40 backdrop-blur-xs p-2.5 rounded-xl border border-sky-400/20">
+          <div class="bg-[#030b18]/80 backdrop-blur-md p-2.5 rounded-xl border border-sky-500/25 shadow-xs">
             <span class="text-sky-200 block text-xs font-bold">ช่วงเวลาผ่าน (เวลาไทย):</span>
             <span class="font-mono font-bold text-sm sm:text-base text-white">
               {{ currentOrNextPass.aos_time_local }} – {{ currentOrNextPass.los_time_local }}
             </span>
           </div>
 
-          <div class="bg-black/40 backdrop-blur-xs p-2.5 rounded-xl border border-sky-400/20">
+          <div class="bg-[#030b18]/80 backdrop-blur-md p-2.5 rounded-xl border border-sky-500/25 shadow-xs">
             <span class="text-sky-200 block text-xs font-bold">เวลามาตรฐานสากล (UTC):</span>
             <span class="font-mono font-bold text-sm sm:text-base text-cyan-200">
               {{ currentOrNextPass.aos_time_utc }} (UTC)
             </span>
           </div>
 
-          <div class="bg-black/40 backdrop-blur-xs p-2.5 rounded-xl border border-sky-400/20">
-            <span class="text-sky-200 block text-xs font-bold">มุมยกสูงสุด (Max Elev):</span>
-            <span class="font-mono font-bold text-sm sm:text-base" :class="currentOrNextPass.maxElevation < 5 ? 'text-rose-300' : 'text-emerald-300'">
-              {{ currentOrNextPass.maxEl }}° {{ currentOrNextPass.maxElevation < 5 ? '(Abort)' : '(Good ✓)' }}
+          <div class="bg-[#030b18]/80 backdrop-blur-md p-2.5 rounded-xl border border-sky-500/25 shadow-xs">
+            <span class="text-sky-200 block text-xs font-bold">มุมยกสูงสุด (Max El):</span>
+            <span class="font-mono font-bold text-sm sm:text-base text-amber-300 flex items-center gap-1">
+              <Compass class="w-3.5 h-3.5 text-amber-400" />
+              <span>{{ currentOrNextPass.maxElevation }}°</span>
             </span>
           </div>
 
-          <div class="bg-black/40 backdrop-blur-xs p-2.5 rounded-xl border border-sky-400/20">
-            <span class="text-sky-200 block text-xs font-bold">ระยะเวลาโคจรผ่าน:</span>
-            <span class="font-mono font-bold text-sm sm:text-base text-white">
-              {{ currentOrNextPass.duration_min }}น. {{ currentOrNextPass.duration_sec }}วิ.
+          <div class="bg-[#030b18]/80 backdrop-blur-md p-2.5 rounded-xl border border-sky-500/25 shadow-xs">
+            <span class="text-sky-200 block text-xs font-bold">ระยะเวลาผ่าน (Duration):</span>
+            <span class="font-mono font-bold text-sm sm:text-base text-emerald-300">
+              {{ currentOrNextPass.duration || '—' }}
             </span>
           </div>
         </div>

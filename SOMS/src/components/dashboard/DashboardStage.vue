@@ -1478,8 +1478,9 @@ const getWidgetStyle = (widget) => {
       height: widget.typeId.startsWith('kpi-') ? '110px' : (widget.height ? `${widget.height}px` : 'auto'),
       marginBottom: '16px',
       zIndex: widget.z || 1,
-      backgroundColor: `rgba(10, 31, 58, ${(widget.backgroundOpacity ?? 95) / 100})`,
-      borderColor: `rgba(56, 189, 248, ${(widget.borderOpacity ?? 100) / 100 * 0.3})`
+      backgroundColor: `rgba(7, 21, 41, ${(widget.backgroundOpacity ?? 95) / 100})`,
+      borderColor: `rgba(56, 189, 248, ${(widget.borderOpacity ?? 100) / 100 * 0.28})`,
+      boxShadow: '0 8px 30px -4px rgba(1, 6, 20, 0.75), 0 0 1px 1px rgba(56, 189, 248, 0.12)'
     }
   }
 
@@ -1490,8 +1491,9 @@ const getWidgetStyle = (widget) => {
     width: `${widget.width}px`,
     height: `${widget.height}px`,
     zIndex: widget.z || 1,
-    backgroundColor: `rgba(10, 31, 58, ${(widget.backgroundOpacity ?? 95) / 100})`,
-    borderColor: `rgba(56, 189, 248, ${(widget.borderOpacity ?? 100) / 100 * 0.3})`
+    backgroundColor: `rgba(7, 21, 41, ${(widget.backgroundOpacity ?? 95) / 100})`,
+    borderColor: `rgba(56, 189, 248, ${(widget.borderOpacity ?? 100) / 100 * 0.28})`,
+    boxShadow: '0 8px 30px -4px rgba(1, 6, 20, 0.75), 0 0 1px 1px rgba(56, 189, 248, 0.12)'
   }
 }
 
