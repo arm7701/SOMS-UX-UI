@@ -220,7 +220,7 @@ const widgetStyle = computed(() => {
       </button>
 
       <!-- Normal Mode: Static Header with Title -->
-      <div v-else class="flex items-center justify-between gap-2">
+      <div v-else class="flex items-center justify-between gap-2 w-full">
         <div class="flex items-center gap-2 min-w-0">
           <span
             v-if="satelliteColor"
@@ -286,13 +286,17 @@ const widgetStyle = computed(() => {
   left: 0;
   display: flex;
   flex-direction: column;
-  border-radius: 14px;
-  border: 1px solid rgba(51, 65, 85, var(--widget-border-opacity, 1));
-  background: rgba(16, 20, 27, var(--widget-background-opacity, 0.94));
-  box-shadow: 0 4px 20px rgba(0, 0, 0, calc(0.35 * var(--widget-background-opacity, 0.94)));
-  backdrop-filter: blur(8px);
-  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  border-radius: 16px;
+  border: 1px solid rgba(36, 47, 66, var(--widget-border-opacity, 1));
+  background: rgba(12, 18, 28, var(--widget-background-opacity, 0.95));
+  box-shadow: 0 8px 30px rgba(0, 0, 0, calc(0.45 * var(--widget-background-opacity, 0.95)));
+  backdrop-filter: blur(12px);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
   overflow: hidden;
+}
+
+.dashboard-widget:hover {
+  border-color: rgba(56, 189, 248, 0.35);
 }
 
 .dashboard-widget.is-compact {
@@ -318,10 +322,10 @@ const widgetStyle = computed(() => {
 
 .widget-header {
   flex: none;
-  min-height: 40px;
-  padding: 8px 14px;
-  background: #0d1117;
-  border-bottom: 1px solid rgba(51, 65, 85, var(--widget-border-opacity, 1));
+  min-height: 42px;
+  padding: 9px 16px;
+  background: #090e18;
+  border-bottom: 1px solid rgba(36, 47, 66, var(--widget-border-opacity, 1));
   display: flex;
   align-items: center;
 }

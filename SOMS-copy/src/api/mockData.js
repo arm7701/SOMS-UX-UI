@@ -402,22 +402,51 @@ export async function mockApiHandler(path, method = 'GET', body = null) {
   const cleanPath = path.split('?')[0]
 
   if (cleanPath === '/auth/session') {
+    const savedUser = typeof window !== 'undefined' ? localStorage.getItem('soms_mock_user') : null
+    if (savedUser) {
+      try {
+        return {
+          user: JSON.parse(savedUser),
+          csrfToken: 'mock-csrf-token-abc-123',
+          setupRequired: false
+        }
+      } catch (e) {}
+    }
     return {
-      user: mockUsers[0],
-      csrfToken: 'mock-csrf-token-abc-123',
+      user: null,
+      csrfToken: '',
       setupRequired: false
     }
   }
 
   if (cleanPath === '/auth/login') {
+    const { username, password } = body || {}
+    // ตรวจสอบความถูกต้องของรหัสผ่านในโหมดจำลอง (Mock Verification)
+    if (username === 'developer' && password && password !== 'password1234') {
+      const err = new Error('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบและลองใหม่อีกครั้ง')
+      err.status = 401
+      throw err
+    }
+    if (username && username !== 'developer' && !mockUsers.some(u => u.rbac_username === username)) {
+      const err = new Error('ไม่พบบัญชีผู้ใช้งานนี้ในระบบฐานข้อมูล')
+      err.status = 404
+      throw err
+    }
+    const matched = mockUsers.find(u => u.rbac_username === username) || mockUsers[0]
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('soms_mock_user', JSON.stringify(matched))
+    }
     return {
-      user: mockUsers[0],
+      user: matched,
       csrfToken: 'mock-csrf-token-abc-123',
       setupRequired: false
     }
   }
 
   if (cleanPath === '/auth/logout') {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('soms_mock_user')
+    }
     return { success: true }
   }
 

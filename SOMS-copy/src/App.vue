@@ -33,15 +33,15 @@ const isAuthPage = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-gradient-to-br from-[#090b0f] via-[#10141b] to-[#171c26] text-slate-100 font-sans relative selection:bg-zinc-600 selection:text-white overflow-x-hidden">
-    <!-- แถบเรืองแสงสีเงินไททาเนียมด้านบนสุด (Top Titanium Silver Gradient Accent Line) -->
-    <div class="h-1 w-full bg-gradient-to-r from-zinc-600 via-slate-300 to-zinc-500 fixed top-0 left-0 right-0 z-50 pointer-events-none shadow-[0_0_12px_rgba(255,255,255,0.25)]"></div>
-
-    <!-- แสงเรืองรองโทนดำเทา มิติสุขุม ล้ำสมัย (Ambient Stealth Titanium Radial Glows) -->
+  <div class="min-h-screen flex flex-col bg-[#070a12] text-slate-100 font-sans relative selection:bg-slate-700 selection:text-white overflow-x-hidden">
+    <!-- แสงเรืองรองโทนดำเทาอวกาศ สบายตาในที่มืด (Low-Light Ambient Aerospace Glows) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      <div class="absolute -top-32 -right-32 w-[650px] h-[650px] rounded-full bg-zinc-600/10 blur-[120px]"></div>
-      <div class="absolute top-1/3 -left-32 w-[600px] h-[600px] rounded-full bg-slate-500/8 blur-[130px]"></div>
-      <div class="absolute -bottom-32 right-1/4 w-[700px] h-[700px] rounded-full bg-neutral-600/10 blur-[140px]"></div>
+      <!-- Tactical Coordinate Grid -->
+      <div class="absolute inset-0 bg-[linear-gradient(to_right,#3341550c_1px,transparent_1px),linear-gradient(to_bottom,#3341550c_1px,transparent_1px)] bg-[size:48px_48px]"></div>
+      <!-- Soft Slate Nebula Glows (คุมโทนดำเทา ไม่แสบตา) -->
+      <div class="absolute -top-32 -right-32 w-[700px] h-[700px] rounded-full bg-slate-700/10 blur-[160px]"></div>
+      <div class="absolute top-1/2 -left-32 w-[650px] h-[650px] rounded-full bg-zinc-700/8 blur-[180px]"></div>
+      <div class="absolute -bottom-32 right-1/4 w-[750px] h-[750px] rounded-full bg-slate-800/8 blur-[180px]"></div>
     </div>
 
     <!-- Toast Notifications ลอยมุมขวาบน -->

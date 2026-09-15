@@ -37,15 +37,15 @@ const getScaleInfo = (val) => {
 </script>
 
 <template>
-  <div class="bg-space-850 rounded-2xl p-5 border border-space-700 shadow-md flex flex-col justify-between">
-    <div class="flex items-center justify-between pb-3 border-b border-space-750">
+  <div class="p-4 h-full flex flex-col justify-between">
+    <div class="flex items-center justify-between pb-2.5 border-b border-slate-750">
       <div class="flex items-center gap-2">
-        <Sun class="w-5 h-5 text-amber-400" />
-        <h3 class="text-base font-bold font-prompt text-white">
+        <Sun class="w-4.5 h-4.5 text-amber-400" />
+        <h4 class="text-sm sm:text-base font-bold font-prompt text-white">
           สภาวะอวกาศ (Space Weather)
-        </h3>
+        </h4>
       </div>
-      <span class="text-xs sm:text-sm text-slate-200 font-mono font-bold">
+      <span class="text-xs text-slate-300 font-mono font-bold">
         {{ weather?.spaceweather_date || 'วันนี้' }}
       </span>
     </div>

@@ -70,24 +70,24 @@ const handleLinkClick = () => {
         <nav class="flex-1 overflow-y-auto p-3 space-y-6">
           <!-- Group 1: Operations -->
           <div>
-            <h4 class="px-3 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-2 font-prompt">
+            <h4 class="px-3 text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 font-prompt">
               ระบบปฏิบัติการดาวเทียม
             </h4>
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <router-link
                 v-for="item in mainLinks"
                 :key="item.path"
                 :to="item.path"
-                class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl transition-all duration-150"
+                class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 font-prompt group"
                 :class="isActive(item.path)
-                  ? 'bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 text-white font-semibold shadow-md border border-zinc-500/60'
-                  : 'text-slate-200 hover:bg-space-800/80 hover:text-white'"
+                  ? 'bg-[#131d2e] text-white font-bold border border-cyan-500/50 shadow-sm shadow-cyan-950/50'
+                  : 'text-slate-200 hover:bg-space-800 hover:text-white'"
                 @click="handleLinkClick"
               >
                 <component
                   :is="item.icon"
-                  class="w-4 h-4 flex-shrink-0"
-                  :class="isActive(item.path) ? 'text-white' : 'text-zinc-400'"
+                  class="w-4.5 h-4.5 flex-shrink-0 transition-colors"
+                  :class="isActive(item.path) ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'"
                 />
                 <span>{{ item.label }}</span>
               </router-link>
@@ -96,24 +96,24 @@ const handleLinkClick = () => {
 
           <!-- Group 2: System Logs & Audit -->
           <div>
-            <h4 class="px-3 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-2 font-prompt">
+            <h4 class="px-3 text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 font-prompt">
               ประวัติและตรวจสอบ
             </h4>
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <router-link
                 v-for="item in systemLinks"
                 :key="item.path"
                 :to="item.path"
-                class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl transition-all duration-150"
+                class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 font-prompt group"
                 :class="isActive(item.path)
-                  ? 'bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 text-white font-semibold shadow-md border border-zinc-500/60'
-                  : 'text-slate-200 hover:bg-space-800/80 hover:text-white'"
+                  ? 'bg-[#131d2e] text-white font-bold border border-cyan-500/50 shadow-sm shadow-cyan-950/50'
+                  : 'text-slate-200 hover:bg-space-800 hover:text-white'"
                 @click="handleLinkClick"
               >
                 <component
                   :is="item.icon"
-                  class="w-4 h-4 flex-shrink-0"
-                  :class="isActive(item.path) ? 'text-white' : 'text-zinc-400'"
+                  class="w-4.5 h-4.5 flex-shrink-0 transition-colors"
+                  :class="isActive(item.path) ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'"
                 />
                 <span>{{ item.label }}</span>
               </router-link>
@@ -122,24 +122,24 @@ const handleLinkClick = () => {
 
           <!-- Group 3: Administrator (Only for Admin role) -->
           <div v-if="authStore.isAdmin">
-            <h4 class="px-3 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-2 font-prompt">
+            <h4 class="px-3 text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 font-prompt">
               ผู้ดูแลระบบ (ADMIN)
             </h4>
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <router-link
                 v-for="item in adminLinks"
                 :key="item.path"
                 :to="item.path"
-                class="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl transition-all duration-150"
+                class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 font-prompt group"
                 :class="isActive(item.path)
-                  ? 'bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 text-white font-semibold shadow-md border border-zinc-500/60'
-                  : 'text-slate-200 hover:bg-space-800/80 hover:text-white'"
+                  ? 'bg-[#131d2e] text-white font-bold border border-cyan-500/50 shadow-sm shadow-cyan-950/50'
+                  : 'text-slate-200 hover:bg-space-800 hover:text-white'"
                 @click="handleLinkClick"
               >
                 <component
                   :is="item.icon"
-                  class="w-4 h-4 flex-shrink-0"
-                  :class="isActive(item.path) ? 'text-white' : 'text-zinc-400'"
+                  class="w-4.5 h-4.5 flex-shrink-0 transition-colors"
+                  :class="isActive(item.path) ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'"
                 />
                 <span>{{ item.label }}</span>
               </router-link>

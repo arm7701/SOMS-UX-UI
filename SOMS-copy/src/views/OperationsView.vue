@@ -171,7 +171,7 @@ const handleDelete = async () => {
             ตารางผู้ปฏิบัติเวร (Operator List)
           </h1>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">
+        <p class="text-xs sm:text-sm text-slate-300 font-medium font-prompt mt-1">
           การจัดเวรประจำวันของเจ้าหน้าที่อำนวยการบินและควบคุมสถานีภาคพื้นดิน
         </p>
       </div>
@@ -179,10 +179,10 @@ const handleDelete = async () => {
       <div>
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 hover:from-zinc-600 hover:to-slate-700 text-white text-xs font-semibold border border-zinc-500/60 shadow-md shadow-black/40 transition-all active:scale-[0.98]"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0c1424] hover:bg-[#121f38] text-cyan-200 hover:text-white border border-cyan-700/60 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer font-prompt"
           @click="openAddModal()"
         >
-          <Plus class="w-4 h-4 text-zinc-200" />
+          <Plus class="w-4 h-4 text-cyan-400" />
           <span>บันทึกเวรปฏิบัติการ</span>
         </button>
       </div>
@@ -205,15 +205,15 @@ const handleDelete = async () => {
       </template>
 
       <template #cell(md_name)="{ value }">
-        <span class="text-xs font-medium text-zinc-200">{{ value }}</span>
+        <span class="text-xs font-semibold text-slate-100">{{ value }}</span>
       </template>
 
       <template #cell(fmo_name)="{ value }">
-        <span class="text-xs font-medium text-zinc-200">{{ value }}</span>
+        <span class="text-xs font-semibold text-slate-100">{{ value }}</span>
       </template>
 
       <template #cell(gso_name)="{ value }">
-        <span class="text-xs font-medium text-zinc-200">{{ value }}</span>
+        <span class="text-xs font-semibold text-slate-100">{{ value }}</span>
       </template>
 
       <template #actions="{ row }">

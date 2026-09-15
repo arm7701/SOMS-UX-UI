@@ -23,27 +23,27 @@ const props = defineProps({
 const colorClasses = computed(() => {
   const map = {
     slate: {
-      iconBg: 'bg-space-800 text-slate-100 border border-space-700',
+      iconBg: 'bg-cyan-950/40 text-cyan-300 border border-cyan-700/50 shadow-sm shadow-cyan-950/50',
       value: 'text-white',
-      accent: 'text-zinc-300'
+      accent: 'text-cyan-400'
     },
     blue: {
-      iconBg: 'bg-zinc-800 text-slate-100 border border-zinc-700',
+      iconBg: 'bg-sky-950/40 text-sky-300 border border-sky-700/50 shadow-sm shadow-sky-950/50',
       value: 'text-white',
-      accent: 'text-zinc-200'
+      accent: 'text-sky-400'
     },
     emerald: {
-      iconBg: 'bg-emerald-950/60 text-emerald-300 border border-emerald-800/60',
+      iconBg: 'bg-emerald-950/50 text-emerald-300 border border-emerald-700/50 shadow-sm shadow-emerald-950/50',
       value: 'text-white',
       accent: 'text-emerald-400'
     },
     amber: {
-      iconBg: 'bg-amber-950/60 text-amber-300 border border-amber-800/60',
+      iconBg: 'bg-amber-950/50 text-amber-300 border border-amber-700/50 shadow-sm shadow-amber-950/50',
       value: 'text-white',
       accent: 'text-amber-400'
     },
     purple: {
-      iconBg: 'bg-purple-950/60 text-purple-300 border border-purple-800/60',
+      iconBg: 'bg-purple-950/50 text-purple-300 border border-purple-700/50 shadow-sm shadow-purple-950/50',
       value: 'text-white',
       accent: 'text-purple-400'
     }
@@ -53,20 +53,20 @@ const colorClasses = computed(() => {
 
 const badgeClasses = computed(() => {
   const map = {
-    success: 'bg-emerald-950/60 text-emerald-300 border-emerald-800/60',
-    warning: 'bg-amber-950/60 text-amber-300 border-amber-800/60',
-    danger: 'bg-rose-950/60 text-rose-300 border-rose-800/60',
-    info: 'bg-zinc-800 text-zinc-200 border-zinc-700'
+    success: 'bg-emerald-950/80 text-emerald-300 border-emerald-500/80 shadow-xs shadow-emerald-950/50',
+    warning: 'bg-amber-950/80 text-amber-300 border-amber-500/80 shadow-xs shadow-amber-950/50',
+    danger: 'bg-rose-950/80 text-rose-300 border-rose-500/80 shadow-xs shadow-rose-950/50',
+    info: 'bg-cyan-950/80 text-cyan-300 border-cyan-500/80 shadow-xs shadow-cyan-950/50'
   }
   return map[props.badgeType] || map.info
 })
 </script>
 
 <template>
-  <div class="bg-space-850 rounded-2xl p-5 border border-space-700 shadow-md hover:border-space-600 transition-all duration-200 flex flex-col justify-between">
+  <div class="bg-[#0c121e]/92 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 shadow-lg hover:border-cyan-500/40 hover:shadow-cyan-950/20 transition-all duration-200 flex flex-col justify-between">
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0">
-        <p class="text-sm font-bold uppercase tracking-wider text-slate-200 font-prompt truncate">
+        <p class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300 font-prompt truncate">
           {{ title }}
         </p>
         <div class="mt-2 flex items-baseline gap-2 flex-wrap">
@@ -84,13 +84,13 @@ const badgeClasses = computed(() => {
     </div>
 
     <!-- รายละเอียดข้อมูลย่อย เติมเต็มพื้นที่ให้สมบูรณ์ ไม่ว่างเปล่า คอนทราสต์สูง -->
-    <div v-if="$slots.default || (items && items.length)" class="mt-3.5 pt-3 border-t border-space-750/80">
+    <div v-if="$slots.default || (items && items.length)" class="mt-3.5 pt-3 border-t border-slate-750/80">
       <slot>
         <div class="flex flex-wrap gap-1.5">
           <span
             v-for="(it, i) in items"
             :key="i"
-            class="px-2.5 py-1 rounded-lg bg-[#0d1117] border border-space-600 text-xs font-prompt text-slate-100 font-semibold"
+            class="px-2.5 py-1 rounded-lg bg-[#0e1626] border border-slate-700/80 text-xs font-prompt text-slate-100 font-semibold shadow-xs"
           >
             {{ it }}
           </span>
@@ -98,8 +98,8 @@ const badgeClasses = computed(() => {
       </slot>
     </div>
 
-    <div v-if="subtitle || badge" class="mt-3 pt-2.5 border-t border-space-750 flex items-center justify-between text-xs gap-2">
-      <span class="text-slate-200 font-medium truncate font-prompt text-xs sm:text-sm">
+    <div v-if="subtitle || badge" class="mt-3 pt-2.5 border-t border-slate-750/80 flex items-center justify-between text-xs gap-2">
+      <span class="text-slate-300 font-medium truncate font-prompt text-xs sm:text-sm">
         {{ subtitle }}
       </span>
       <span v-if="badge" class="px-2.5 py-1 rounded-full text-xs font-mono font-bold border flex-shrink-0" :class="badgeClasses">

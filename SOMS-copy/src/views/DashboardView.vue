@@ -655,17 +655,21 @@ const getChartData = (widgetId) => {
 <template>
   <div class="dashboard-workspace space-y-5" :class="{ 'is-editing': isEditing }">
     <!-- Top Header Bar -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-space-700">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-750/80">
       <div>
-        <div class="flex items-center gap-2.5">
-          <Calendar class="w-6 h-6 text-cyan-400" />
-          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white tracking-wide">
-            {{ todayFormatted }}
-          </h1>
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 rounded-xl bg-cyan-950/60 border border-cyan-600/50 text-cyan-300 shadow-xs shadow-cyan-950/60">
+            <Calendar class="w-5 h-5" />
+          </div>
+          <div>
+            <h1 class="text-xl sm:text-2xl font-black font-prompt text-white tracking-wide">
+              {{ todayFormatted }}
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 font-medium font-prompt mt-0.5">
+              ระบบสารสนเทศและการปฏิบัติการควบคุมดาวเทียม (SOIS Operations Center)
+            </p>
+          </div>
         </div>
-        <p class="text-xs sm:text-sm text-slate-300 mt-1 font-semibold font-prompt">
-          ระบบสารสนเทศและการปฏิบัติการควบคุมดาวเทียม (SOIS Operations Center)
-        </p>
       </div>
 
       <!-- Action Controls -->
@@ -673,7 +677,7 @@ const getChartData = (widgetId) => {
         <!-- Add Widget Button -->
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-space-850 hover:bg-space-800 text-slate-100 hover:text-white border border-space-600 text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer font-prompt"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0c1424] hover:bg-[#121f38] text-cyan-200 hover:text-white border border-cyan-700/60 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer font-prompt"
           @click="showLibraryModal = true"
         >
           <Plus class="w-4 h-4 text-cyan-400" />
@@ -683,7 +687,7 @@ const getChartData = (widgetId) => {
         <!-- Fit Full Width Button -->
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-space-850 hover:bg-space-800 text-slate-100 hover:text-white border border-space-600 text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer font-prompt"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#091817] hover:bg-[#0e2423] text-emerald-200 hover:text-white border border-emerald-700/60 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer font-prompt"
           title="ปรับขนาดและจัดวางวิดเจ็ตเต็มความกว้างหน้าจออัตโนมัติ"
           @click="fitLayoutToFullWidth(false)"
         >
@@ -695,7 +699,7 @@ const getChartData = (widgetId) => {
         <button
           v-if="!isEditing"
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white border border-zinc-500/60 text-xs sm:text-sm font-bold shadow-md transition-all cursor-pointer font-prompt"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1c180e] hover:bg-[#292212] text-amber-200 hover:text-white border border-amber-600/70 text-xs sm:text-sm font-bold shadow-md transition-all cursor-pointer font-prompt"
           title="จัดวาง ขยับเลื่อน และปรับขนาดวิดเจ็ตได้อย่างอิสระเหมือนต้นฉบับ"
           @click="enterEditMode"
         >
@@ -706,7 +710,7 @@ const getChartData = (widgetId) => {
         <!-- Handover Modal Button -->
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-space-850 hover:bg-space-800 text-slate-100 hover:text-white border border-space-600 text-xs sm:text-sm font-semibold shadow-sm transition-all cursor-pointer font-prompt"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0e1422] hover:bg-[#141e33] text-slate-100 hover:text-white border border-slate-700/80 text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer font-prompt"
           @click="showHandoverModal = true"
         >
           <ClipboardList class="w-4 h-4 text-cyan-400" />
@@ -717,10 +721,10 @@ const getChartData = (widgetId) => {
         <button
           type="button"
           :disabled="loading"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-space-600 bg-space-850 hover:bg-space-800 text-slate-100 hover:text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs cursor-pointer font-prompt disabled:opacity-50"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-700/80 bg-[#0e1422] hover:bg-[#141e33] text-slate-100 hover:text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs cursor-pointer font-prompt disabled:opacity-50"
           @click="fetchDashboard"
         >
-          <RefreshCw class="w-4 h-4" :class="loading ? 'animate-spin' : ''" />
+          <RefreshCw class="w-4 h-4 text-slate-300" :class="loading ? 'animate-spin' : ''" />
           <span>รีเฟรช</span>
         </button>
       </div>

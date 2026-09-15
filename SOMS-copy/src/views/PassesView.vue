@@ -160,12 +160,12 @@ const exportPassesToCsv = () => {
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-space-700">
       <div>
         <div class="flex items-center gap-2">
-          <CalendarDays class="w-6 h-6 text-zinc-300" />
+          <CalendarDays class="w-6 h-6 text-cyan-400" />
           <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white">
             แผนการผ่านดาวเทียม (Pass Detail)
           </h1>
         </div>
-        <p class="text-xs text-zinc-400 mt-1 font-prompt">
+        <p class="text-xs sm:text-sm text-slate-300 mt-1 font-prompt font-medium">
           ตารางเวลาการโคจรผ่านสถานีภาคพื้นดิน (AOS - Acquisition of Signal / LOS - Loss of Signal)
         </p>
       </div>
@@ -174,22 +174,22 @@ const exportPassesToCsv = () => {
       <div class="flex items-center gap-2.5 flex-wrap">
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-space-600 bg-space-850 hover:bg-space-800 text-slate-200 hover:text-white text-xs font-semibold transition-colors shadow-xs cursor-pointer font-prompt"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-cyan-700/60 bg-[#0c1424] hover:bg-[#121f38] text-cyan-200 hover:text-white text-xs sm:text-sm font-bold transition-all shadow-xs cursor-pointer font-prompt"
           title="ดาวน์โหลดตารางพาสเป็นไฟล์ CSV สำหรับ Excel"
           @click="exportPassesToCsv"
         >
-          <Download class="w-3.5 h-3.5 text-zinc-400" />
+          <Download class="w-4 h-4 text-cyan-400" />
           <span>ส่งออก CSV</span>
         </button>
 
         <div class="flex items-center gap-2 font-prompt">
-          <label for="sat-select" class="text-xs font-semibold text-zinc-300">
+          <label for="sat-select" class="text-xs sm:text-sm font-semibold text-slate-200">
             ดาวเทียม:
           </label>
           <select
             id="sat-select"
             v-model="selectedSatellite"
-            class="px-3 py-1.5 rounded-xl border border-space-600 bg-space-850 text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-zinc-500/20 shadow-xs cursor-pointer font-prompt"
+            class="px-3 py-1.5 rounded-xl border border-space-600 bg-space-850 text-xs sm:text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 shadow-xs cursor-pointer font-prompt"
             @change="fetchPasses"
           >
             <option value="46320">NAPA-1 N (46320)</option>
@@ -201,17 +201,17 @@ const exportPassesToCsv = () => {
 
     <!-- Quick Pass Summary Chips -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-      <div class="p-3.5 rounded-2xl bg-space-850 border border-space-700 shadow-xs flex items-center justify-between font-prompt">
-        <span class="text-xs font-semibold text-zinc-400">พาสทั้งหมดที่ตรวจพบ</span>
-        <span class="text-base font-bold font-mono text-white">{{ stats.total }} รอบ</span>
+      <div class="p-3.5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
+        <span class="text-xs sm:text-sm font-semibold text-slate-300">พาสทั้งหมดที่ตรวจพบ</span>
+        <span class="text-lg font-bold font-mono text-white">{{ stats.total }} รอบ</span>
       </div>
-      <div class="p-3.5 rounded-2xl bg-space-850 border border-space-700 shadow-xs flex items-center justify-between font-prompt">
-        <span class="text-xs font-semibold text-zinc-400">พาสมุมยกปกติ (พร้อมปฏิบัติ)</span>
-        <span class="text-base font-bold font-mono text-emerald-400">{{ stats.normal }} รอบ</span>
+      <div class="p-3.5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
+        <span class="text-xs sm:text-sm font-semibold text-slate-300">พาสมุมยกปกติ (พร้อมปฏิบัติ)</span>
+        <span class="text-lg font-bold font-mono text-emerald-400">{{ stats.normal }} รอบ</span>
       </div>
-      <div class="p-3.5 rounded-2xl bg-space-850 border border-space-700 shadow-xs flex items-center justify-between font-prompt">
-        <span class="text-xs font-semibold text-zinc-400">พาสมุมต่ำ (&lt; 5° แนะนำ Abort)</span>
-        <span class="text-base font-bold font-mono text-rose-400">{{ stats.lowEl }} รอบ</span>
+      <div class="p-3.5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
+        <span class="text-xs sm:text-sm font-semibold text-slate-300">พาสมุมต่ำ (&lt; 5° แนะนำ Abort)</span>
+        <span class="text-lg font-bold font-mono text-rose-400">{{ stats.lowEl }} รอบ</span>
       </div>
     </div>
 
