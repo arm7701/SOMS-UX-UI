@@ -1028,15 +1028,15 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- 5. Main Login Card Container (การ์ดเข้าสู่ระบบ จางหายไปเมื่อล็อกอินสำเร็จ) -->
+    <!-- 5. Main Login Card Container (การ์ดเข้าสู่ระบบ จางหายไปเมื่อล็อกอินสำเร็จ หรือเมื่อกดชมลูกโลกเต็มจอ) -->
     <div
       :class="[
-        'relative z-10 w-full max-w-[480px] transition-all duration-700 ease-out',
+        'relative z-10 w-full max-w-[480px] transition-all duration-500 ease-out',
         isZoomingIn
-          ? 'opacity-0 scale-75 -translate-y-12 filter blur-md pointer-events-none'
+          ? 'opacity-0 scale-75 -translate-y-12 filter blur-md pointer-events-none invisible'
           : cardMinimized
-            ? 'opacity-10 scale-95 pointer-events-none'
-            : 'opacity-100 scale-100'
+            ? 'opacity-0 scale-90 pointer-events-none invisible'
+            : 'opacity-100 scale-100 visible'
       ]"
     >
       <div class="bg-[#07172c]/90 backdrop-blur-2xl rounded-3xl p-7 sm:p-9 border-2 border-sky-400/40 shadow-[0_20px_60px_rgba(1,8,20,0.95),0_0_40px_rgba(56,189,248,0.2)] transition-all font-prompt">
