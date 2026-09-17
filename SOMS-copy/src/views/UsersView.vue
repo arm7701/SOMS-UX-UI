@@ -44,12 +44,12 @@ const showResetDialog = ref(false)
 const resetTarget = ref(null)
 
 const columns = [
-  { key: 'rbac_fullname', label: 'ยศ ชื่อ-สกุล', sortable: true, width: '220px' },
-  { key: 'rbac_shortname', label: 'ชื่อย่อ', width: '110px' },
-  { key: 'rbac_position', label: 'ตำแหน่ง', width: '180px' },
-  { key: 'rbac_username', label: 'Username', sortable: true, width: '130px' },
-  { key: 'rbac_role', label: 'หน้าที่ประจำ', align: 'center', width: '120px' },
-  { key: 'rbac_status', label: 'สถานะ', align: 'center', width: '110px' }
+  { key: 'rbac_fullname', label: 'ยศ ชื่อ-สกุล', sortable: true, width: '24%', minWidth: '180px' },
+  { key: 'rbac_shortname', label: 'ชื่อย่อ', width: '12%', minWidth: '90px' },
+  { key: 'rbac_position', label: 'ตำแหน่ง', width: '22%', minWidth: '160px' },
+  { key: 'rbac_username', label: 'Username', sortable: true, width: '16%', minWidth: '120px' },
+  { key: 'rbac_role', label: 'หน้าที่ประจำ', align: 'center', width: '14%', minWidth: '110px' },
+  { key: 'rbac_status', label: 'สถานะ', align: 'center', width: '12%', minWidth: '100px' }
 ]
 
 const fetchUsers = async () => {

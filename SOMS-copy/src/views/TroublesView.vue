@@ -36,10 +36,10 @@ const showDeleteDialog = ref(false)
 const deleteTarget = ref(null)
 
 const columns = [
-  { key: 'index', label: 'ลำดับ', width: '80px', align: 'center' },
-  { key: 'trouble_name', label: 'ชื่อข้อขัดข้อง (Trouble Name)', sortable: true, width: '280px' },
-  { key: 'subsystem_name', label: 'ระบบย่อย (Subsystem)', sortable: true, width: '220px' },
-  { key: 'trouble_note', label: 'รายละเอียด/แนวทางแก้ไข' }
+  { key: 'index', label: 'ลำดับ', width: '7%', minWidth: '70px', align: 'center' },
+  { key: 'trouble_name', label: 'ชื่อข้อขัดข้อง (Trouble Name)', sortable: true, width: '30%', minWidth: '220px' },
+  { key: 'subsystem_name', label: 'ระบบย่อย (Subsystem)', sortable: true, width: '23%', minWidth: '160px' },
+  { key: 'trouble_note', label: 'รายละเอียด/แนวทางแก้ไข', width: '40%', minWidth: '220px' }
 ]
 
 const fetchTroubles = async () => {

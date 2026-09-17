@@ -32,13 +32,13 @@ const showDeleteDialog = ref(false)
 const deleteTarget = ref(null)
 
 const columns = [
-  { key: 'sat_flight_pass', label: 'Flight No.', sortable: true, width: '130px' },
-  { key: 'date_display', label: 'วันที่ (Date)', sortable: true, width: '130px' },
-  { key: 'satellite_name', label: 'ดาวเทียม', width: '130px' },
-  { key: 'pass_name', label: 'รอบพาส', width: '120px' },
-  { key: 'pass_time', label: 'เวลา (AOS - LOS)', width: '170px' },
-  { key: 'md_name', label: 'MD ประจำเวร', width: '140px' },
-  { key: 'created_by', label: 'ผู้จัดทำ', width: '140px' }
+  { key: 'sat_flight_pass', label: 'Flight No.', sortable: true, width: '13%', minWidth: '120px' },
+  { key: 'date_display', label: 'วันที่ (Date)', sortable: true, width: '13%', minWidth: '120px' },
+  { key: 'satellite_name', label: 'ดาวเทียม', width: '13%', minWidth: '120px' },
+  { key: 'pass_name', label: 'รอบพาส', width: '13%', minWidth: '110px' },
+  { key: 'pass_time', label: 'เวลา (AOS - LOS)', width: '18%', minWidth: '160px' },
+  { key: 'md_name', label: 'MD ประจำเวร', width: '15%', minWidth: '130px' },
+  { key: 'created_by', label: 'ผู้จัดทำ', width: '15%', minWidth: '130px' }
 ]
 
 const fetchReports = async () => {

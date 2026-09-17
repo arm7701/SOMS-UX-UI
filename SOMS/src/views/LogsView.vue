@@ -22,12 +22,12 @@ const selectedCategory = ref('ALL')
 const selectedSeverity = ref('ALL')
 
 const columns = [
-  { key: 'timestamp', label: 'วัน-เวลา (Timestamp)', sortable: true, width: '160px' },
-  { key: 'user', label: 'ผู้ดำเนินการ (User / Source)', width: '200px' },
-  { key: 'category', label: 'หมวดหมู่งาน', width: '130px', align: 'center' },
-  { key: 'action', label: 'กิจกรรม (Action)', width: '170px' },
-  { key: 'details', label: 'รายละเอียดเหตุการณ์ (Event Details)' },
-  { key: 'severity', label: 'ระดับ (Severity)', width: '110px', align: 'center' }
+  { key: 'timestamp', label: 'วัน-เวลา (Timestamp)', sortable: true, width: '16%', minWidth: '150px' },
+  { key: 'user', label: 'ผู้ดำเนินการ (User / Source)', width: '18%', minWidth: '160px' },
+  { key: 'category', label: 'หมวดหมู่งาน', width: '12%', minWidth: '110px', align: 'center' },
+  { key: 'action', label: 'กิจกรรม (Action)', width: '16%', minWidth: '140px' },
+  { key: 'details', label: 'รายละเอียดเหตุการณ์ (Event Details)', width: '28%', minWidth: '200px' },
+  { key: 'severity', label: 'ระดับ (Severity)', width: '10%', minWidth: '90px', align: 'center' }
 ]
 
 const fetchLogs = async () => {

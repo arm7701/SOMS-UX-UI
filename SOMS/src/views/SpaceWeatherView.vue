@@ -16,11 +16,11 @@ const loading = ref(false)
 const weatherLogs = ref([])
 
 const columns = [
-  { key: 'spaceweather_date', label: 'วันที่ (Date)', sortable: true, width: '130px' },
-  { key: 'spaceweather_r', label: 'Radio Blackout (R)', width: '160px', align: 'center' },
-  { key: 'spaceweather_s', label: 'Solar Radiation (S)', width: '160px', align: 'center' },
-  { key: 'spaceweather_g', label: 'Geomagnetic (G)', width: '160px', align: 'center' },
-  { key: 'spaceweather_note', label: 'รายละเอียดสภาพอวกาศ/จุดดับดวงอาทิตย์' }
+  { key: 'spaceweather_date', label: 'วันที่ (Date)', sortable: true, width: '16%', minWidth: '130px' },
+  { key: 'spaceweather_r', label: 'Radio Blackout (R)', width: '16%', minWidth: '140px', align: 'center' },
+  { key: 'spaceweather_s', label: 'Solar Radiation (S)', width: '16%', minWidth: '140px', align: 'center' },
+  { key: 'spaceweather_g', label: 'Geomagnetic (G)', width: '16%', minWidth: '140px', align: 'center' },
+  { key: 'spaceweather_note', label: 'รายละเอียดสภาพอวกาศ/จุดดับดวงอาทิตย์', width: '36%', minWidth: '200px' }
 ]
 
 const fetchWeather = async () => {

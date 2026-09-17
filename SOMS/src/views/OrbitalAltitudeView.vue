@@ -16,10 +16,10 @@ const loading = ref(false)
 const history = ref([])
 
 const columns = [
-  { key: 'date_display', label: 'วันที่ (DATE)', sortable: true, width: '160px' },
-  { key: 'napa1_alt', label: 'NAPA-1 N (ความสูง)', width: '180px', align: 'center' },
-  { key: 'napa2_alt', label: 'NAPA-2 N (ความสูง)', width: '180px', align: 'center' },
-  { key: 'status', label: 'สถานะการตรวจวัด', align: 'center' }
+  { key: 'date_display', label: 'วันที่ (DATE)', sortable: true, width: '25%', minWidth: '140px' },
+  { key: 'napa1_alt', label: 'NAPA-1 N (ความสูง)', width: '25%', minWidth: '160px', align: 'center' },
+  { key: 'napa2_alt', label: 'NAPA-2 N (ความสูง)', width: '25%', minWidth: '160px', align: 'center' },
+  { key: 'status', label: 'สถานะการตรวจวัด', width: '25%', minWidth: '130px', align: 'center' }
 ]
 
 const fetchAltitudeData = async () => {

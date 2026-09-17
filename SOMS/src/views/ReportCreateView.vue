@@ -206,7 +206,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="max-w-5xl mx-auto space-y-6 pb-12">
+  <div class="w-full space-y-6 pb-12">
     <!-- Header -->
     <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-space-700">
       <div>

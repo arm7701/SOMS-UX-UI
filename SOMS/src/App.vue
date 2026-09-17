@@ -69,9 +69,9 @@ const isAuthPage = computed(() => {
         <!-- Sidebar ด้านข้าง (เต็มความสูง 100% ตลอดแนว ไม่มีการขาดช่วงหรือแหว่งใต้แถบ) -->
         <AppSidebar />
 
-        <!-- ส่วนแสดงผลเนื้อหาหลัก (เลื่อน Scroll อิสระ พร้อม Footer ชิดล่างสุดเสมอ) -->
+        <!-- ส่วนแสดงผลเนื้อหาหลัก (ขยายเต็มพื้นที่หน้าจอ 100% ไร้ขอบข้างเหลือทิ้ง รองรับมัลติแพลตฟอร์ม) -->
         <div class="flex-1 flex flex-col min-w-0 overflow-y-auto overflow-x-hidden transition-all duration-300">
-          <main id="main" class="flex-1 p-3 sm:p-5 lg:p-6 w-full max-w-none pb-10">
+          <main id="main" class="flex-1 p-3.5 sm:p-5 lg:p-6 xl:p-8 w-full max-w-none pb-20 lg:pb-10">
             <router-view v-slot="{ Component }">
               <Transition name="fade" mode="out-in">
                 <component :is="Component" />

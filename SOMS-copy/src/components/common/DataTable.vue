@@ -140,12 +140,12 @@ const changePage = (p) => {
               v-for="col in columns"
               :key="col.key"
               scope="col"
-              class="py-3 px-3.5 sm:px-4 transition-colors font-prompt"
+              class="py-3.5 px-3.5 sm:px-4 transition-colors font-prompt"
               :class="[
                 col.sortable ? 'cursor-pointer hover:bg-space-750' : '',
                 col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
               ]"
-              :style="{ width: col.width || 'auto' }"
+              :style="{ width: col.width || 'auto', minWidth: col.minWidth || (col.width ? col.width : '100px') }"
               @click="handleSort(col.key, col.sortable)"
             >
               <div class="inline-flex items-center gap-1.5" :class="col.align === 'center' ? 'justify-center' : col.align === 'right' ? 'justify-end' : ''">
@@ -162,7 +162,7 @@ const changePage = (p) => {
                 </span>
               </div>
             </th>
-            <th v-if="$slots.actions" scope="col" class="py-3 px-4 text-center w-36 font-prompt">
+            <th v-if="$slots.actions" scope="col" class="py-3.5 px-4 text-center w-36 min-w-[130px] font-prompt">
               การจัดการ
             </th>
           </tr>
@@ -176,14 +176,15 @@ const changePage = (p) => {
             <td
               v-for="col in columns"
               :key="col.key"
-              class="py-3 px-3.5 sm:px-4 align-middle font-prompt text-slate-100"
+              class="py-3.5 px-3.5 sm:px-4 align-middle font-prompt text-slate-100"
               :class="col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'"
+              :style="{ minWidth: col.minWidth || (col.width ? col.width : '100px') }"
             >
               <slot :name="`cell(${col.key})`" :row="row" :value="row[col.key]" :index="(currentPage - 1) * pageSize + idx + 1">
                 {{ row[col.key] !== null && row[col.key] !== undefined && row[col.key] !== '' ? row[col.key] : '—' }}
               </slot>
             </td>
-            <td v-if="$slots.actions" class="py-3 px-4 text-center align-middle whitespace-nowrap">
+            <td v-if="$slots.actions" class="py-3.5 px-4 text-center align-middle whitespace-nowrap min-w-[130px]">
               <slot name="actions" :row="row" />
             </td>
           </tr>

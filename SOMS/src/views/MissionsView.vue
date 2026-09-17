@@ -33,9 +33,9 @@ const showDeleteDialog = ref(false)
 const deleteTarget = ref(null)
 
 const columns = [
-  { key: 'index', label: 'ลำดับ', width: '80px', align: 'center' },
-  { key: 'mission_name', label: 'ชื่อภารกิจ (Mission Name)', sortable: true, width: '300px' },
-  { key: 'mission_note', label: 'รายละเอียด/หมายเหตุ' }
+  { key: 'index', label: 'ลำดับ', width: '8%', minWidth: '70px', align: 'center' },
+  { key: 'mission_name', label: 'ชื่อภารกิจ (Mission Name)', sortable: true, width: '35%', minWidth: '220px' },
+  { key: 'mission_note', label: 'รายละเอียด/หมายเหตุ', width: '57%', minWidth: '250px' }
 ]
 
 const fetchMissions = async () => {

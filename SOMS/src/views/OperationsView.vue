@@ -38,11 +38,11 @@ const showDeleteDialog = ref(false)
 const deleteTarget = ref(null)
 
 const columns = [
-  { key: 'date_label', label: 'วันที่ (DATE)', sortable: true, width: '150px' },
-  { key: 'md_name', label: 'Mission Director (MD)', width: '220px' },
-  { key: 'fmo_name', label: 'Flight & Mission Operator (FMO)', width: '220px' },
-  { key: 'gso_name', label: 'Ground Station Operator (GSO)', width: '220px' },
-  { key: 'note', label: 'หมายเหตุ/ภารกิจเวร' }
+  { key: 'date_label', label: 'วันที่ (DATE)', sortable: true, width: '14%', minWidth: '130px' },
+  { key: 'md_name', label: 'Mission Director (MD)', width: '22%', minWidth: '180px' },
+  { key: 'fmo_name', label: 'Flight & Mission Operator (FMO)', width: '22%', minWidth: '180px' },
+  { key: 'gso_name', label: 'Ground Station Operator (GSO)', width: '22%', minWidth: '180px' },
+  { key: 'note', label: 'หมายเหตุ/ภารกิจเวร', width: '20%', minWidth: '160px' }
 ]
 
 const fetchOperations = async () => {

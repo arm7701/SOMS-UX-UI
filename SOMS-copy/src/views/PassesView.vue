@@ -24,13 +24,13 @@ const selectedSatellite = ref(route.query.satellite ? String(route.query.satelli
 const filterMode = ref('all') // 'all' | 'today' | 'upcoming' | 'high_el' | 'low_el'
 
 const columns = [
-  { key: 'satellite_name', label: 'ดาวเทียม', width: '130px' },
-  { key: 'utc_time', label: 'เวลา (UTC)', sortable: true },
-  { key: 'local_date', label: 'วันที่ (ไทย)', sortable: true, width: '120px' },
-  { key: 'local_time', label: 'ช่วงเวลาผ่าน (เวลาไทย)', width: '160px' },
-  { key: 'duration', label: 'ระยะเวลา', width: '110px', align: 'center' },
-  { key: 'maxEl', label: 'มุมยกสูงสุด', sortable: true, width: '110px', align: 'center' },
-  { key: 'status', label: 'สถานะพาส', width: '130px', align: 'center' }
+  { key: 'satellite_name', label: 'ดาวเทียม', width: '13%', minWidth: '130px' },
+  { key: 'utc_time', label: 'เวลา (UTC)', sortable: true, width: '18%', minWidth: '170px' },
+  { key: 'local_date', label: 'วันที่ (ไทย)', sortable: true, width: '12%', minWidth: '110px' },
+  { key: 'local_time', label: 'ช่วงเวลาผ่าน (เวลาไทย)', width: '18%', minWidth: '160px' },
+  { key: 'duration', label: 'ระยะเวลา', width: '12%', minWidth: '110px', align: 'center' },
+  { key: 'maxEl', label: 'มุมยกสูงสุด', sortable: true, width: '12%', minWidth: '110px', align: 'center' },
+  { key: 'status', label: 'สถานะพาส', width: '15%', minWidth: '130px', align: 'center' }
 ]
 
 const fetchPasses = async (silent = false) => {
@@ -199,26 +199,47 @@ const exportPassesToCsv = () => {
       </div>
     </div>
 
-    <!-- Quick Pass Summary Chips -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-      <div class="p-3.5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
-        <span class="text-xs sm:text-sm font-semibold text-slate-300">พาสทั้งหมดที่ตรวจพบ</span>
-        <span class="text-lg font-bold font-mono text-white">{{ stats.total }} รอบ</span>
+    <!-- Quick Pass Summary Chips (เต็มพื้นที่หน้าจอ พร้อมไอคอนและตัวเลขคมชัด) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 lg:gap-5 w-full">
+      <div class="p-4 sm:p-5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-cyan-950/80 border border-cyan-800/60 flex items-center justify-center text-cyan-400">
+            <Orbit class="w-5 h-5" />
+          </div>
+          <div>
+            <span class="text-xs sm:text-sm font-semibold text-slate-300 block">พาสทั้งหมดที่ตรวจพบ</span>
+            <span class="text-xl sm:text-2xl font-black font-mono text-white">{{ stats.total }} รอบ</span>
+          </div>
+        </div>
       </div>
-      <div class="p-3.5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
-        <span class="text-xs sm:text-sm font-semibold text-slate-300">พาสมุมยกปกติ (พร้อมปฏิบัติ)</span>
-        <span class="text-lg font-bold font-mono text-emerald-400">{{ stats.normal }} รอบ</span>
+      <div class="p-4 sm:p-5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-800/60 flex items-center justify-center text-emerald-400">
+            <Sparkles class="w-5 h-5" />
+          </div>
+          <div>
+            <span class="text-xs sm:text-sm font-semibold text-slate-300 block">พาสมุมยกปกติ (พร้อมปฏิบัติ)</span>
+            <span class="text-xl sm:text-2xl font-black font-mono text-emerald-400">{{ stats.normal }} รอบ</span>
+          </div>
+        </div>
       </div>
-      <div class="p-3.5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
-        <span class="text-xs sm:text-sm font-semibold text-slate-300">พาสมุมต่ำ (&lt; 5° แนะนำ Abort)</span>
-        <span class="text-lg font-bold font-mono text-rose-400">{{ stats.lowEl }} รอบ</span>
+      <div class="p-4 sm:p-5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-rose-950/80 border border-rose-800/60 flex items-center justify-center text-rose-400">
+            <AlertCircle class="w-5 h-5" />
+          </div>
+          <div>
+            <span class="text-xs sm:text-sm font-semibold text-slate-300 block">พาสมุมต่ำ (&lt; 5° แนะนำ Abort)</span>
+            <span class="text-xl sm:text-2xl font-black font-mono text-rose-400">{{ stats.lowEl }} รอบ</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Filter Chips Bar (ปุ่มกรองพาสด่วน) -->
-    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs font-semibold select-none font-prompt">
-      <span class="text-zinc-400 flex items-center gap-1 mr-1 flex-shrink-0 font-semibold">
-        <Filter class="w-3.5 h-3.5 text-zinc-400" />
+    <!-- Filter Chips Bar (ปุ่มกรองพาสด่วน กระจายตัวสวยงามบนทุกขนาดหน้าจอ) -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs font-semibold select-none font-prompt flex-wrap w-full">
+      <span class="text-zinc-400 flex items-center gap-1.5 mr-1 flex-shrink-0 font-semibold">
+        <Filter class="w-4 h-4 text-cyan-400" />
         <span>ตัวกรอง:</span>
       </span>
 
