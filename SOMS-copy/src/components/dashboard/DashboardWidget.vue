@@ -279,9 +279,10 @@ const widgetStyle = computed(() => {
   }
 
   const it = currentItem.value
+  const boundWidth = props.stageWidth && it.width > props.stageWidth ? props.stageWidth : it.width
   return {
     transform: `translate3d(${it.x}px, ${it.y}px, 0)`,
-    width: `${it.width}px`,
+    width: `${boundWidth}px`,
     height: `${it.height}px`,
     zIndex: props.selected ? 60 : (it.z || 1),
     '--widget-background-opacity': String((it.backgroundOpacity ?? 92) / 100),

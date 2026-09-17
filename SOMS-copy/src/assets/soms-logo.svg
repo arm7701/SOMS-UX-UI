@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" fill="none">
+  <defs>
+    <linearGradient id="soms-badge-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+    <linearGradient id="soms-gold-l" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#a16207" />
+    </linearGradient>
+    <linearGradient id="soms-gold-r" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="50%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#713f12" />
+    </linearGradient>
+    <linearGradient id="soms-text-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="60%" stop-color="#f0f9ff" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+    <filter id="soms-drop" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0284c7" flood-opacity="0.45" />
+    </filter>
+  </defs>
+
+  <!-- Left: Emblem Badge -->
+  <g transform="translate(15, 10)" filter="url(#soms-drop)">
+    <!-- Hexagon Shield -->
+    <polygon
+      points="80,5 145,42 145,118 80,155 15,118 15,42"
+      fill="#091424"
+      stroke="#1e3a8a"
+      stroke-width="3"
+    />
+    <polygon
+      points="80,12 138,45 138,115 80,148 22,115 22,45"
+      fill="none"
+      stroke="url(#soms-badge-blue)"
+      stroke-width="2"
+      stroke-dasharray="8 4"
+      opacity="0.9"
+    />
+
+    <!-- Orbit Ellipse -->
+    <ellipse
+      cx="80"
+      cy="78"
+      rx="62"
+      ry="24"
+      transform="rotate(-28 80 78)"
+      fill="none"
+      stroke="#38bdf8"
+      stroke-width="2.5"
+      stroke-dasharray="6 3"
+    />
+
+    <!-- Satellite at Apogee -->
+    <circle cx="128" cy="46" r="5" fill="#38bdf8" stroke="#ffffff" stroke-width="2" />
+    <line x1="118" y1="46" x2="138" y2="46" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" />
+
+    <!-- Center Monogram SOMS -->
+    <text
+      x="80"
+      y="88"
+      font-family="'Orbitron', sans-serif"
+      font-size="28"
+      font-weight="900"
+      letter-spacing="2"
+      text-anchor="middle"
+      fill="#ffffff"
+    >
+      SOMS
+    </text>
+
+    <!-- 3D Faceted Gold Chevrons -->
+    <polygon points="45,112 80,96 80,102 45,116" fill="url(#soms-gold-l)" />
+    <polygon points="115,112 80,96 80,102 115,116" fill="url(#soms-gold-r)" />
+    <polygon points="55,120 80,108 80,113 55,123" fill="url(#soms-gold-l)" opacity="0.85" />
+    <polygon points="105,120 80,108 80,113 105,123" fill="url(#soms-gold-r)" opacity="0.85" />
+  </g>
+
+  <!-- Right: Typography Text Lockup -->
+  <g transform="translate(195, 38)">
+    <!-- Acronym Row -->
+    <text
+      x="0"
+      y="28"
+      font-family="'Orbitron', sans-serif"
+      font-size="34"
+      font-weight="900"
+      letter-spacing="2"
+      fill="url(#soms-text-grad)"
+    >
+      SOMS
+    </text>
+    
+    <rect x="125" y="6" width="60" height="24" rx="6" fill="#082f49" stroke="#0284c7" stroke-width="1.5" />
+    <text
+      x="155"
+      y="22"
+      font-family="'Prompt', -apple-system, sans-serif"
+      font-size="12"
+      font-weight="800"
+      text-anchor="middle"
+      fill="#38bdf8"
+    >
+      RTAF
+    </text>
+
+    <!-- Thai Full Title -->
+    <text
+      x="0"
+      y="66"
+      font-family="'Prompt', -apple-system, sans-serif"
+      font-size="22"
+      font-weight="800"
+      letter-spacing="0.2"
+      fill="#ffffff"
+    >
+      ระบบบริหารจัดการการปฏิบัติการดาวเทียมกองทัพอากาศ
+    </text>
+
+    <!-- English Full Title -->
+    <text
+      x="0"
+      y="95"
+      font-family="'Prompt', -apple-system, sans-serif"
+      font-size="15"
+      font-weight="700"
+      letter-spacing="0.8"
+      fill="#38bdf8"
+      text-transform="uppercase"
+    >
+      Satellite Operations Management System
+    </text>
+  </g>
+</svg>

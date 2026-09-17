@@ -128,8 +128,8 @@ router.beforeEach(async (to, from, next) => {
 
   // อัปเดต Title ของเบราว์เซอร์
   document.title = to.meta.title
-    ? `${to.meta.title} - Satellite Operations Information System`
-    : 'Satellite Operations Information System'
+    ? `${to.meta.title} - ระบบบริหารจัดการการปฏิบัติการดาวเทียมกองทัพอากาศ (SOMS)`
+    : 'ระบบบริหารจัดการการปฏิบัติการดาวเทียมกองทัพอากาศ (Satellite Operations Management System — SOMS)'
 
   // กรณีผู้ใช้ต้องตั้งรหัสผ่านใหม่
   if (authStore.setupRequired && to.path !== '/setup-password') {

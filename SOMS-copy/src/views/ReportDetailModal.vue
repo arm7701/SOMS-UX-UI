@@ -30,7 +30,7 @@ const copyToClipboard = async () => {
   const r = props.report
 
   const text = `
-=== รายงานการปฏิบัติการดาวเทียม SOIS ===
+=== รายงานการปฏิบัติการดาวเทียม SOMS ===
 Flight Pass No.: ${r.sat_flight_pass || '-'}
 ดาวเทียม: ${dataStore.getSatelliteName(r.norad_id)}
 รอบพาส: ${dataStore.getPassName(r.sat_seq)}

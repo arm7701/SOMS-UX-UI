@@ -296,6 +296,38 @@ const stageHeightPx = computed(() => {
   return `${maxBottom + 60}px`
 })
 
+// ปรับสเกลหรือคำนวณการจัดวางเต็มความกว้างหน้าจออัตโนมัติ (Responsive Multi-Platform Auto-Fit)
+const autoFitLayoutToWidth = (targetW) => {
+  if (isEditing.value || !targetW || targetW < 360) return
+  const current = savedLayout.value
+  if (!current || !current.length) return
+  
+  const currentMaxW = Math.max(...current.map(w => (w.x || 0) + (w.width || 0)))
+  if (!currentMaxW || Math.abs(currentMaxW - targetW) <= 12) return
+
+  // หากไม่มีการโคลนวิดเจ็ตแบบกำหนดเอง ให้สร้าง smart layout ตามความกว้างหน้าจอเป้าหมายเป๊ะ 100%
+  const hasCustomInstances = current.some(w => w.id && w.id.includes('-instance-'))
+  if (!hasCustomInstances) {
+    savedLayout.value = buildSmartLayout(targetW)
+  } else {
+    // กรณีมีวิดเจ็ตกำหนดเอง ให้ปรับสัดส่วน (Scale) ตามสัดส่วนหน้าจอ
+    const ratio = targetW / currentMaxW
+    savedLayout.value = current.map(w => {
+      const wasFull = Math.abs((w.x || 0) + (w.width || 0) - currentMaxW) < 16 && (w.x || 0) === 0
+      if (wasFull) {
+        return { ...w, x: 0, width: targetW }
+      }
+      const newX = Math.round((w.x || 0) * ratio)
+      const newW = Math.max(w.minWidth || 180, Math.round((w.width || 200) * ratio))
+      return {
+        ...w,
+        x: newX,
+        width: Math.min(newW, targetW - newX)
+      }
+    })
+  }
+}
+
 // อัปเดตขนาดของสเตจเมื่อหน้าจอเปลี่ยน
 const updateStageDimensions = () => {
   if (typeof window === 'undefined') return
@@ -306,6 +338,11 @@ const updateStageDimensions = () => {
     stageWidth.value = Math.max(320, window.innerWidth - 64)
   }
   isCompact.value = window.innerWidth < 768 || stageWidth.value < 640
+
+  // ปรับการจัดวางให้เต็มความกว้างหน้าจออัตโนมัติบนเดสก์ท็อป/แล็ปท็อป/จอผนัง
+  if (!isCompact.value && stageWidth.value >= 640 && !isEditing.value) {
+    autoFitLayoutToWidth(stageWidth.value)
+  }
 }
 
 let stageResizeObs = null
@@ -328,21 +365,30 @@ const fitLayoutToFullWidth = (silent = false) => {
   }
 }
 
+// ตรวจจับการเปิด/ปิดแถบเมนู Sidebar เพื่อขยายแดชบอร์ดเต็มจอทันที
+watch(() => appStore.sidebarOpen, () => {
+  setTimeout(() => {
+    updateStageDimensions()
+  }, 320)
+})
+
 onMounted(() => {
   updateStageDimensions()
   if (stageRef.value) {
-    stageResizeObs = new ResizeObserver(updateStageDimensions)
+    stageResizeObs = new ResizeObserver(() => {
+      updateStageDimensions()
+    })
     stageResizeObs.observe(stageRef.value)
   }
   window.addEventListener('resize', updateStageDimensions)
   window.addEventListener('keydown', onKeyDown)
 
-  // หากเปิดครั้งแรกในเวอร์ชัน v8 ให้ขยายจัดเต็มความกว้างหน้าจออัตโนมัติ
-  if (!localStorage.getItem('soms_dashboard_layout_v8')) {
-    nextTick(() => {
-      fitLayoutToFullWidth(true)
-    })
-  }
+  nextTick(() => {
+    updateStageDimensions()
+    if (!isCompact.value && stageWidth.value >= 640) {
+      autoFitLayoutToWidth(stageWidth.value)
+    }
+  })
 
   fetchDashboard()
 })
@@ -609,7 +655,7 @@ const getChartData = (widgetId) => {
               {{ todayFormatted }}
             </h1>
             <p class="text-xs sm:text-sm text-slate-300 font-normal font-prompt mt-1 tracking-normal">
-              ระบบสารสนเทศและการปฏิบัติการควบคุมดาวเทียม (SOIS Operations Center)
+              ระบบบริหารจัดการการปฏิบัติการดาวเทียมกองทัพอากาศ (Satellite Operations Management System — SOMS)
             </p>
           </div>
         </div>
@@ -912,7 +958,7 @@ const getChartData = (widgetId) => {
     <!-- INTERACTIVE DASHBOARD STAGE (100% โมดูลาร์ - ขยับเลื่อน ย้าย ปรับขนาด และเพิ่มซ้ำได้ทุกส่วนไม่มีข้อยกเว้น) -->
     <div
       ref="stageRef"
-      class="dashboard-stage relative transition-all"
+      class="dashboard-stage relative transition-all w-full max-w-full overflow-hidden"
       :class="{
         'is-editing': isEditing,
         'min-h-[800px]': !isCompact

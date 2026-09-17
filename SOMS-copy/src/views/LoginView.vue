@@ -18,6 +18,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useAppStore } from '@/stores/app'
+import SomsLogo from '@/components/common/SomsLogo.vue'
 import * as THREE from 'three'
 import {
   LogIn,
@@ -103,7 +104,7 @@ const skipTransition = () => {
   skipRequested.value = true
   curtainOpacity.value = 1
   setTimeout(() => {
-    appStore.showToast('ยินดีต้อนรับสู่ระบบ SOIS', 'เข้าสู่ระบบสำเร็จ เข้าสู่คอนโซลปฏิบัติการ')
+    appStore.showToast('ยินดีต้อนรับสู่ระบบ SOMS', 'เข้าสู่ระบบสำเร็จ เข้าสู่คอนโซลปฏิบัติการ')
     router.push(destinationPath)
   }, 180)
 }
@@ -535,7 +536,7 @@ onMounted(() => {
           setTimeout(() => {
             appStore.showToast(
               'เชื่อมต่อระบบวงโคจรสำเร็จ',
-              'ยินดีต้อนรับสู่ระบบ SOIS — เข้าสู่คอนโซลปฏิบัติการ'
+              'ยินดีต้อนรับสู่ระบบ SOMS — เข้าสู่คอนโซลปฏิบัติการ'
             )
           }, 320)
         })
@@ -584,62 +585,34 @@ onMounted(() => {
     <!-- 4. MAIN SPLIT COMMAND LAYOUT (จัดวางแยกส่วนซ้าย-ขวาอย่างสง่างาม ไม่ซ้อนทับ ไม่ลายตา) -->
     <!-- ===================================================================== -->
     <div
-      class="relative z-20 max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center transition-all duration-500 ease-out"
+      class="relative z-20 max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center justify-between transition-all duration-500 ease-out px-4 sm:px-6 lg:px-8"
       :class="isTransitioning ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'"
     >
       <!-- ฝั่งซ้าย (Hero Emblem & Authority Branding) -->
       <div class="lg:col-span-7 flex justify-center lg:justify-start w-full">
-        <div class="w-full max-w-xl command-card rounded-3xl p-7 sm:p-9 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
-          <!-- Centerpiece Logo with 3D Orbit Rings -->
-          <div class="relative w-48 h-48 sm:w-52 sm:h-52 flex items-center justify-center cursor-pointer" @dblclick="autofillDev" title="Double-click for testing">
-            <!-- 3D Orbit Rings -->
-            <div class="orbit-ring-3d orbit-ring-1">
-              <div class="orbit-satellite-dot dot-1"></div>
-            </div>
-            <div class="orbit-ring-3d orbit-ring-2">
-              <div class="orbit-satellite-dot dot-2"></div>
-            </div>
-            <div class="orbit-ring-3d orbit-ring-3"></div>
-
-            <!-- ISR Official Crest -->
-            <div class="relative z-10 logo-float-container">
-              <img
-                src="/src/assets/png-isr.png"
-                alt="ISR Emblem"
-                class="w-36 sm:w-44 h-auto object-contain filter drop-shadow-[0_0_25px_rgba(148,163,184,0.35)] brightness-110"
-              />
-            </div>
-          </div>
-
-          <!-- Typography & Credentials Notice (คมชัด สีคอนทราสต์สูง อ่านง่าย ไม่กลืนพื้นหลัง) -->
-          <div class="space-y-2.5 max-w-lg">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/60 text-emerald-300 text-xs font-bold tracking-wider uppercase shadow-md">
-              <ShieldCheck class="w-3.5 h-3.5 text-emerald-400" />
-              <span>RESTRICTED ACCESS // LEVEL 4 AUTHORIZATION</span>
-            </div>
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-wide font-prompt leading-tight drop-shadow-md">
-              Satellite Operations
-            </h1>
-            <p class="text-base sm:text-xl uppercase tracking-[0.16em] text-cyan-400 font-black font-prompt drop-shadow-sm">
-              Information System (SOIS)
-            </p>
-            <p class="text-sm sm:text-base text-slate-200 font-semibold font-prompt pt-1 leading-relaxed">
-              ศูนย์ปฏิบัติการทางอวกาศ กองทัพอากาศ · RTAF Space Operations Command
-            </p>
-          </div>
+        <div class="w-full max-w-xl hero-glass-panel rounded-3xl p-7 sm:p-9 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+          <!-- SOMS Official Hero Wordmark & Emblem Logo -->
+          <SomsLogo
+            variant="hero"
+            align="responsive"
+            class="w-full cursor-pointer"
+            @dblclick="autofillDev"
+            title="Double-click for testing"
+          />
 
           <!-- Security Gateway Tags -->
-          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-2 text-xs font-mono font-bold">
-            <span class="px-3 py-1.5 rounded-lg bg-[#070d18] border border-emerald-500/50 text-emerald-300 flex items-center gap-1.5 shadow-sm">
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-2 text-xs font-mono font-bold">
+            <span class="px-2.5 py-1.5 rounded-lg bg-slate-900/70 border border-emerald-500/50 text-emerald-300 flex items-center gap-1.5 shadow-sm">
               <Radio class="w-3.5 h-3.5 text-emerald-400" />
-              <span>GATEWAY: ACTIVE</span>
+              <span>GATEWAY ACTIVE</span>
             </span>
-            <span class="px-3 py-1.5 rounded-lg bg-[#070d18] border border-slate-700 text-slate-200 flex items-center gap-1.5 shadow-sm">
+            <span class="px-2.5 py-1.5 rounded-lg bg-slate-900/70 border border-cyan-500/50 text-cyan-200 flex items-center gap-1.5 shadow-sm">
               <LockKeyhole class="w-3.5 h-3.5 text-cyan-400" />
               <span>ENCRYPTED PROTOCOL</span>
             </span>
-            <span class="px-3 py-1.5 rounded-lg bg-[#070d18] border border-slate-700 text-slate-200 shadow-sm">
-              SECURE DEFENSE NETWORK
+            <span class="px-2.5 py-1.5 rounded-lg bg-slate-900/70 border border-slate-700 text-slate-300 flex items-center gap-1.5 shadow-sm">
+              <ShieldCheck class="w-3.5 h-3.5 text-sky-400" />
+              <span>DEFENSE NETWORK</span>
             </span>
           </div>
         </div>
@@ -747,9 +720,12 @@ onMounted(() => {
             </form>
 
             <!-- Card Footer Notice -->
-            <div class="mt-6 pt-4 border-t border-slate-700/80 text-center text-xs sm:text-sm font-prompt">
-              <p class="text-slate-300 font-medium leading-relaxed">
-                ระบบสารสนเทศความมั่นคงทางอวกาศ · สงวนสิทธิ์สำหรับเจ้าหน้าที่เวรปฏิบัติการ
+            <div class="mt-6 pt-4 border-t border-slate-700/60 text-center font-prompt space-y-1">
+              <p class="text-slate-200 font-semibold text-xs tracking-wide">
+                ระบบบริหารจัดการการปฏิบัติการดาวเทียม (SOMS)
+              </p>
+              <p class="text-slate-400 text-[11px] font-normal">
+                กองทัพอากาศ · สำหรับเจ้าหน้าที่เวรปฏิบัติการ
               </p>
             </div>
           </div>
@@ -772,12 +748,20 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.hero-glass-panel {
+  background: linear-gradient(140deg, rgba(6, 14, 28, 0.32) 0%, rgba(4, 9, 20, 0.40) 100%);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.60), 0 0 30px rgba(14, 165, 233, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 .command-card {
-  background: rgba(11, 17, 30, 0.94);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(71, 85, 105, 0.65);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 35px rgba(15, 23, 42, 0.6);
+  background: linear-gradient(145deg, rgba(8, 16, 32, 0.52) 0%, rgba(4, 9, 20, 0.62) 100%);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 35px rgba(14, 165, 233, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.10);
 }
 
 /* ============================================================================

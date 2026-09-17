@@ -12,6 +12,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useAppStore } from '@/stores/app'
 import { X } from 'lucide-vue-next'
 import { mainLinks, systemLinks, adminLinks } from '@/config'
+import SomsLogo from '@/components/common/SomsLogo.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -53,10 +54,7 @@ const handleLinkClick = () => {
       <div class="w-64 h-full flex flex-col justify-between flex-shrink-0">
         <!-- Mobile Header in Drawer -->
         <div class="p-4 border-b border-space-700 flex items-center justify-between lg:hidden bg-space-850">
-          <div class="flex items-center gap-2">
-            <img src="/src/assets/png-isr.png" alt="ISR Logo" class="h-6 w-auto" />
-            <span class="font-bold text-sm text-white font-prompt">SOIS เมนูระบบ</span>
-          </div>
+          <SomsLogo variant="compact" />
           <button
             type="button"
             class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-space-800 transition-colors"

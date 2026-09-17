@@ -67,7 +67,7 @@ const generateBriefingText = () => {
   const now = new Date()
   const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
 
-  let text = `📋 [รายงานสรุปส่งมอบเวร SOIS/SOMS]\n`
+  let text = `📋 [รายงานสรุปส่งมอบเวร SOMS]\n`
   text += `ประจำวันที่: ${todayFormatted.value} (เวลาบันทึก: ${timeStr} น.)\n`
   text += `━━━━━━━━━━━━━━━━━━━━━\n`
   text += `👥 เจ้าหน้าที่ปฏิบัติหน้าที่:\n`
@@ -133,7 +133,7 @@ const printBriefing = () => {
               สรุปส่งมอบเวรปฏิบัติการ (Shift Handover Briefing)
             </h3>
             <p class="text-xs sm:text-sm text-slate-300 mt-0.5 font-medium">
-              {{ todayFormatted }} • ศูนย์ปฏิบัติการทางอวกาศ SOIS/SOMS
+              {{ todayFormatted }} • ระบบบริหารจัดการการปฏิบัติการดาวเทียม (SOMS)
             </p>
           </div>
         </div>
