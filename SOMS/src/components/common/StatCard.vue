@@ -2,8 +2,8 @@
 /**
  * ============================================================================
  * ไฟล์: src/components/common/StatCard.vue
- * วัตถุประสงค์: การ์ดแสดงค่าสถิติหรือ KPI สำคัญ (เช่น ความสูงดาวเทียม, จำนวนพาส)
- * ดีไซน์: สบายตา คอนทราสต์ชัดเจน การ์ดลอยเด่นไม่กลืนกับพื้นหลัง
+ * วัตถุประสงค์: การ์ดแสดงค่าสถิติหรือ KPI สำคัญ (ธีมดำเทาไททาเนียม)
+ * คอนทราสต์ชัดเจน การ์ดลอยเด่น ไม่กลืนกับพื้นหลัง ฟอนต์อ่านง่าย 100%
  * ============================================================================
  */
 import { computed } from 'vue'
@@ -16,77 +16,93 @@ const props = defineProps({
   icon: { type: [Object, Function], default: null },
   badge: { type: String, default: '' },
   badgeType: { type: String, default: 'info' }, // 'success' | 'warning' | 'danger' | 'info'
-  color: { type: String, default: 'blue' } // 'blue' | 'emerald' | 'amber' | 'purple' | 'slate'
+  color: { type: String, default: 'slate' }, // 'slate' | 'blue' | 'emerald' | 'amber' | 'purple'
+  items: { type: Array, default: () => [] } // รายการแท็กข้อมูลย่อยแสดงเติมเต็มพื้นที่ว่าง
 })
 
 const colorClasses = computed(() => {
   const map = {
-    blue: {
-      iconBg: 'bg-sky-950/70 text-cyan-300 border border-sky-400/40 shadow-[0_0_12px_rgba(56,189,248,0.2)]',
+    slate: {
+      iconBg: 'bg-cyan-950/40 text-cyan-300 border border-cyan-700/50 shadow-sm shadow-cyan-950/50',
       value: 'text-white',
-      accent: 'text-cyan-300'
+      accent: 'text-cyan-400'
+    },
+    blue: {
+      iconBg: 'bg-sky-950/40 text-sky-300 border border-sky-700/50 shadow-sm shadow-sky-950/50',
+      value: 'text-white',
+      accent: 'text-sky-400'
     },
     emerald: {
-      iconBg: 'bg-emerald-950/70 text-emerald-300 border border-emerald-400/40 shadow-[0_0_12px_rgba(52,211,153,0.2)]',
+      iconBg: 'bg-emerald-950/50 text-emerald-300 border border-emerald-700/50 shadow-sm shadow-emerald-950/50',
       value: 'text-white',
-      accent: 'text-emerald-300'
+      accent: 'text-emerald-400'
     },
     amber: {
-      iconBg: 'bg-amber-950/70 text-amber-300 border border-amber-400/40 shadow-[0_0_12px_rgba(251,191,36,0.2)]',
+      iconBg: 'bg-amber-950/50 text-amber-300 border border-amber-700/50 shadow-sm shadow-amber-950/50',
       value: 'text-white',
-      accent: 'text-amber-300'
+      accent: 'text-amber-400'
     },
     purple: {
-      iconBg: 'bg-indigo-950/70 text-indigo-300 border border-indigo-400/40 shadow-[0_0_12px_rgba(129,140,248,0.2)]',
+      iconBg: 'bg-purple-950/50 text-purple-300 border border-purple-700/50 shadow-sm shadow-purple-950/50',
       value: 'text-white',
-      accent: 'text-indigo-300'
-    },
-    slate: {
-      iconBg: 'bg-[#061833] text-sky-200 border border-sky-500/30',
-      value: 'text-white',
-      accent: 'text-sky-300'
+      accent: 'text-purple-400'
     }
   }
-  return map[props.color] || map.blue
+  return map[props.color] || map.slate
 })
 
 const badgeClasses = computed(() => {
   const map = {
-    success: 'bg-emerald-950/80 text-emerald-300 border-emerald-500/70 shadow-[0_0_8px_rgba(52,211,153,0.25)]',
-    warning: 'bg-amber-950/80 text-amber-300 border-amber-500/70 shadow-[0_0_8px_rgba(251,191,36,0.25)]',
-    danger: 'bg-red-950/80 text-red-300 border-red-500/70 shadow-[0_0_8px_rgba(248,113,113,0.25)]',
-    info: 'bg-sky-950/80 text-cyan-300 border-sky-500/70 shadow-[0_0_8px_rgba(56,189,248,0.25)]'
+    success: 'bg-emerald-950/80 text-emerald-300 border-emerald-500/80 shadow-xs shadow-emerald-950/50',
+    warning: 'bg-amber-950/80 text-amber-300 border-amber-500/80 shadow-xs shadow-amber-950/50',
+    danger: 'bg-rose-950/80 text-rose-300 border-rose-500/80 shadow-xs shadow-rose-950/50',
+    info: 'bg-cyan-950/80 text-cyan-300 border-cyan-500/80 shadow-xs shadow-cyan-950/50'
   }
   return map[props.badgeType] || map.info
 })
 </script>
 
 <template>
-  <div class="bg-[#08172f]/85 rounded-2xl p-4 sm:p-5 border border-sky-400/25 shadow-lg flex flex-col justify-between">
+  <div class="bg-[#132238]/95 backdrop-blur-md rounded-2xl p-5 border border-slate-600/60 shadow-lg hover:border-cyan-500/50 hover:shadow-cyan-900/25 transition-all duration-200 flex flex-col justify-between">
     <div class="flex items-start justify-between gap-3">
-      <div>
-        <p class="text-sm font-bold uppercase tracking-wider text-sky-200">
+      <div class="min-w-0">
+        <p class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-300 font-prompt truncate">
           {{ title }}
         </p>
-        <div class="mt-2 flex items-baseline gap-1.5">
-          <span class="text-3xl lg:text-4xl font-extrabold tracking-tight font-mono drop-shadow-sm" :class="colorClasses.value">
+        <div class="mt-2 flex items-baseline gap-2 flex-wrap">
+          <span class="text-3xl lg:text-4xl font-extrabold tracking-tight font-mono text-white" :class="colorClasses.value">
             {{ value }}
           </span>
-          <span v-if="unit" class="text-base font-bold text-cyan-300">
+          <span v-if="unit" class="text-base font-semibold text-slate-300 font-prompt">
             {{ unit }}
           </span>
         </div>
       </div>
-      <div v-if="icon" class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" :class="colorClasses.iconBg">
+      <div v-if="icon" class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm" :class="colorClasses.iconBg">
         <component :is="icon" class="w-6 h-6" />
       </div>
     </div>
 
-    <div v-if="subtitle || badge" class="mt-3 pt-3 border-t border-sky-500/20 flex items-center justify-between text-sm">
-      <span class="text-sm font-semibold text-sky-100 truncate">
+    <!-- รายละเอียดข้อมูลย่อย เติมเต็มพื้นที่ให้สมบูรณ์ ไม่ว่างเปล่า คอนทราสต์สูง -->
+    <div v-if="$slots.default || (items && items.length)" class="mt-3.5 pt-3 border-t border-slate-700/60">
+      <slot>
+        <div class="flex flex-wrap gap-1.5">
+          <span
+            v-for="(it, i) in items"
+            :key="i"
+            class="px-2.5 py-1 rounded-lg bg-[#182840] border border-slate-600 text-xs font-prompt text-slate-100 font-medium shadow-xs"
+          >
+            {{ it }}
+          </span>
+        </div>
+      </slot>
+    </div>
+
+    <div v-if="subtitle || badge" class="mt-3 pt-2.5 border-t border-slate-700/60 flex items-center justify-between text-xs gap-2">
+      <span class="text-slate-300 font-normal truncate font-prompt text-xs sm:text-sm">
         {{ subtitle }}
       </span>
-      <span v-if="badge" class="px-2.5 py-0.5 rounded-full text-xs sm:text-sm font-bold border-2" :class="badgeClasses">
+      <span v-if="badge" class="px-2.5 py-1 rounded-full text-xs font-mono font-bold border flex-shrink-0" :class="badgeClasses">
         {{ badge }}
       </span>
     </div>

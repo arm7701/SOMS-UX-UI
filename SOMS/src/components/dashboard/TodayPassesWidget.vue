@@ -3,6 +3,7 @@
  * ============================================================================
  * ไฟล์: src/components/dashboard/TodayPassesWidget.vue
  * วัตถุประสงค์: แสดงรายการพาสดาวเทียมประจำวัน (Pass Detail Schedule) สำหรับทั้ง 2 ดวง
+ * ธีมดำเทาไททาเนียม คอนทราสต์คมชัดทุกแถว
  * ============================================================================
  */
 import { Calendar, Sun, Moon, ArrowRight } from 'lucide-vue-next'
@@ -28,110 +29,118 @@ const isDayPass = (timeStr) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-    <!-- NAPA-1 Passes -->
-    <div class="bg-[#08172f]/85 rounded-2xl p-5 border border-sky-400/25 shadow-lg flex flex-col justify-between">
-      <div>
-        <div class="flex items-center justify-between pb-3 border-b border-sky-500/20">
-          <div class="flex items-center gap-2">
-            <Calendar class="w-6 h-6 text-cyan-300" />
-            <h3 class="text-lg font-bold font-prompt text-white">
-              พาสดาวเทียม NAPA-1 N
-            </h3>
+  <div class="p-4 h-full flex flex-col justify-between space-y-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
+      <!-- NAPA-1 Passes -->
+      <div class="bg-[#132238]/95 rounded-xl p-4 border border-slate-600/60 flex flex-col justify-between shadow-xs">
+        <div>
+          <div class="flex items-center justify-between pb-2.5 border-b border-slate-700/60">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#38bdf8] flex-shrink-0"></span>
+              <h4 class="text-sm sm:text-base font-bold font-prompt text-white truncate">
+                NAPA-1 N (46320)
+              </h4>
+            </div>
+            <router-link
+              to="/passes?satellite=46320"
+              class="text-xs text-cyan-300 hover:text-white inline-flex items-center gap-1 font-bold font-prompt flex-shrink-0 ml-2"
+            >
+              <span>ดูทั้งหมด</span>
+              <ArrowRight class="w-3.5 h-3.5" />
+            </router-link>
           </div>
-          <router-link to="/passes?satellite=46320" class="text-sm text-cyan-300 hover:text-white inline-flex items-center gap-1 font-bold">
-            <span>ดูทั้งหมด</span>
-            <ArrowRight class="w-4 h-4" />
-          </router-link>
-        </div>
 
-        <div class="mt-3 divide-y divide-sky-500/15">
-          <div
-            v-for="(p, i) in getPassesForSat(46320)"
-            :key="p.id || i"
-            class="py-3 flex items-center justify-between gap-3 text-sm"
-          >
-            <div class="flex items-center gap-2.5">
-              <Sun v-if="isDayPass(p.aos_time_utc)" class="w-5 h-5 text-amber-400 flex-shrink-0" />
-              <Moon v-else class="w-5 h-5 text-indigo-400 flex-shrink-0" />
-              <div>
-                <span class="font-bold text-white">
-                  {{ isDayPass(p.aos_time_utc) ? `DayPass-${i + 1}` : `NightPass-${i + 1}` }}
+          <div class="mt-2.5 divide-y divide-slate-700/50">
+            <div
+              v-for="(p, i) in getPassesForSat(46320)"
+              :key="p.id || i"
+              class="py-2.5 flex items-center justify-between gap-2 text-xs sm:text-sm"
+            >
+              <div class="flex items-center gap-2.5 min-w-0">
+                <Sun v-if="isDayPass(p.aos_time_utc)" class="w-4 h-4 text-amber-400 flex-shrink-0" />
+                <Moon v-else class="w-4 h-4 text-sky-400 flex-shrink-0" />
+                <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2 min-w-0">
+                  <span class="font-bold text-white font-prompt whitespace-nowrap text-xs sm:text-sm">
+                    {{ isDayPass(p.aos_time_utc) ? `DayPass-${i + 1}` : `NightPass-${i + 1}` }}
+                  </span>
+                  <span class="text-slate-300 font-mono font-medium text-xs whitespace-nowrap">
+                    {{ p.aos_time_utc }} – {{ p.los_time_utc }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <span class="font-mono text-cyan-300 font-bold text-xs sm:text-sm">
+                  El. {{ p.maxEl }}°
                 </span>
-                <span class="text-cyan-200 ml-2 font-mono font-bold">
-                  {{ p.aos_time_utc }} – {{ p.los_time_utc }} (UTC)
-                </span>
+                <StatusBadge
+                  :label="Number(p.maxEl) < 5 ? 'Abort' : 'พร้อมปฏิบัติ'"
+                  :status="Number(p.maxEl) < 5 ? 'danger' : 'normal'"
+                  size="sm"
+                />
               </div>
             </div>
 
-            <div class="flex items-center gap-2.5">
-              <span class="font-mono font-bold text-amber-300">
-                El. {{ p.maxEl }}°
-              </span>
-              <StatusBadge
-                :label="Number(p.maxEl) < 5 ? 'Abort (<5°)' : 'พร้อมปฏิบัติ'"
-                :status="Number(p.maxEl) < 5 ? 'danger' : 'normal'"
-                size="md"
-              />
+            <div v-if="getPassesForSat(46320).length === 0" class="py-6 text-center text-slate-400 text-xs font-prompt font-medium">
+              ไม่มีรอบพาสผ่านในวันนี้
             </div>
-          </div>
-
-          <div v-if="getPassesForSat(46320).length === 0" class="py-6 text-center text-sky-200 text-sm font-semibold">
-            ไม่มีรอบพาสผ่านในวันนี้
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- NAPA-2 Passes -->
-    <div class="bg-[#08172f]/85 rounded-2xl p-5 border border-sky-400/25 shadow-lg flex flex-col justify-between">
-      <div>
-        <div class="flex items-center justify-between pb-3 border-b border-sky-500/20">
-          <div class="flex items-center gap-2">
-            <Calendar class="w-6 h-6 text-indigo-300" />
-            <h3 class="text-lg font-bold font-prompt text-white">
-              พาสดาวเทียม NAPA-2 N
-            </h3>
+      <!-- NAPA-2 Passes -->
+      <div class="bg-[#132238]/95 rounded-xl p-4 border border-slate-600/60 flex flex-col justify-between shadow-xs">
+        <div>
+          <div class="flex items-center justify-between pb-2.5 border-b border-slate-700/60">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399] flex-shrink-0"></span>
+              <h4 class="text-sm sm:text-base font-bold font-prompt text-white truncate">
+                NAPA-2 N (48963)
+              </h4>
+            </div>
+            <router-link
+              to="/passes?satellite=48963"
+              class="text-xs text-cyan-300 hover:text-white inline-flex items-center gap-1 font-bold font-prompt flex-shrink-0 ml-2"
+            >
+              <span>ดูทั้งหมด</span>
+              <ArrowRight class="w-3.5 h-3.5" />
+            </router-link>
           </div>
-          <router-link to="/passes?satellite=48963" class="text-sm text-indigo-300 hover:text-white inline-flex items-center gap-1 font-bold">
-            <span>ดูทั้งหมด</span>
-            <ArrowRight class="w-4 h-4" />
-          </router-link>
-        </div>
 
-        <div class="mt-3 divide-y divide-sky-500/15">
-          <div
-            v-for="(p, i) in getPassesForSat(48963)"
-            :key="p.id || i"
-            class="py-3 flex items-center justify-between gap-3 text-sm"
-          >
-            <div class="flex items-center gap-2.5">
-              <Sun v-if="isDayPass(p.aos_time_utc)" class="w-5 h-5 text-amber-400 flex-shrink-0" />
-              <Moon v-else class="w-5 h-5 text-indigo-400 flex-shrink-0" />
-              <div>
-                <span class="font-bold text-white">
-                  {{ isDayPass(p.aos_time_utc) ? `DayPass-${i + 1}` : `NightPass-${i + 1}` }}
+          <div class="mt-2.5 divide-y divide-slate-700/50">
+            <div
+              v-for="(p, i) in getPassesForSat(48963)"
+              :key="p.id || i"
+              class="py-2.5 flex items-center justify-between gap-2 text-xs sm:text-sm"
+            >
+              <div class="flex items-center gap-2.5 min-w-0">
+                <Sun v-if="isDayPass(p.aos_time_utc)" class="w-4 h-4 text-amber-400 flex-shrink-0" />
+                <Moon v-else class="w-4 h-4 text-sky-400 flex-shrink-0" />
+                <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2 min-w-0">
+                  <span class="font-bold text-white font-prompt whitespace-nowrap text-xs sm:text-sm">
+                    {{ isDayPass(p.aos_time_utc) ? `DayPass-${i + 1}` : `NightPass-${i + 1}` }}
+                  </span>
+                  <span class="text-slate-300 font-mono font-medium text-xs whitespace-nowrap">
+                    {{ p.aos_time_utc }} – {{ p.los_time_utc }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <span class="font-mono text-emerald-300 font-bold text-xs sm:text-sm">
+                  El. {{ p.maxEl }}°
                 </span>
-                <span class="text-cyan-200 ml-2 font-mono font-bold">
-                  {{ p.aos_time_utc }} – {{ p.los_time_utc }} (UTC)
-                </span>
+                <StatusBadge
+                  :label="Number(p.maxEl) < 5 ? 'Abort' : 'พร้อมปฏิบัติ'"
+                  :status="Number(p.maxEl) < 5 ? 'danger' : 'normal'"
+                  size="sm"
+                />
               </div>
             </div>
 
-            <div class="flex items-center gap-2.5">
-              <span class="font-mono font-bold text-amber-300">
-                El. {{ p.maxEl }}°
-              </span>
-              <StatusBadge
-                :label="Number(p.maxEl) < 5 ? 'Abort (<5°)' : 'พร้อมปฏิบัติ'"
-                :status="Number(p.maxEl) < 5 ? 'danger' : 'normal'"
-                size="md"
-              />
+            <div v-if="getPassesForSat(48963).length === 0" class="py-6 text-center text-slate-400 text-xs font-prompt font-medium">
+              ไม่มีรอบพาสผ่านในวันนี้
             </div>
-          </div>
-
-          <div v-if="getPassesForSat(48963).length === 0" class="py-6 text-center text-sky-200 text-sm font-semibold">
-            ไม่มีรอบพาสผ่านในวันนี้
           </div>
         </div>
       </div>

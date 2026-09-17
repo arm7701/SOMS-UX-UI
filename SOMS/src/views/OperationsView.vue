@@ -163,15 +163,15 @@ const handleDelete = async () => {
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-space-700">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
       <div>
         <div class="flex items-center gap-2">
-          <Users class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-slate-900 dark:text-white">
+          <Users class="w-6 h-6 text-zinc-300" />
+          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white">
             ตารางผู้ปฏิบัติเวร (Operator List)
           </h1>
         </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p class="text-xs sm:text-sm text-slate-300 font-medium font-prompt mt-1">
           การจัดเวรประจำวันของเจ้าหน้าที่อำนวยการบินและควบคุมสถานีภาคพื้นดิน
         </p>
       </div>
@@ -179,10 +179,10 @@ const handleDelete = async () => {
       <div>
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0c1424] hover:bg-[#121f38] text-cyan-200 hover:text-white border border-cyan-700/60 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer font-prompt"
           @click="openAddModal()"
         >
-          <Plus class="w-4 h-4" />
+          <Plus class="w-4 h-4 text-cyan-400" />
           <span>บันทึกเวรปฏิบัติการ</span>
         </button>
       </div>
@@ -197,23 +197,23 @@ const handleDelete = async () => {
     >
       <template #cell(date_label)="{ row, value }">
         <div class="flex items-center gap-2">
-          <span class="font-mono text-xs font-semibold text-slate-800 dark:text-slate-100">{{ value }}</span>
-          <span v-if="row.isToday" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/50 dark:text-rose-400">
+          <span class="font-mono text-xs font-semibold text-white">{{ value }}</span>
+          <span v-if="row.isToday" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-950/60 text-rose-300 border border-rose-800/80">
             TODAY
           </span>
         </div>
       </template>
 
       <template #cell(md_name)="{ value }">
-        <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ value }}</span>
+        <span class="text-xs font-semibold text-slate-100">{{ value }}</span>
       </template>
 
       <template #cell(fmo_name)="{ value }">
-        <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ value }}</span>
+        <span class="text-xs font-semibold text-slate-100">{{ value }}</span>
       </template>
 
       <template #cell(gso_name)="{ value }">
-        <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ value }}</span>
+        <span class="text-xs font-semibold text-slate-100">{{ value }}</span>
       </template>
 
       <template #actions="{ row }">
@@ -221,7 +221,7 @@ const handleDelete = async () => {
           <button
             v-if="row.rawDuties.length > 0"
             type="button"
-            class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-space-700 dark:text-slate-300 dark:hover:bg-space-800 text-xs transition-colors"
+            class="p-1.5 rounded-lg border border-zinc-700 bg-zinc-850 text-zinc-300 hover:bg-zinc-750 hover:text-white hover:border-zinc-500 text-xs transition-colors shadow-2xs"
             title="แก้ไขเวรของวันนี้"
             @click="openEditModal(row.rawDuties[0])"
           >
@@ -229,7 +229,7 @@ const handleDelete = async () => {
           </button>
           <button
             type="button"
-            class="p-1.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-300 text-xs transition-colors"
+            class="p-1.5 rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-200 hover:bg-zinc-700 hover:text-white text-xs transition-colors shadow-2xs"
             title="เพิ่มผู้เข้าเวรในวันนี้"
             @click="openAddModal(row.date)"
           >
@@ -247,25 +247,25 @@ const handleDelete = async () => {
     >
       <form id="duty-form" class="space-y-4" @submit.prevent="handleSubmit">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            วันที่ปฏิบัติหน้าที่ <span class="text-rose-500">*</span>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">
+            วันที่ปฏิบัติหน้าที่ <span class="text-rose-400">*</span>
           </label>
           <input
             v-model="formData.operation_date"
             type="date"
             required
-            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white focus:outline-none focus:border-zinc-500"
           />
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            ผู้ปฏิบัติเวร <span class="text-rose-500">*</span>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">
+            ผู้ปฏิบัติเวร <span class="text-rose-400">*</span>
           </label>
           <select
             v-model="formData.rbac_id"
             required
-            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white focus:outline-none focus:border-zinc-500"
           >
             <option value="" disabled>-- เลือกเจ้าหน้าที่ --</option>
             <option
@@ -279,13 +279,13 @@ const handleDelete = async () => {
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            หน้าที่ในเวร (Role) <span class="text-rose-500">*</span>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">
+            หน้าที่ในเวร (Role) <span class="text-rose-400">*</span>
           </label>
           <select
             v-model="formData.rbac_role"
             required
-            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white focus:outline-none focus:border-zinc-500"
           >
             <option value="MD">Mission Director (MD)</option>
             <option value="FMO">Flight and Mission Operator (FMO)</option>
@@ -294,14 +294,14 @@ const handleDelete = async () => {
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">
             หมายเหตุ/บันทึกการปฏิบัติ
           </label>
           <textarea
             v-model="formData.operation_note"
             rows="3"
             placeholder="รายละเอียดงานหรือเหตุการณ์ในเวร"
-            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500"
           ></textarea>
         </div>
       </form>
@@ -309,7 +309,7 @@ const handleDelete = async () => {
       <template #footer>
         <button
           type="button"
-          class="px-4 py-2 text-xs font-medium rounded-xl border border-slate-300 dark:border-space-600 hover:bg-slate-100 dark:hover:bg-space-700 text-slate-700 dark:text-slate-200"
+          class="px-4 py-2 text-xs font-medium rounded-xl border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200"
           @click="showModal = false"
         >
           ยกเลิก
@@ -317,7 +317,7 @@ const handleDelete = async () => {
         <button
           type="submit"
           form="duty-form"
-          class="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+          class="px-5 py-2 text-xs font-semibold rounded-xl bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 hover:from-zinc-600 hover:to-slate-700 border border-zinc-500/60 text-white shadow-xs"
         >
           บันทึกข้อมูล
         </button>

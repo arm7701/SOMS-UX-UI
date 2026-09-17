@@ -3,8 +3,7 @@
  * ============================================================================
  * ไฟล์: src/views/PassesView.vue
  * วัตถุประสงค์: หน้าจอแผนการผ่านของดาวเทียม (Pass Detail Schedule)
- * แสดงตารางเวลา AOS/LOS ทั้งเวลา UTC และเวลาไทย พร้อมการแจ้งเตือนมุมยกต่ำ (< 5 องศา)
- * และปุ่มเชื่อมโยงสร้างรายงานภารกิจจากพาสได้ทันที
+ * ธีมดำเทาไททาเนียม: คอนทราสต์คมชัดทุกเซลล์ พร้อมระบบกรองและส่งออก CSV
  * ============================================================================
  */
 import { ref, onMounted, computed, watch } from 'vue'
@@ -118,56 +117,55 @@ const exportPassesToCsv = () => {
   const rows = filteredPasses.value
   if (!rows || rows.length === 0) {
     appStore.showToast('ไม่มีข้อมูล', 'ไม่มีรายการรอบพาสสำหรับส่งออกในขณะนี้', 'warning')
-    return
+  } else {
+    const headers = ['ลำดับ', 'ดาวเทียม', 'รอบพาส', 'วันที่ (ไทย)', 'AOS (UTC)', 'LOS (UTC)', 'AOS (ไทย)', 'LOS (ไทย)', 'มุมยกสูงสุด (MaxEl)', 'ระยะเวลา', 'สถานะ']
+    const csvRows = [headers.join(',')]
+
+    rows.forEach((r, idx) => {
+      const row = [
+        idx + 1,
+        `"${r.satellite_name}"`,
+        `"${r.pass_name || ''}"`,
+        `"${r.local_date || ''}"`,
+        `"${r.aos_time_utc}"`,
+        `"${r.los_time_utc}"`,
+        `"${r.aos_time_local}"`,
+        `"${r.los_time_local}"`,
+        r.maxElevation,
+        `"${r.duration_min}m ${r.duration_sec}s"`,
+        `"${r.isLowElevation ? 'Abort (<5°)' : 'Ready'}"`
+      ]
+      csvRows.push(row.join(','))
+    })
+
+    const csvContent = '\uFEFF' + csvRows.join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `soms-passes-${selectedSatellite.value}-${new Date().toISOString().slice(0, 10)}.csv`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+
+    appStore.showToast('ส่งออกสำเร็จ', `ดาวน์โหลดตารางพาส ${rows.length} รายการเป็นไฟล์ CSV เรียบร้อยแล้ว`)
   }
-
-  const headers = ['ลำดับ', 'ดาวเทียม', 'รอบพาส', 'วันที่ (ไทย)', 'AOS (UTC)', 'LOS (UTC)', 'AOS (ไทย)', 'LOS (ไทย)', 'มุมยกสูงสุด (MaxEl)', 'ระยะเวลา', 'สถานะ']
-  const csvRows = [headers.join(',')]
-
-  rows.forEach((r, idx) => {
-    const row = [
-      idx + 1,
-      `"${r.satellite_name}"`,
-      `"${r.pass_name}"`,
-      `"${r.local_date}"`,
-      `"${r.aos_time_utc}"`,
-      `"${r.los_time_utc}"`,
-      `"${r.aos_time_local}"`,
-      `"${r.los_time_local}"`,
-      r.maxElevation,
-      `"${r.duration_min}m ${r.duration_sec}s"`,
-      `"${r.isLowElevation ? 'Abort (<5°)' : 'Ready'}"`
-    ]
-    csvRows.push(row.join(','))
-  })
-
-  const csvContent = '\uFEFF' + csvRows.join('\n')
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `soms-passes-${selectedSatellite.value}-${new Date().toISOString().slice(0, 10)}.csv`
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
-
-  appStore.showToast('ส่งออกสำเร็จ', `ดาวน์โหลดตารางพาส ${rows.length} รายการเป็นไฟล์ CSV เรียบร้อยแล้ว`)
 }
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-space-700">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-space-700">
       <div>
         <div class="flex items-center gap-2">
-          <CalendarDays class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-slate-900 dark:text-white">
+          <CalendarDays class="w-6 h-6 text-cyan-400" />
+          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white">
             แผนการผ่านดาวเทียม (Pass Detail)
           </h1>
         </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p class="text-xs sm:text-sm text-slate-300 mt-1 font-prompt font-medium">
           ตารางเวลาการโคจรผ่านสถานีภาคพื้นดิน (AOS - Acquisition of Signal / LOS - Loss of Signal)
         </p>
       </div>
@@ -176,22 +174,22 @@ const exportPassesToCsv = () => {
       <div class="flex items-center gap-2.5 flex-wrap">
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-sky-200/80 dark:border-sky-800/50 bg-sky-50 dark:bg-space-850 hover:bg-sky-100 dark:hover:bg-space-800 text-sky-700 dark:text-sky-300 text-xs font-semibold transition-colors shadow-2xs"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-cyan-700/60 bg-[#0c1424] hover:bg-[#121f38] text-cyan-200 hover:text-white text-xs sm:text-sm font-bold transition-all shadow-xs cursor-pointer font-prompt"
           title="ดาวน์โหลดตารางพาสเป็นไฟล์ CSV สำหรับ Excel"
           @click="exportPassesToCsv"
         >
-          <Download class="w-3.5 h-3.5 text-sky-500" />
+          <Download class="w-4 h-4 text-cyan-400" />
           <span>ส่งออก CSV</span>
         </button>
 
-        <div class="flex items-center gap-2">
-          <label for="sat-select" class="text-xs font-semibold text-slate-600 dark:text-slate-300">
+        <div class="flex items-center gap-2 font-prompt">
+          <label for="sat-select" class="text-xs sm:text-sm font-semibold text-slate-200">
             ดาวเทียม:
           </label>
           <select
             id="sat-select"
             v-model="selectedSatellite"
-            class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-xs font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-500/20 shadow-2xs"
+            class="px-3 py-1.5 rounded-xl border border-space-600 bg-space-850 text-xs sm:text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 shadow-xs cursor-pointer font-prompt"
             @change="fetchPasses"
           >
             <option value="46320">NAPA-1 N (46320)</option>
@@ -203,54 +201,54 @@ const exportPassesToCsv = () => {
 
     <!-- Quick Pass Summary Chips (เต็มพื้นที่หน้าจอ พร้อมไอคอนและตัวเลขคมชัด) -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 lg:gap-5 w-full">
-      <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-space-850 border border-slate-200 dark:border-space-700 shadow-2xs flex items-center justify-between font-prompt">
+      <div class="p-4 sm:p-5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/80 border border-cyan-200 dark:border-cyan-800/60 flex items-center justify-center text-cyan-600 dark:text-cyan-400">
+          <div class="w-10 h-10 rounded-xl bg-cyan-950/80 border border-cyan-800/60 flex items-center justify-center text-cyan-400">
             <Orbit class="w-5 h-5" />
           </div>
           <div>
-            <span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-sky-200 block">พาสทั้งหมดที่ตรวจพบ</span>
-            <span class="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white">{{ stats.total }} รอบ</span>
+            <span class="text-xs sm:text-sm font-semibold text-slate-300 block">พาสทั้งหมดที่ตรวจพบ</span>
+            <span class="text-xl sm:text-2xl font-black font-mono text-white">{{ stats.total }} รอบ</span>
           </div>
         </div>
       </div>
-      <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-space-850 border border-slate-200 dark:border-space-700 shadow-2xs flex items-center justify-between font-prompt">
+      <div class="p-4 sm:p-5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+          <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-800/60 flex items-center justify-center text-emerald-400">
             <Sparkles class="w-5 h-5" />
           </div>
           <div>
-            <span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-sky-200 block">พาสมุมยกปกติ (พร้อมปฏิบัติ)</span>
-            <span class="text-xl sm:text-2xl font-black font-mono text-emerald-600 dark:text-emerald-400">{{ stats.normal }} รอบ</span>
+            <span class="text-xs sm:text-sm font-semibold text-slate-300 block">พาสมุมยกปกติ (พร้อมปฏิบัติ)</span>
+            <span class="text-xl sm:text-2xl font-black font-mono text-emerald-400">{{ stats.normal }} รอบ</span>
           </div>
         </div>
       </div>
-      <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-space-850 border border-slate-200 dark:border-space-700 shadow-2xs flex items-center justify-between font-prompt">
+      <div class="p-4 sm:p-5 rounded-2xl bg-[#0c121e]/90 border border-slate-700/80 shadow-xs flex items-center justify-between font-prompt">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center text-rose-600 dark:text-rose-400">
+          <div class="w-10 h-10 rounded-xl bg-rose-950/80 border border-rose-800/60 flex items-center justify-center text-rose-400">
             <AlertCircle class="w-5 h-5" />
           </div>
           <div>
-            <span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-sky-200 block">พาสมุมต่ำ (&lt; 5° แนะนำ Abort)</span>
-            <span class="text-xl sm:text-2xl font-black font-mono text-rose-600 dark:text-rose-400">{{ stats.lowEl }} รอบ</span>
+            <span class="text-xs sm:text-sm font-semibold text-slate-300 block">พาสมุมต่ำ (&lt; 5° แนะนำ Abort)</span>
+            <span class="text-xl sm:text-2xl font-black font-mono text-rose-400">{{ stats.lowEl }} รอบ</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Filter Chips Bar (ปุ่มกรองพาสด่วน) -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs font-semibold select-none flex-wrap w-full font-prompt">
-      <span class="text-sky-600 dark:text-sky-200 flex items-center gap-1.5 mr-1 flex-shrink-0 font-semibold">
-        <Filter class="w-4 h-4 text-sky-500" />
+    <!-- Filter Chips Bar (ปุ่มกรองพาสด่วน กระจายตัวสวยงามบนทุกขนาดหน้าจอ) -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs font-semibold select-none font-prompt flex-wrap w-full">
+      <span class="text-zinc-400 flex items-center gap-1.5 mr-1 flex-shrink-0 font-semibold">
+        <Filter class="w-4 h-4 text-cyan-400" />
         <span>ตัวกรอง:</span>
       </span>
 
       <button
         type="button"
-        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap"
+        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap cursor-pointer"
         :class="filterMode === 'all'
-          ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
-          : 'bg-white dark:bg-space-850 border-slate-200 dark:border-space-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-space-800'"
+          ? 'bg-zinc-700 border-zinc-500 text-white shadow-sm'
+          : 'bg-space-850 border-space-700 text-slate-200 hover:bg-space-800 hover:text-white'"
         @click="filterMode = 'all'"
       >
         ทั้งหมด ({{ stats.total }})
@@ -258,50 +256,50 @@ const exportPassesToCsv = () => {
 
       <button
         type="button"
-        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1"
+        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1 cursor-pointer"
         :class="filterMode === 'today'
-          ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
-          : 'bg-white dark:bg-space-850 border-slate-200 dark:border-space-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-space-800'"
+          ? 'bg-zinc-700 border-zinc-500 text-white shadow-sm'
+          : 'bg-space-850 border-space-700 text-slate-200 hover:bg-space-800 hover:text-white'"
         @click="filterMode = 'today'"
       >
         <span>📅 เฉพาะวันนี้</span>
-        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" :class="filterMode === 'today' ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300'">{{ stats.today }}</span>
+        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" :class="filterMode === 'today' ? 'bg-space-900 text-white' : 'bg-space-800 text-zinc-300'">{{ stats.today }}</span>
       </button>
 
       <button
         type="button"
-        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1"
+        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1 cursor-pointer"
         :class="filterMode === 'upcoming'
-          ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
-          : 'bg-white dark:bg-space-850 border-slate-200 dark:border-space-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-space-800'"
+          ? 'bg-zinc-700 border-zinc-500 text-white shadow-sm'
+          : 'bg-space-850 border-space-700 text-slate-200 hover:bg-space-800 hover:text-white'"
         @click="filterMode = 'upcoming'"
       >
         <span>⏳ ที่จะมาถึง (Upcoming)</span>
-        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" :class="filterMode === 'upcoming' ? 'bg-white/20 text-white' : 'bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-300'">{{ stats.upcoming }}</span>
+        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" :class="filterMode === 'upcoming' ? 'bg-space-900 text-white' : 'bg-space-800 text-zinc-300'">{{ stats.upcoming }}</span>
       </button>
 
       <button
         type="button"
-        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1"
+        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1 cursor-pointer"
         :class="filterMode === 'high_el'
-          ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs'
-          : 'bg-white dark:bg-space-850 border-slate-200 dark:border-space-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-space-800'"
+          ? 'bg-emerald-950/80 border-emerald-600 text-emerald-300 shadow-sm'
+          : 'bg-space-850 border-space-700 text-slate-200 hover:bg-space-800 hover:text-white'"
         @click="filterMode = 'high_el'"
       >
         <span>🎯 มุมยกสูง (&ge; 20°)</span>
-        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" :class="filterMode === 'high_el' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300'">{{ stats.highEl }}</span>
+        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" :class="filterMode === 'high_el' ? 'bg-emerald-900 text-emerald-200' : 'bg-space-800 text-zinc-300'">{{ stats.highEl }}</span>
       </button>
 
       <button
         type="button"
-        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1"
+        class="px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1 cursor-pointer"
         :class="filterMode === 'low_el'
-          ? 'bg-rose-600 border-rose-600 text-white shadow-xs'
-          : 'bg-white dark:bg-space-850 border-slate-200 dark:border-space-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-space-800'"
+          ? 'bg-rose-950/80 border-rose-600 text-rose-300 shadow-sm'
+          : 'bg-space-850 border-space-700 text-slate-200 hover:bg-space-800 hover:text-white'"
         @click="filterMode = 'low_el'"
       >
         <span>⚠️ มุมต่ำ (&lt; 5° Abort)</span>
-        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" :class="filterMode === 'low_el' ? 'bg-white/20 text-white' : 'bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300'">{{ stats.lowEl }}</span>
+        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" :class="filterMode === 'low_el' ? 'bg-rose-900 text-rose-200' : 'bg-space-800 text-zinc-300'">{{ stats.lowEl }}</span>
       </button>
     </div>
 
@@ -313,20 +311,20 @@ const exportPassesToCsv = () => {
       :default-page-size="25"
     >
       <template #cell(satellite_name)="{ row }">
-        <div class="flex items-center gap-1.5 font-semibold text-xs text-slate-800 dark:text-slate-100">
-          <Orbit class="w-3.5 h-3.5 text-blue-600" />
+        <div class="flex items-center gap-1.5 font-semibold text-xs text-white">
+          <Orbit class="w-3.5 h-3.5 text-zinc-300" />
           <span>{{ row.satellite_name }}</span>
         </div>
       </template>
 
       <template #cell(utc_time)="{ value }">
-        <span class="font-mono text-xs text-blue-700 dark:text-blue-400 font-medium">
+        <span class="font-mono text-xs text-slate-200 font-medium">
           {{ value }}
         </span>
       </template>
 
       <template #cell(local_time)="{ value }">
-        <span class="font-mono text-xs text-slate-700 dark:text-slate-300">
+        <span class="font-mono text-xs text-slate-200 font-medium">
           {{ value }}
         </span>
       </template>
@@ -334,7 +332,7 @@ const exportPassesToCsv = () => {
       <template #cell(maxEl)="{ value, row }">
         <span
           class="font-mono font-bold text-xs"
-          :class="row.isLowElevation ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-slate-100'"
+          :class="row.isLowElevation ? 'text-rose-400' : 'text-white'"
         >
           {{ value }}°
         </span>
@@ -350,7 +348,7 @@ const exportPassesToCsv = () => {
       <template #actions="{ row }">
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950/50 dark:border-blue-800 dark:text-blue-300 text-xs font-semibold transition-colors"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-500/60 bg-zinc-700 hover:bg-zinc-600 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer font-prompt"
           title="สร้างรายงานบันทึกผลการปฏิบัติการพาสนี้"
           @click="createReportFromPass(row)"
         >

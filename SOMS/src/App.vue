@@ -4,7 +4,7 @@
  * ไฟล์: src/App.vue
  * วัตถุประสงค์: Root Component ของแอปพลิเคชัน
  * จัดการ Layout โครงสร้างหน้าจอ (Navbar, Sidebar, Main Content, Footer, Toasts)
- * พร้อมระบบจัดการธีมและสถานะการยืนยันตัวตน
+ * พร้อมระบบจัดการธีมและสถานะการยืนยันตัวตน (Obsidian Charcoal & Titanium Slate)
  * ============================================================================
  */
 import { computed, onMounted } from 'vue'
@@ -33,19 +33,21 @@ const isAuthPage = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-[#030816] text-slate-100 font-sans relative selection:bg-sky-500 selection:text-white overflow-x-hidden">
-    <!-- แถบเรืองแสงสีฟ้าสว่างด้านบนสุด (Top Sky Gradient Accent Line) -->
-    <div class="h-[2px] w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent fixed top-0 left-0 right-0 z-50 pointer-events-none shadow-[0_0_12px_rgba(56,189,248,0.8)]"></div>
-
-    <!-- แสงเรืองรองมิติอวกาศลึก สบายตา เหมาะสำหรับใช้งานในที่มืด/แสงน้อย ไม่แยงตา (Cosmic Ambient Deep Glows) -->
+  <div
+    class="min-h-screen flex flex-col text-slate-100 font-sans relative selection:bg-cyan-800 selection:text-white overflow-x-hidden"
+    style="background: radial-gradient(ellipse at 50% 0%, #1c2d47 0%, #132238 45%, #0c1728 100%);"
+  >
+    <!-- แสงเรืองรองโทนแอโรสเปซเนวีสว่างตา สบายตาในทุกสภาพแวดล้อม (Tactical Aerospace Ambient Background) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      <!-- Deep Cosmic Nebula Glows -->
-      <div class="absolute -top-40 -right-40 w-[650px] h-[650px] rounded-full bg-cyan-700/10 blur-[160px]"></div>
-      <div class="absolute top-1/3 -left-40 w-[600px] h-[600px] rounded-full bg-blue-800/12 blur-[170px]"></div>
-      <div class="absolute -bottom-40 right-1/4 w-[700px] h-[700px] rounded-full bg-sky-600/8 blur-[180px]"></div>
-
-      <!-- Tactical Micro Coordinate Grid Pattern (สวยว้าว คมชัด ไม่ลายตา) -->
-      <div class="absolute inset-0 bg-[linear-gradient(to_right,#38bdf806_1px,transparent_1px),linear-gradient(to_bottom,#38bdf806_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none"></div>
+      <!-- Tactical Coordinate Grid & Telemetry Matrix (ตารางพิกัดยุทธการ ละมุนตา ไม่กลืนข้อความ) -->
+      <div
+        class="absolute inset-0 opacity-60"
+        style="background-image: linear-gradient(to right, rgba(148, 163, 184, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(148, 163, 184, 0.04) 1px, transparent 1px); background-size: 36px 36px;"
+      ></div>
+      <!-- Luminous Cyan, Blue & Sky Ambient Glows (มิติความลึก สว่าง สบายตา ไม่แย่งสายตา) -->
+      <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] rounded-full bg-cyan-500/12 blur-[170px]"></div>
+      <div class="absolute top-1/3 -left-40 w-[700px] h-[700px] rounded-full bg-blue-600/12 blur-[180px]"></div>
+      <div class="absolute -bottom-40 right-1/4 w-[900px] h-[900px] rounded-full bg-sky-600/10 blur-[200px]"></div>
     </div>
 
     <!-- Toast Notifications ลอยมุมขวาบน -->
@@ -55,38 +57,43 @@ const isAuthPage = computed(() => {
     <CommandPalette v-model="appStore.commandPaletteOpen" />
 
     <!-- หน้าจอ Login / Setup Password แบบ Standalone Card -->
-    <div v-if="isAuthPage" class="flex-1 flex flex-col relative z-10">
-      <router-view />
-    </div>
-
-    <!-- โครงสร้างหน้าจอหลักของระบบ (Main Layout: App Shell สมบูรณ์แบบ ไร้รอยต่อ ไร้รอยแหว่ง) -->
-    <div v-else class="flex-1 flex flex-col h-screen overflow-hidden relative z-10">
-      <!-- Navbar ด้านบน (Full width) -->
-      <AppNavbar class="flex-shrink-0" />
-
-      <!-- ส่วนกลาง: Sidebar ด้านข้าง + Content Area -->
-      <div class="flex-1 flex w-full overflow-hidden min-h-0">
-        <!-- Sidebar ด้านข้าง (เต็มความสูง 100% ตลอดแนว ไม่มีการขาดช่วงหรือแหว่งใต้แถบ) -->
-        <AppSidebar />
-
-        <!-- ส่วนแสดงผลเนื้อหาหลัก (ขยายเต็มพื้นที่หน้าจอ 100% ไร้ขอบข้างเหลือทิ้ง รองรับมัลติแพลตฟอร์ม) -->
-        <div class="flex-1 flex flex-col min-w-0 overflow-y-auto overflow-x-hidden transition-all duration-300">
-          <main id="main" class="flex-1 p-3.5 sm:p-5 lg:p-6 xl:p-8 w-full max-w-none pb-20 lg:pb-10">
-            <router-view v-slot="{ Component }">
-              <Transition name="fade" mode="out-in">
-                <component :is="Component" />
-              </Transition>
-            </router-view>
-          </main>
-
-          <!-- Footer ด้านล่างสุด: เต็มความกว้างชิดท้ายเนื้อหาอย่างลงตัว ไร้รอยต่อ ไร้รอยแหว่ง 100% -->
-          <AppFooter class="pb-16 lg:pb-0 flex-shrink-0" />
-        </div>
+    <Transition name="auth-fade" mode="out-in">
+      <div v-if="isAuthPage" key="auth-screen" class="flex-1 flex flex-col relative z-10">
+        <router-view />
       </div>
 
-      <!-- แถบเมนูด้านล่างสำหรับจอมือถือ (Mobile Bottom Dock) -->
-      <MobileBottomNav />
-    </div>
+      <!-- โครงสร้างหน้าจอหลักของระบบ (Main Layout) -->
+      <div v-else key="main-screen" class="flex-1 flex flex-col min-h-screen relative z-10">
+        <!-- Navbar ด้านบน (Sticky Top, Full Width) -->
+        <AppNavbar />
+
+        <!-- พื้นที่กลางเชื่อมต่อระหว่าง Navbar และ Footer -->
+        <div class="flex-1 flex w-full min-h-0">
+          <!-- Sidebar ด้านข้าง -->
+          <AppSidebar />
+
+          <!-- ส่วนแสดงผลเนื้อหาหลัก (Main Content: ขยายเต็มพื้นที่หน้าจอ 100% ไร้ขอบข้างเหลือทิ้ง รองรับมัลติแพลตฟอร์ม) -->
+          <div class="flex-1 flex flex-col min-w-0 transition-all duration-300">
+            <main
+              id="main"
+              class="flex-1 p-3.5 sm:p-5 lg:p-6 xl:p-8 w-full max-w-none transition-all duration-300 pb-20 lg:pb-10"
+            >
+              <router-view v-slot="{ Component }">
+                <Transition name="fade" mode="out-in">
+                  <component :is="Component" />
+                </Transition>
+              </router-view>
+            </main>
+          </div>
+        </div>
+
+        <!-- Footer ด้านล่างสุด เต็มความกว้างหน้าจอ (100% Full-Width Grounding Footer) -->
+        <AppFooter class="pb-16 lg:pb-0" />
+
+        <!-- แถบเมนูด้านล่างสำหรับจอมือถือ (Mobile Bottom Dock) -->
+        <MobileBottomNav />
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -97,6 +104,18 @@ const isAuthPage = computed(() => {
 }
 .fade-enter-from,
 .fade-leave-to {
+  opacity: 0;
+}
+
+/* รอยต่อระหว่างหน้าจอ Login และ Dashboard ให้สมูท นุ่มนวล ไร้รอยต่อ */
+.auth-fade-enter-active {
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.auth-fade-leave-active {
+  transition: opacity 0.3s ease-in;
+}
+.auth-fade-enter-from,
+.auth-fade-leave-to {
   opacity: 0;
 }
 </style>

@@ -2,7 +2,7 @@
 /**
  * ============================================================================
  * ไฟล์: src/components/common/ConfirmDialog.vue
- * วัตถุประสงค์: กล่องข้อความถามยืนยันก่อนลบข้อมูล หรือกระทำการสำคัญ
+ * วัตถุประสงค์: กล่องข้อความถามยืนยันก่อนลบข้อมูล หรือกระทำการสำคัญ (ธีมดำเทา)
  * ============================================================================
  */
 import { AlertTriangle } from 'lucide-vue-next'
@@ -37,13 +37,13 @@ const onCancel = () => {
   >
     <div class="flex items-start gap-4">
       <div
-        class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-        :class="danger ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400' : 'bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400'"
+        class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+        :class="danger ? 'bg-rose-950/60 text-rose-400 border border-rose-800/60' : 'bg-amber-950/60 text-amber-400 border border-amber-800/60'"
       >
         <AlertTriangle class="w-5 h-5" />
       </div>
       <div>
-        <p class="text-sm text-slate-700 dark:text-slate-300">
+        <p class="text-sm text-slate-100 font-prompt leading-relaxed">
           {{ message }}
         </p>
       </div>
@@ -52,7 +52,7 @@ const onCancel = () => {
     <template #footer>
       <button
         type="button"
-        class="px-4 py-2 rounded-lg text-sm font-medium border border-slate-300 dark:border-space-600 hover:bg-slate-100 dark:hover:bg-space-700 text-slate-700 dark:text-slate-200 transition-colors"
+        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium border border-space-600 bg-space-800 hover:bg-space-700 text-slate-200 hover:text-white transition-colors cursor-pointer font-prompt"
         @click="onCancel"
       >
         {{ cancelText }}
@@ -60,8 +60,8 @@ const onCancel = () => {
       <button
         type="button"
         :disabled="loading"
-        class="px-4 py-2 rounded-lg text-sm font-medium text-white shadow-xs transition-colors"
-        :class="danger ? 'bg-rose-600 hover:bg-rose-700' : 'bg-blue-600 hover:bg-blue-700'"
+        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white shadow-sm transition-colors cursor-pointer font-prompt disabled:opacity-50"
+        :class="danger ? 'bg-rose-600 hover:bg-rose-500' : 'bg-zinc-700 hover:bg-zinc-600 border border-zinc-500/60'"
         @click="onConfirm"
       >
         <span v-if="loading">กำลังประมวลผล...</span>

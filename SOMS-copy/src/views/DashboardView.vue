@@ -33,11 +33,14 @@ import {
   Move,
   Trash2,
   LineChart,
-  Maximize2
+  Maximize2,
+  Copy,
+  Monitor
 } from 'lucide-vue-next'
 
 import StatCard from '@/components/common/StatCard.vue'
 import SatelliteSummary from '@/components/dashboard/SatelliteSummary.vue'
+import KpiOverviewWidget from '@/components/dashboard/KpiOverviewWidget.vue'
 import SpaceWeatherWidget from '@/components/dashboard/SpaceWeatherWidget.vue'
 import TodayPassesWidget from '@/components/dashboard/TodayPassesWidget.vue'
 import DutyOperatorsWidget from '@/components/dashboard/DutyOperatorsWidget.vue'
@@ -67,348 +70,207 @@ const stageWidth = ref(1280)
 const isCompact = ref(false)
 const selectedWidgetId = ref('orbit-tracker')
 
-// ฟังก์ชันคำนวณการจัดวางวิดเจ็ตให้เต็มความกว้างสเตจ 100% ไม่เหลือพื้นที่ว่างด้านข้าง
-const buildFullWidthLayout = (stageW = 1400) => {
+// ฟังก์ชันคำนวณการจัดวางวิดเจ็ตอัจฉริยะ (Multi-Tier Smart Layout Engine)
+// รองรับตั้งแต่จอแท็บเล็ต/เดสก์ท็อป ไปจนถึง Ultrawide, 4K, และ Video Wall ขนาดใหญ่ (10+ จอต่อกันในห้องศูนย์ปฏิบัติการ)
+const buildSmartLayout = (stageW = 1400) => {
   const W = Math.max(920, stageW)
   const GAP = 16
 
-  // Row 1: Orbit Tracker (60%) + Pass Countdown (40%)
+  if (W >= 4200) {
+    // =========================================================================
+    // TIER 1: OPERATOR VIDEO WALL (สำหรับต่อจอ 10+ จอ เช่น 7680x2160, 11520x2160)
+    // จัดเรียงแบบ 3 แถวพาโนรามากว้างขวางเต็มผนัง ไม่ต้องเลื่อนสกอร์บาร์
+    // =========================================================================
+    // Row 0: KPI Overview (42%) + Satellite Summaries (58%)
+    const r0_kpiW = Math.round((W - GAP) * 0.42)
+    const r0_sumW = W - r0_kpiW - GAP
+    const r0_y = 0
+    const r0_h = 240
+
+    // Row 1: Orbit Tracker (36%) + Pass Countdown (22%) + Altitude (14%) + Attitude (14%) + Weather (14%)
+    const r1_y = r0_y + r0_h + GAP
+    const r1_h = 560
+    const r1_orbitW = Math.round((W - GAP * 4) * 0.36)
+    const r1_passW = Math.round((W - GAP * 4) * 0.22)
+    const r1_subW = Math.floor((W - GAP * 4 - r1_orbitW - r1_passW) / 3)
+    const r1_weatherW = W - r1_orbitW - r1_passW - r1_subW * 2 - GAP * 4
+
+    // Row 2: Today Passes (16%) + Duty Operators (16%) + 8 Telemetry Charts (68% / 2 rows of 4)
+    const r2_y = r1_y + r1_h + GAP
+    const r2_h = 420
+    const r2_passW = Math.round((W - GAP * 5) * 0.16)
+    const r2_opsW = Math.round((W - GAP * 5) * 0.16)
+    const chartsTotalW = W - r2_passW - r2_opsW - GAP * 2
+    const chartColW = Math.floor((chartsTotalW - GAP * 3) / 4)
+    const chartSubH = Math.floor((r2_h - GAP) / 2)
+
+    return [
+      { id: 'kpi-overview', baseType: 'kpi-overview', title: 'KPI Operations Overview (ภาพรวมภารกิจยุทธการ)', category: 'general', satelliteColor: '#10b981', x: 0, y: r0_y, width: r0_kpiW, height: r0_h, minWidth: 420, minHeight: 130, z: 1, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'satellite-summary', baseType: 'satellite-summary', title: 'Satellite Telemetry Summaries (ข้อมูลด่วนดาวเทียม)', category: 'satellite', satelliteId: 'all', satelliteColor: '#38bdf8', x: r0_kpiW + GAP, y: r0_y, width: r0_sumW, height: r0_h, minWidth: 360, minHeight: 180, z: 2, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+      { id: 'orbit-tracker', baseType: 'orbit-tracker', title: 'Orbit Tracker (แผนที่วงโคจรสด)', category: 'general', satelliteColor: '#60a5fa', x: 0, y: r1_y, width: r1_orbitW, height: r1_h, minWidth: 420, minHeight: 380, z: 3, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'pass-countdown', baseType: 'pass-countdown', title: 'Pass Countdown (นับถอยหลังรอบพาส)', category: 'satellite', satelliteColor: '#38bdf8', x: r1_orbitW + GAP, y: r1_y, width: r1_passW, height: r1_h, minWidth: 320, minHeight: 380, z: 4, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'altitude', baseType: 'altitude', title: 'Altitude & Orbital Stats (ความสูง TLE)', category: 'satellite', satelliteColor: '#34d399', x: r1_orbitW + r1_passW + GAP * 2, y: r1_y, width: r1_subW, height: r1_h, minWidth: 280, minHeight: 200, z: 5, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'attitude', baseType: 'attitude', title: 'Spacecraft Attitude (การทรงตัว)', category: 'satellite', satelliteColor: '#fbbf24', x: r1_orbitW + r1_passW + r1_subW + GAP * 3, y: r1_y, width: r1_subW, height: r1_h, minWidth: 280, minHeight: 200, z: 6, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'weather', baseType: 'weather', title: 'Space Weather (สภาพอวกาศ NOAA)', category: 'general', satelliteColor: '#f97316', x: r1_orbitW + r1_passW + r1_subW * 2 + GAP * 4, y: r1_y, width: r1_weatherW, height: r1_h, minWidth: 280, minHeight: 200, z: 7, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+      { id: 'passes', baseType: 'passes', title: 'Today Passes (รอบพาสวันนี้)', category: 'general', satelliteColor: '#38bdf8', x: 0, y: r2_y, width: r2_passW, height: r2_h, minWidth: 320, minHeight: 240, z: 8, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'operators', baseType: 'operators', title: 'Duty Operators (เวรปฏิบัติการ)', category: 'general', satelliteColor: '#a78bfa', x: r2_passW + GAP, y: r2_y, width: r2_opsW, height: r2_h, minWidth: 320, minHeight: 240, z: 9, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+      { id: 'chart-altitude', baseType: 'chart-altitude', chartKey: 'altitude', title: 'Orbital Altitude (ความสูงวงโคจร)', category: 'telemetry', satelliteColor: '#38bdf8', x: r2_passW + r2_opsW + GAP * 2, y: r2_y, width: chartColW, height: chartSubH, minWidth: 200, minHeight: 160, z: 10, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-velocity', baseType: 'chart-velocity', chartKey: 'velocity', title: 'Velocity (ความเร็ว)', category: 'telemetry', satelliteColor: '#06b6d4', x: r2_passW + r2_opsW + GAP * 2 + (chartColW + GAP), y: r2_y, width: chartColW, height: chartSubH, minWidth: 200, minHeight: 160, z: 11, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-inclination', baseType: 'chart-inclination', chartKey: 'inclination', title: 'Inclination (มุมเอียงวงโคจร)', category: 'telemetry', satelliteColor: '#34d399', x: r2_passW + r2_opsW + GAP * 2 + (chartColW + GAP) * 2, y: r2_y, width: chartColW, height: chartSubH, minWidth: 200, minHeight: 160, z: 12, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-period', baseType: 'chart-period', chartKey: 'period', title: 'Orbital Period (คาบการโคจร)', category: 'telemetry', satelliteColor: '#3b82f6', x: r2_passW + r2_opsW + GAP * 2 + (chartColW + GAP) * 3, y: r2_y, width: W - (r2_passW + r2_opsW + GAP * 2 + (chartColW + GAP) * 3), height: chartSubH, minWidth: 200, minHeight: 160, z: 13, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+      { id: 'chart-tleAge', baseType: 'chart-tleAge', chartKey: 'tleAge', title: 'TLE Age (อายุข้อมูล TLE)', category: 'telemetry', satelliteColor: '#10b981', x: r2_passW + r2_opsW + GAP * 2, y: r2_y + chartSubH + GAP, width: chartColW, height: chartSubH, minWidth: 200, minHeight: 160, z: 14, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-meanMotion', baseType: 'chart-meanMotion', chartKey: 'meanMotion', title: 'Mean Motion (จำนวนรอบต่อวัน)', category: 'telemetry', satelliteColor: '#a78bfa', x: r2_passW + r2_opsW + GAP * 2 + (chartColW + GAP), y: r2_y + chartSubH + GAP, width: chartColW, height: chartSubH, minWidth: 200, minHeight: 160, z: 15, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-eccentricity', baseType: 'chart-eccentricity', chartKey: 'eccentricity', title: 'Eccentricity (ความรีของวงโคจร)', category: 'telemetry', satelliteColor: '#f1f5f9', x: r2_passW + r2_opsW + GAP * 2 + (chartColW + GAP) * 2, y: r2_y + chartSubH + GAP, width: chartColW, height: chartSubH, minWidth: 200, minHeight: 160, z: 16, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-anomalies', baseType: 'chart-anomalies', chartKey: 'anomalies', title: 'Mission Anomalies (ข้อขัดข้อง)', category: 'telemetry', satelliteColor: '#fb7185', x: r2_passW + r2_opsW + GAP * 2 + (chartColW + GAP) * 3, y: r2_y + chartSubH + GAP, width: W - (r2_passW + r2_opsW + GAP * 2 + (chartColW + GAP) * 3), height: chartSubH, minWidth: 200, minHeight: 160, z: 17, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false }
+    ]
+  }
+
+  if (W >= 2400) {
+    // =========================================================================
+    // TIER 2: ULTRAWIDE / 4K / DUAL MONITOR (2400px - 4200px)
+    // =========================================================================
+    const halfW = Math.floor((W - GAP) / 2)
+    const r0_y = 0
+    const r0_h = 240
+
+    const r1_y = r0_y + r0_h + GAP
+    const r1_h = 520
+    const r1_orbitW = Math.round((W - GAP * 2) * 0.48)
+    const r1_passW = Math.round((W - GAP * 2) * 0.28)
+    const r1_weatherW = W - r1_orbitW - r1_passW - GAP * 2
+
+    const r2_y = r1_y + r1_h + GAP
+    const r2_h = 280
+    const col4W = Math.floor((W - GAP * 3) / 4)
+
+    const r3_y = r2_y + r2_h + GAP
+    const r3_h = 250
+
+    const r4_y = r3_y + r3_h + GAP
+    const r4_h = 250
+
+    return [
+      { id: 'kpi-overview', baseType: 'kpi-overview', title: 'KPI Operations Overview (ภาพรวมภารกิจยุทธการ)', category: 'general', satelliteColor: '#10b981', x: 0, y: r0_y, width: halfW, height: r0_h, minWidth: 420, minHeight: 130, z: 1, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'satellite-summary', baseType: 'satellite-summary', title: 'Satellite Telemetry Summaries (ข้อมูลด่วนดาวเทียม)', category: 'satellite', satelliteId: 'all', satelliteColor: '#38bdf8', x: halfW + GAP, y: r0_y, width: W - halfW - GAP, height: r0_h, minWidth: 360, minHeight: 180, z: 2, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+      { id: 'orbit-tracker', baseType: 'orbit-tracker', title: 'Orbit Tracker (แผนที่วงโคจรสด)', category: 'general', satelliteColor: '#60a5fa', x: 0, y: r1_y, width: r1_orbitW, height: r1_h, minWidth: 420, minHeight: 380, z: 3, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'pass-countdown', baseType: 'pass-countdown', title: 'Pass Countdown (นับถอยหลังรอบพาส)', category: 'satellite', satelliteColor: '#38bdf8', x: r1_orbitW + GAP, y: r1_y, width: r1_passW, height: r1_h, minWidth: 320, minHeight: 380, z: 4, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'weather', baseType: 'weather', title: 'Space Weather (สภาพอวกาศ NOAA)', category: 'general', satelliteColor: '#f97316', x: r1_orbitW + r1_passW + GAP * 2, y: r1_y, width: r1_weatherW, height: r1_h, minWidth: 280, minHeight: 200, z: 7, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+      { id: 'altitude', baseType: 'altitude', title: 'Altitude & Orbital Stats (ความสูง TLE)', category: 'satellite', satelliteColor: '#34d399', x: 0, y: r2_y, width: col4W, height: r2_h, minWidth: 280, minHeight: 200, z: 5, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'attitude', baseType: 'attitude', title: 'Spacecraft Attitude (การทรงตัว)', category: 'satellite', satelliteColor: '#fbbf24', x: col4W + GAP, y: r2_y, width: col4W, height: r2_h, minWidth: 280, minHeight: 200, z: 6, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'passes', baseType: 'passes', title: 'Today Passes (รอบพาสวันนี้)', category: 'general', satelliteColor: '#38bdf8', x: (col4W + GAP) * 2, y: r2_y, width: col4W, height: r2_h, minWidth: 320, minHeight: 240, z: 8, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'operators', baseType: 'operators', title: 'Duty Operators (เวรปฏิบัติการ)', category: 'general', satelliteColor: '#a78bfa', x: (col4W + GAP) * 3, y: r2_y, width: W - (col4W + GAP) * 3, height: r2_h, minWidth: 320, minHeight: 240, z: 9, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+      { id: 'chart-altitude', baseType: 'chart-altitude', chartKey: 'altitude', title: 'Orbital Altitude (ความสูงวงโคจร)', category: 'telemetry', satelliteColor: '#38bdf8', x: 0, y: r3_y, width: col4W, height: r3_h, minWidth: 200, minHeight: 160, z: 10, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-velocity', baseType: 'chart-velocity', chartKey: 'velocity', title: 'Velocity (ความเร็ว)', category: 'telemetry', satelliteColor: '#06b6d4', x: col4W + GAP, y: r3_y, width: col4W, height: r3_h, minWidth: 200, minHeight: 160, z: 11, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-inclination', baseType: 'chart-inclination', chartKey: 'inclination', title: 'Inclination (มุมเอียงวงโคจร)', category: 'telemetry', satelliteColor: '#34d399', x: (col4W + GAP) * 2, y: r3_y, width: col4W, height: r3_h, minWidth: 200, minHeight: 160, z: 12, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-period', baseType: 'chart-period', chartKey: 'period', title: 'Orbital Period (คาบการโคจร)', category: 'telemetry', satelliteColor: '#3b82f6', x: (col4W + GAP) * 3, y: r3_y, width: W - (col4W + GAP) * 3, height: r3_h, minWidth: 200, minHeight: 160, z: 13, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+      { id: 'chart-tleAge', baseType: 'chart-tleAge', chartKey: 'tleAge', title: 'TLE Age (อายุข้อมูล TLE)', category: 'telemetry', satelliteColor: '#10b981', x: 0, y: r4_y, width: col4W, height: r4_h, minWidth: 200, minHeight: 160, z: 14, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-meanMotion', baseType: 'chart-meanMotion', chartKey: 'meanMotion', title: 'Mean Motion (จำนวนรอบต่อวัน)', category: 'telemetry', satelliteColor: '#a78bfa', x: col4W + GAP, y: r4_y, width: col4W, height: r4_h, minWidth: 200, minHeight: 160, z: 15, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-eccentricity', baseType: 'chart-eccentricity', chartKey: 'eccentricity', title: 'Eccentricity (ความรีของวงโคจร)', category: 'telemetry', satelliteColor: '#f1f5f9', x: (col4W + GAP) * 2, y: r4_y, width: col4W, height: r4_h, minWidth: 200, minHeight: 160, z: 16, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+      { id: 'chart-anomalies', baseType: 'chart-anomalies', chartKey: 'anomalies', title: 'Mission Anomalies (ข้อขัดข้อง)', category: 'telemetry', satelliteColor: '#fb7185', x: (col4W + GAP) * 3, y: r4_y, width: W - (col4W + GAP) * 3, height: r4_h, minWidth: 200, minHeight: 160, z: 17, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false }
+    ]
+  }
+
+  // =========================================================================
+  // TIER 3: STANDARD DESKTOP (W < 2400)
+  // =========================================================================
+  const row0Y = 0
+  const row0H = 180
+
+  const row1Y = row0Y + row0H + GAP
+  const row1H = 340
+
   const orbitW = Math.round((W - GAP) * 0.60)
   const passW = W - orbitW - GAP
-  const row1H = 540
+  const row2Y = row1Y + row1H + GAP
+  const row2H = 540
 
-  // Row 2: 3 คอลัมน์ (Altitude, Attitude, Space Weather)
   const col3W = Math.floor((W - GAP * 2) / 3)
-  const row2Y = row1H + GAP
-  const row2H = 260
-
-  // Row 3: 2 คอลัมน์ (Today Passes, Duty Operators)
-  const col2W = Math.floor((W - GAP) / 2)
   const row3Y = row2Y + row2H + GAP
-  const row3H = 300
+  const row3H = 260
 
-  // Row 4: 4 คอลัมน์ Telemetry Charts 1-4 (Altitude, Velocity, Inclination, Period)
-  const col4W = Math.floor((W - GAP * 3) / 4)
+  const col2W = Math.floor((W - GAP) / 2)
   const row4Y = row3Y + row3H + GAP
-  const row4H = 260
+  const row4H = 300
 
-  // Row 5: 4 คอลัมน์ Telemetry Charts 5-8 (TLE Age, Mean Motion, Eccentricity, Anomalies)
+  const col4W = Math.floor((W - GAP * 3) / 4)
   const row5Y = row4Y + row4H + GAP
   const row5H = 260
 
+  const row6Y = row5Y + row5H + GAP
+  const row6H = 260
+
   return [
-    // 1. Orbit Tracker (แผนที่วงโคจรสด)
-    {
-      id: 'orbit-tracker',
-      title: 'Orbit Tracker (แผนที่วงโคจรสด)',
-      category: 'general',
-      satelliteColor: '#60a5fa',
-      x: 0,
-      y: 0,
-      width: orbitW,
-      height: row1H,
-      minWidth: 420,
-      minHeight: 380,
-      z: 1,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 2. Pass Countdown (นับถอยหลังรอบพาส)
-    {
-      id: 'pass-countdown',
-      title: 'Pass Countdown (นับถอยหลังรอบพาส)',
-      category: 'satellite',
-      satelliteColor: '#38bdf8',
-      x: orbitW + GAP,
-      y: 0,
-      width: passW,
-      height: row1H,
-      minWidth: 320,
-      minHeight: 380,
-      z: 2,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 3. Altitude & Orbital Stats (ระดับความสูง TLE)
-    {
-      id: 'altitude',
-      title: 'Altitude & Orbital Stats (ความสูง TLE)',
-      category: 'satellite',
-      satelliteColor: '#34d399',
-      x: 0,
-      y: row2Y,
-      width: col3W,
-      height: row2H,
-      minWidth: 280,
-      minHeight: 200,
-      z: 3,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 4. Spacecraft Attitude (การทรงตัว)
-    {
-      id: 'attitude',
-      title: 'Spacecraft Attitude (การทรงตัว)',
-      category: 'satellite',
-      satelliteColor: '#fbbf24',
-      x: col3W + GAP,
-      y: row2Y,
-      width: col3W,
-      height: row2H,
-      minWidth: 280,
-      minHeight: 200,
-      z: 4,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 5. Space Weather (สภาพอวกาศ NOAA)
-    {
-      id: 'weather',
-      title: 'Space Weather (สภาพอวกาศ NOAA)',
-      category: 'general',
-      satelliteColor: '#f97316',
-      x: (col3W + GAP) * 2,
-      y: row2Y,
-      width: W - (col3W + GAP) * 2,
-      height: row2H,
-      minWidth: 280,
-      minHeight: 200,
-      z: 5,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 6. Today Passes (รอบพาสวันนี้)
-    {
-      id: 'passes',
-      title: 'Today Passes (รอบพาสวันนี้)',
-      category: 'general',
-      satelliteColor: '#38bdf8',
-      x: 0,
-      y: row3Y,
-      width: col2W,
-      height: row3H,
-      minWidth: 320,
-      minHeight: 240,
-      z: 6,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 7. Duty Operators (เวรปฏิบัติการ)
-    {
-      id: 'operators',
-      title: 'Duty Operators (เวรปฏิบัติการ)',
-      category: 'general',
-      satelliteColor: '#a78bfa',
-      x: col2W + GAP,
-      y: row3Y,
-      width: W - col2W - GAP,
-      height: row3H,
-      minWidth: 320,
-      minHeight: 240,
-      z: 7,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 8. Telemetry Chart: Altitude
-    {
-      id: 'chart-altitude',
-      chartKey: 'altitude',
-      title: 'Orbital Altitude (ความสูงวงโคจร)',
-      category: 'telemetry',
-      satelliteColor: '#38bdf8',
-      x: 0,
-      y: row4Y,
-      width: col4W,
-      height: row4H,
-      minWidth: 220,
-      minHeight: 180,
-      z: 8,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 9. Telemetry Chart: Velocity
-    {
-      id: 'chart-velocity',
-      chartKey: 'velocity',
-      title: 'Orbital Velocity (ความเร็วการโคจร)',
-      category: 'telemetry',
-      satelliteColor: '#f43f5e',
-      x: col4W + GAP,
-      y: row4Y,
-      width: col4W,
-      height: row4H,
-      minWidth: 220,
-      minHeight: 180,
-      z: 9,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 10. Telemetry Chart: Inclination
-    {
-      id: 'chart-inclination',
-      chartKey: 'inclination',
-      title: 'Orbital Inclination (มุมเอียง)',
-      category: 'telemetry',
-      satelliteColor: '#eab308',
-      x: (col4W + GAP) * 2,
-      y: row4Y,
-      width: col4W,
-      height: row4H,
-      minWidth: 220,
-      minHeight: 180,
-      z: 10,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 11. Telemetry Chart: Orbital Period
-    {
-      id: 'chart-period',
-      chartKey: 'period',
-      title: 'Orbital Period (คาบการโคจร)',
-      category: 'telemetry',
-      satelliteColor: '#3b82f6',
-      x: (col4W + GAP) * 3,
-      y: row4Y,
-      width: W - (col4W + GAP) * 3,
-      height: row4H,
-      minWidth: 220,
-      minHeight: 180,
-      z: 11,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 12. Telemetry Chart: TLE Age
-    {
-      id: 'chart-tleAge',
-      chartKey: 'tleAge',
-      title: 'TLE Age (อายุข้อมูล TLE)',
-      category: 'telemetry',
-      satelliteColor: '#10b981',
-      x: 0,
-      y: row5Y,
-      width: col4W,
-      height: row5H,
-      minWidth: 220,
-      minHeight: 180,
-      z: 12,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 13. Telemetry Chart: Mean Motion
-    {
-      id: 'chart-meanMotion',
-      chartKey: 'meanMotion',
-      title: 'Mean Motion (จำนวนรอบต่อวัน)',
-      category: 'telemetry',
-      satelliteColor: '#a78bfa',
-      x: col4W + GAP,
-      y: row5Y,
-      width: col4W,
-      height: row5H,
-      minWidth: 220,
-      minHeight: 180,
-      z: 13,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 14. Telemetry Chart: Eccentricity
-    {
-      id: 'chart-eccentricity',
-      chartKey: 'eccentricity',
-      title: 'Eccentricity (ความรีของวงโคจร)',
-      category: 'telemetry',
-      satelliteColor: '#f1f5f9',
-      x: (col4W + GAP) * 2,
-      y: row5Y,
-      width: col4W,
-      height: row5H,
-      minWidth: 220,
-      minHeight: 180,
-      z: 14,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    },
-    // 15. Telemetry Chart: Mission Anomalies
-    {
-      id: 'chart-anomalies',
-      chartKey: 'anomalies',
-      title: 'Mission Anomalies (ข้อขัดข้อง)',
-      category: 'telemetry',
-      satelliteColor: '#fb7185',
-      x: (col4W + GAP) * 3,
-      y: row5Y,
-      width: W - (col4W + GAP) * 3,
-      height: row5H,
-      minWidth: 220,
-      minHeight: 180,
-      z: 15,
-      backgroundOpacity: 94,
-      contentOpacity: 100,
-      borderOpacity: 100,
-      locked: false,
-      hidden: false
-    }
+    { id: 'kpi-overview', baseType: 'kpi-overview', title: 'KPI Operations Overview (ภาพรวมภารกิจยุทธการ)', category: 'general', satelliteColor: '#10b981', x: 0, y: row0Y, width: W, height: row0H, minWidth: 420, minHeight: 130, z: 1, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'satellite-summary', baseType: 'satellite-summary', title: 'Satellite Telemetry Summaries (ข้อมูลด่วนดาวเทียม)', category: 'satellite', satelliteId: 'all', satelliteColor: '#38bdf8', x: 0, y: row1Y, width: W, height: row1H, minWidth: 360, minHeight: 180, z: 2, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'orbit-tracker', baseType: 'orbit-tracker', title: 'Orbit Tracker (แผนที่วงโคจรสด)', category: 'general', satelliteColor: '#60a5fa', x: 0, y: row2Y, width: orbitW, height: row2H, minWidth: 420, minHeight: 380, z: 3, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'pass-countdown', baseType: 'pass-countdown', title: 'Pass Countdown (นับถอยหลังรอบพาส)', category: 'satellite', satelliteColor: '#38bdf8', x: orbitW + GAP, y: row2Y, width: passW, height: row2H, minWidth: 320, minHeight: 380, z: 4, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'altitude', baseType: 'altitude', title: 'Altitude & Orbital Stats (ความสูง TLE)', category: 'satellite', satelliteColor: '#34d399', x: 0, y: row3Y, width: col3W, height: row3H, minWidth: 280, minHeight: 200, z: 5, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'attitude', baseType: 'attitude', title: 'Spacecraft Attitude (การทรงตัว)', category: 'satellite', satelliteColor: '#fbbf24', x: col3W + GAP, y: row3Y, width: col3W, height: row3H, minWidth: 280, minHeight: 200, z: 6, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'weather', baseType: 'weather', title: 'Space Weather (สภาพอวกาศ NOAA)', category: 'general', satelliteColor: '#f97316', x: (col3W + GAP) * 2, y: row3Y, width: W - (col3W + GAP) * 2, height: row3H, minWidth: 280, minHeight: 200, z: 7, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'passes', baseType: 'passes', title: 'Today Passes (รอบพาสวันนี้)', category: 'general', satelliteColor: '#38bdf8', x: 0, y: row4Y, width: col2W, height: row4H, minWidth: 320, minHeight: 240, z: 8, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'operators', baseType: 'operators', title: 'Duty Operators (เวรปฏิบัติการ)', category: 'general', satelliteColor: '#a78bfa', x: col2W + GAP, y: row4Y, width: W - col2W - GAP, height: row4H, minWidth: 320, minHeight: 240, z: 9, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+    { id: 'chart-altitude', baseType: 'chart-altitude', chartKey: 'altitude', title: 'Orbital Altitude (ความสูงวงโคจร)', category: 'telemetry', satelliteColor: '#38bdf8', x: 0, y: row5Y, width: col4W, height: row5H, minWidth: 220, minHeight: 180, z: 10, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'chart-velocity', baseType: 'chart-velocity', chartKey: 'velocity', title: 'Velocity (ความเร็ว)', category: 'telemetry', satelliteColor: '#06b6d4', x: col4W + GAP, y: row5Y, width: col4W, height: row5H, minWidth: 220, minHeight: 180, z: 11, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'chart-inclination', baseType: 'chart-inclination', chartKey: 'inclination', title: 'Inclination (มุมเอียงวงโคจร)', category: 'telemetry', satelliteColor: '#34d399', x: (col4W + GAP) * 2, y: row5Y, width: col4W, height: row5H, minWidth: 220, minHeight: 180, z: 12, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'chart-period', baseType: 'chart-period', chartKey: 'period', title: 'Orbital Period (คาบการโคจร)', category: 'telemetry', satelliteColor: '#3b82f6', x: (col4W + GAP) * 3, y: row5Y, width: W - (col4W + GAP) * 3, height: row5H, minWidth: 220, minHeight: 180, z: 13, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+
+    { id: 'chart-tleAge', baseType: 'chart-tleAge', chartKey: 'tleAge', title: 'TLE Age (อายุข้อมูล TLE)', category: 'telemetry', satelliteColor: '#10b981', x: 0, y: row6Y, width: col4W, height: row6H, minWidth: 220, minHeight: 180, z: 14, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'chart-meanMotion', baseType: 'chart-meanMotion', chartKey: 'meanMotion', title: 'Mean Motion (จำนวนรอบต่อวัน)', category: 'telemetry', satelliteColor: '#a78bfa', x: col4W + GAP, y: row6Y, width: col4W, height: row6H, minWidth: 220, minHeight: 180, z: 15, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'chart-eccentricity', baseType: 'chart-eccentricity', chartKey: 'eccentricity', title: 'Eccentricity (ความรีของวงโคจร)', category: 'telemetry', satelliteColor: '#f1f5f9', x: (col4W + GAP) * 2, y: row6Y, width: col4W, height: row6H, minWidth: 220, minHeight: 180, z: 16, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false },
+    { id: 'chart-anomalies', baseType: 'chart-anomalies', chartKey: 'anomalies', title: 'Mission Anomalies (ข้อขัดข้อง)', category: 'telemetry', satelliteColor: '#fb7185', x: (col4W + GAP) * 3, y: row6Y, width: W - (col4W + GAP) * 3, height: row6H, minWidth: 220, minHeight: 180, z: 17, backgroundOpacity: 94, contentOpacity: 100, borderOpacity: 100, locked: false, hidden: false }
   ]
 }
 
-const DEFAULT_WIDGET_LAYOUT = buildFullWidthLayout(1400)
+const DEFAULT_WIDGET_LAYOUT = buildSmartLayout(1400)
 
-// โหลดการจัดวางที่บันทึกไว้ใน LocalStorage (เวอร์ชัน v6 รองรับเต็มหน้าจออัตโนมัติ)
+// โหลดการจัดวางที่บันทึกไว้ใน LocalStorage (เวอร์ชัน v8 รองรับ Operator Video Wall เต็มรูปแบบ)
 const savedLayout = ref((() => {
   try {
-    const raw = localStorage.getItem('soms_dashboard_layout_v6')
+    const raw = localStorage.getItem('soms_dashboard_layout_v8') || localStorage.getItem('soms_dashboard_layout_v7')
     if (raw) {
       const parsed = JSON.parse(raw)
-      if (Array.isArray(parsed) && parsed.some(w => w.id === 'chart-altitude')) {
+      if (Array.isArray(parsed) && parsed.some(w => (w.baseType || w.id) === 'kpi-overview')) {
         return parsed
       }
     }
   } catch (e) {}
   const initialWidth = typeof window !== 'undefined' ? Math.max(920, window.innerWidth - 80) : 1400
-  return buildFullWidthLayout(initialWidth)
+  return buildSmartLayout(initialWidth)
 })())
+
+// โหมดจอผนังขนาดใหญ่ (Operator Video Wall Scale Mode)
+const isVideoWallMode = ref(false)
+const toggleVideoWallMode = () => {
+  isVideoWallMode.value = !isVideoWallMode.value
+  if (isVideoWallMode.value) {
+    appStore.showToast('โหมดผนังจอขนาดใหญ่ (Video Wall)', 'เปิดการขยายขนาดข้อความและปรับแต่งเพื่อการแสดงผลบนจอห้องปฏิบัติการขนาดใหญ่')
+  } else {
+    appStore.showToast('โหมดหน้าจอปกติ', 'ปรับกลับสู่ขนาดมาตรฐาน')
+  }
+}
+
+// ขยายวิดเจ็ตเต็มจอ (Maximize to Fullscreen Modal)
+const maximizedWidget = ref(null)
+const openMaximizeModal = (widget) => {
+  maximizedWidget.value = widget
+}
+const closeMaximizeModal = () => {
+  maximizedWidget.value = null
+}
+const onKeyDown = (e) => {
+  if (e.key === 'Escape' && maximizedWidget.value) {
+    closeMaximizeModal()
+  }
+}
 
 // Draft layout ขณะอยู่ในโหมดแก้ไข (Edit mode)
 const draftLayout = ref(JSON.parse(JSON.stringify(savedLayout.value)))
@@ -448,17 +310,17 @@ const updateStageDimensions = () => {
 
 let stageResizeObs = null
 
-// ปรับขยายและจัดวางวิดเจ็ตให้เต็มความกว้างหน้าจออัตโนมัติ (Fit Full Width)
+// ปรับขยายและจัดวางวิดเจ็ตให้เต็มความกว้างหน้าจออัตโนมัติ (Fit Full Width / Multi-Tier Smart Layout)
 const fitLayoutToFullWidth = (silent = false) => {
   const currentW = stageWidth.value || (typeof window !== 'undefined' ? window.innerWidth - 64 : 1400)
-  const newLayout = buildFullWidthLayout(currentW)
+  const newLayout = buildSmartLayout(currentW)
   
   if (isEditing.value) {
     draftLayout.value = newLayout
   } else {
     savedLayout.value = newLayout
     try {
-      localStorage.setItem('soms_dashboard_layout_v6', JSON.stringify(newLayout))
+      localStorage.setItem('soms_dashboard_layout_v8', JSON.stringify(newLayout))
     } catch (e) {}
   }
   if (!silent) {
@@ -473,9 +335,10 @@ onMounted(() => {
     stageResizeObs.observe(stageRef.value)
   }
   window.addEventListener('resize', updateStageDimensions)
+  window.addEventListener('keydown', onKeyDown)
 
-  // หากเปิดครั้งแรกในเวอร์ชัน v6 ให้ขยายจัดเต็มความกว้างหน้าจออัตโนมัติ
-  if (!localStorage.getItem('soms_dashboard_layout_v6')) {
+  // หากเปิดครั้งแรกในเวอร์ชัน v8 ให้ขยายจัดเต็มความกว้างหน้าจออัตโนมัติ
+  if (!localStorage.getItem('soms_dashboard_layout_v8')) {
     nextTick(() => {
       fitLayoutToFullWidth(true)
     })
@@ -487,6 +350,7 @@ onMounted(() => {
 onUnmounted(() => {
   if (stageResizeObs) stageResizeObs.disconnect()
   window.removeEventListener('resize', updateStageDimensions)
+  window.removeEventListener('keydown', onKeyDown)
 })
 
 // เข้าสู่โหมดแก้ไข (Edit Mode)
@@ -502,7 +366,7 @@ const enterEditMode = () => {
 const saveDashboardLayout = () => {
   savedLayout.value = JSON.parse(JSON.stringify(draftLayout.value))
   try {
-    localStorage.setItem('soms_dashboard_layout_v6', JSON.stringify(savedLayout.value))
+    localStorage.setItem('soms_dashboard_layout_v8', JSON.stringify(savedLayout.value))
   } catch (e) {}
   isEditing.value = false
   appStore.showToast('บันทึกสำเร็จ', 'บันทึกการจัดวางและตำแหน่งวิดเจ็ตลงในระบบแล้ว')
@@ -517,11 +381,11 @@ const cancelEditMode = () => {
 // รีเซ็ตการจัดวางเป็นค่าเริ่มต้นเต็มจอ
 const resetToDefault = () => {
   const currentW = stageWidth.value || 1400
-  const def = buildFullWidthLayout(currentW)
+  const def = buildSmartLayout(currentW)
   draftLayout.value = JSON.parse(JSON.stringify(def))
   savedLayout.value = JSON.parse(JSON.stringify(def))
   try {
-    localStorage.setItem('soms_dashboard_layout_v6', JSON.stringify(def))
+    localStorage.setItem('soms_dashboard_layout_v8', JSON.stringify(def))
   } catch (e) {}
   appStore.showToast('คืนค่าสำเร็จ', 'รีเซ็ตการจัดวางแดชบอร์ดเต็มหน้าจอเรียบร้อยแล้ว')
 }
@@ -575,23 +439,96 @@ const removeSelectedWidget = () => {
   appStore.showToast('ซ่อนวิดเจ็ต', 'นำวิดเจ็ตออกจากหน้าจอเรียบร้อยแล้ว')
 }
 
+// เพิ่มวิดเจ็ตชิ้นใหม่จากคลัง (รองรับการเพิ่มซ้ำหลายชิ้น Duplicate Widgets ได้อิสระ)
+const addWidgetFromLibrary = (baseId) => {
+  const list = isEditing.value ? draftLayout.value : savedLayout.value
+  const def = DEFAULT_WIDGET_LAYOUT.find(w => (w.baseType || w.id) === baseId) || {
+    id: baseId,
+    baseType: baseId,
+    title: baseId,
+    category: 'general',
+    satelliteColor: '#38bdf8',
+    x: 16,
+    y: 16,
+    width: 480,
+    height: 320,
+    minWidth: 280,
+    minHeight: 180,
+    z: 10,
+    backgroundOpacity: 94,
+    contentOpacity: 100,
+    borderOpacity: 100,
+    locked: false,
+    hidden: false
+  }
+
+  const existingCount = list.filter(w => (w.baseType || w.id.split('-instance-')[0]) === baseId).length
+  const newInstanceId = existingCount === 0 && !list.some(w => w.id === baseId)
+    ? baseId
+    : `${baseId}-instance-${Date.now()}`
+
+  const offset = (existingCount % 5) * 28
+  const newWidget = {
+    ...def,
+    id: newInstanceId,
+    baseType: baseId,
+    title: existingCount > 0 ? `${def.title} #${existingCount + 1}` : def.title,
+    x: Math.min(Math.max(0, stageWidth.value - (def.width || 480)), 24 + offset),
+    y: 32 + offset,
+    z: Math.max(1, ...list.map(w => w.z || 1)) + 1,
+    hidden: false
+  }
+
+  list.push(newWidget)
+  selectedWidgetId.value = newInstanceId
+
+  if (!isEditing.value) {
+    try {
+      localStorage.setItem('soms_dashboard_layout_v8', JSON.stringify(savedLayout.value))
+    } catch (e) {}
+  }
+  appStore.showToast('เพิ่มวิดเจ็ตสำเร็จ', `เพิ่ม ${newWidget.title} ลงบนกระดานเรียบร้อยแล้ว`)
+}
+
 // สลับเปิด/ปิดวิดเจ็ตจากคลัง (Library)
 const toggleWidgetFromLibrary = (widgetId) => {
   const list = isEditing.value ? draftLayout.value : savedLayout.value
-  const item = list.find(w => w.id === widgetId)
-  if (item) {
-    item.hidden = !item.hidden
+  const matching = list.filter(w => (w.baseType || w.id.split('-instance-')[0]) === widgetId)
+  if (matching.length > 0) {
+    const allVisible = matching.every(w => !w.hidden)
+    matching.forEach(w => {
+      w.hidden = allVisible
+    })
   } else {
-    const def = DEFAULT_WIDGET_LAYOUT.find(w => w.id === widgetId)
-    if (def) {
-      list.push({ ...def, hidden: false, x: 0, y: 0 })
-    }
+    addWidgetFromLibrary(widgetId)
   }
   if (!isEditing.value) {
     try {
-      localStorage.setItem('soms_dashboard_layout_v6', JSON.stringify(savedLayout.value))
+      localStorage.setItem('soms_dashboard_layout_v8', JSON.stringify(savedLayout.value))
     } catch (e) {}
   }
+}
+
+// โคลนวิดเจ็ตที่เลือกอยู่ในโหมดแก้ไข (Clone/Duplicate Selected Widget)
+const duplicateCurrentWidget = () => {
+  if (!currentSelectedWidget.value) return
+  const src = currentSelectedWidget.value
+  const base = src.baseType || src.id.split('-instance-')[0]
+  const list = draftLayout.value
+  const count = list.filter(w => (w.baseType || w.id.split('-instance-')[0]) === base).length
+  const newId = `${base}-instance-${Date.now()}`
+  const cloned = {
+    ...src,
+    id: newId,
+    baseType: base,
+    title: `${src.title} (สำเนา #${count + 1})`,
+    x: Math.min(stageWidth.value - src.width, src.x + 24),
+    y: src.y + 24,
+    z: Math.max(1, ...list.map(w => w.z || 1)) + 1
+  }
+  list.push(cloned)
+  selectedWidgetId.value = newId
+  appStore.showToast('โคลนวิดเจ็ตสำเร็จ', `คัดลอก ${cloned.title} เรียบร้อยแล้ว`)
 }
 
 // ดึงข้อมูล Dashboard
@@ -653,7 +590,13 @@ const getChartData = (widgetId) => {
 </script>
 
 <template>
-  <div class="dashboard-workspace space-y-5" :class="{ 'is-editing': isEditing }">
+  <div
+    class="dashboard-workspace space-y-5"
+    :class="{
+      'is-editing': isEditing,
+      'video-wall-mode': isVideoWallMode
+    }"
+  >
     <!-- Top Header Bar -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-750/80">
       <div>
@@ -662,36 +605,48 @@ const getChartData = (widgetId) => {
             <Calendar class="w-5 h-5" />
           </div>
           <div>
-            <h1 class="text-xl sm:text-2xl font-black font-prompt text-white tracking-wide">
+            <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white tracking-normal">
               {{ todayFormatted }}
             </h1>
-            <p class="text-xs sm:text-sm text-slate-300 font-medium font-prompt mt-0.5">
+            <p class="text-xs sm:text-sm text-slate-300 font-normal font-prompt mt-1 tracking-normal">
               ระบบสารสนเทศและการปฏิบัติการควบคุมดาวเทียม (SOIS Operations Center)
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Action Controls -->
-      <div class="flex items-center gap-2 flex-wrap">
+      <!-- Action Controls (จัดระยะช่องไฟและสีสันให้สว่างตา สบายตา มองเห็นชัดเจน) -->
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <!-- Operator Video Wall Scale Toggle Button -->
+        <button
+          type="button"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer font-prompt"
+          :class="isVideoWallMode ? 'bg-indigo-900/80 border-indigo-400 text-white shadow-indigo-900/60' : 'bg-[#142137] hover:bg-[#1c2d4a] border-slate-600/70 text-slate-100 hover:text-white'"
+          title="สลับโหมดการแสดงผลสำหรับจอผนังขนาดใหญ่ (10+ จอต่อกันในห้องศูนย์ปฏิบัติการ)"
+          @click="toggleVideoWallMode"
+        >
+          <Monitor class="w-4 h-4" :class="isVideoWallMode ? 'text-indigo-300' : 'text-slate-300'" />
+          <span>{{ isVideoWallMode ? 'โหมดผนังจอ (Active)' : 'โหมดผนังจอ (Video Wall)' }}</span>
+        </button>
+
         <!-- Add Widget Button -->
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0c1424] hover:bg-[#121f38] text-cyan-200 hover:text-white border border-cyan-700/60 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer font-prompt"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#132747] hover:bg-[#1c3661] text-cyan-200 hover:text-white border border-cyan-500/60 text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer font-prompt"
           @click="showLibraryModal = true"
         >
-          <Plus class="w-4 h-4 text-cyan-400" />
+          <Plus class="w-4 h-4 text-cyan-300" />
           <span>+ เพิ่มวิดเจ็ต</span>
         </button>
 
         <!-- Fit Full Width Button -->
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#091817] hover:bg-[#0e2423] text-emerald-200 hover:text-white border border-emerald-700/60 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer font-prompt"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#102d2c] hover:bg-[#184240] text-emerald-200 hover:text-white border border-emerald-500/60 text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer font-prompt"
           title="ปรับขนาดและจัดวางวิดเจ็ตเต็มความกว้างหน้าจออัตโนมัติ"
           @click="fitLayoutToFullWidth(false)"
         >
-          <Maximize2 class="w-4 h-4 text-emerald-400" />
+          <Maximize2 class="w-4 h-4 text-emerald-300" />
           <span>จัดเต็มจอ (Fit Width)</span>
         </button>
 
@@ -699,7 +654,7 @@ const getChartData = (widgetId) => {
         <button
           v-if="!isEditing"
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1c180e] hover:bg-[#292212] text-amber-200 hover:text-white border border-amber-600/70 text-xs sm:text-sm font-bold shadow-md transition-all cursor-pointer font-prompt"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2b2210] hover:bg-[#3d3117] text-amber-200 hover:text-white border border-amber-500/70 text-xs sm:text-sm font-semibold shadow-md transition-all cursor-pointer font-prompt"
           title="จัดวาง ขยับเลื่อน และปรับขนาดวิดเจ็ตได้อย่างอิสระเหมือนต้นฉบับ"
           @click="enterEditMode"
         >
@@ -710,7 +665,7 @@ const getChartData = (widgetId) => {
         <!-- Handover Modal Button -->
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0e1422] hover:bg-[#141e33] text-slate-100 hover:text-white border border-slate-700/80 text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer font-prompt"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#142137] hover:bg-[#1c2d4a] text-slate-100 hover:text-white border border-slate-600/70 text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer font-prompt"
           @click="showHandoverModal = true"
         >
           <ClipboardList class="w-4 h-4 text-cyan-400" />
@@ -720,8 +675,8 @@ const getChartData = (widgetId) => {
         <!-- Refresh Button -->
         <button
           type="button"
-          :disabled="loading"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-700/80 bg-[#0e1422] hover:bg-[#141e33] text-slate-100 hover:text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs cursor-pointer font-prompt disabled:opacity-50"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#142137] hover:bg-[#1c2d4a] text-slate-100 hover:text-white border border-slate-600/70 text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer font-prompt"
+          title="ดึงข้อมูลสถานะล่าสุดทันที"
           @click="fetchDashboard"
         >
           <RefreshCw class="w-4 h-4 text-slate-300" :class="loading ? 'animate-spin' : ''" />
@@ -887,6 +842,35 @@ const getChartData = (widgetId) => {
           รีเซ็ตรูปลักษณ์
         </button>
 
+        <!-- Clone / Duplicate Widget Button -->
+        <button
+          v-if="currentSelectedWidget"
+          type="button"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-700/80 text-cyan-300 hover:text-white transition-colors cursor-pointer text-xs font-semibold"
+          title="โคลน/คัดลอกวิดเจ็ตนี้เพิ่มอีกชิ้นบนกระดาน เพื่อดูข้อมูลดาวเทียมหรือพารามิเตอร์คนละชุด"
+          @click="duplicateCurrentWidget"
+        >
+          <Copy class="w-3.5 h-3.5" />
+          <span>โคลนวิดเจ็ต (+ Duplicate)</span>
+        </button>
+
+        <!-- Satellite Target Selector for Satellite-based Widgets -->
+        <div
+          v-if="currentSelectedWidget && ['satellite-summary', 'altitude'].includes(currentSelectedWidget.baseType || currentSelectedWidget.id.split('-instance-')[0])"
+          class="flex items-center gap-2 bg-[#090b0f] px-3 py-1.5 rounded-xl border border-space-700"
+        >
+          <span class="text-xs text-slate-300 font-bold whitespace-nowrap">ดาวเทียมเป้าหมาย:</span>
+          <select
+            v-model="currentSelectedWidget.satelliteId"
+            class="bg-[#0f1522] text-xs text-cyan-300 font-bold rounded-lg px-2 py-1 border border-space-700 focus:outline-none focus:border-cyan-500 cursor-pointer font-prompt"
+          >
+            <option value="all">ทั้งหมด (All Satellites)</option>
+            <option value="46320">NAPA-1 N (46320)</option>
+            <option value="48963">NAPA-2 N (48963)</option>
+            <option value="58016">THEOS-2 (58016)</option>
+          </select>
+        </div>
+
         <!-- Remove Selected Widget -->
         <button
           type="button"
@@ -925,56 +909,7 @@ const getChartData = (widgetId) => {
       {{ error }}
     </div>
 
-    <!-- Top KPI Stats (Fixed Overview Bar - เติมเต็มพื้นที่ด้วยข้อมูลทางยุทธการ) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-      <StatCard
-        title="ดาวเทียมในวงโคจร"
-        value="2"
-        unit="ดวง"
-        subtitle="NAPA-1 N / NAPA-2 N"
-        :icon="Orbit"
-        color="slate"
-        badge="ONLINE"
-        badge-type="success"
-        :items="['NAPA-1 N (495.2 km)', 'NAPA-2 N (508.8 km)', 'สถานะ: ปกติ 100%']"
-      />
-      <StatCard
-        title="พาสดาวเทียมวันนี้"
-        :value="dashboardData.passes.length"
-        unit="รอบ"
-        subtitle="Day & Night Passes"
-        :icon="Activity"
-        color="slate"
-        badge="SCHEDULED"
-        badge-type="info"
-        :items="['พาสถัดไป: NAPA-2 N (82.5° El)', 'AOS: 06:10 UTC', 'BMA Ground Station']"
-      />
-      <StatCard
-        title="สภาพอวกาศล่าสุด"
-        :value="dashboardData.weather ? `R${dashboardData.weather.spaceweather_r || 0}` : '—'"
-        subtitle="NOAA Scale (Radio)"
-        :icon="ShieldCheck"
-        color="amber"
-        badge="MONITORING"
-        badge-type="warning"
-        :items="['Radio: R1 (Minor)', 'Geomagnetic: G0', 'Solar Radiation: S0', 'Kp: 2.3']"
-      />
-      <StatCard
-        title="เวรปฏิบัติการ"
-        value="ACTIVE"
-        subtitle="MD / FMO / GSO ประจำสถานี"
-        :icon="ShieldCheck"
-        color="emerald"
-        badge="ON DUTY"
-        badge-type="success"
-        :items="['ชุดปฏิบัติการที่ 1 (Day Shift)', 'MD: น.ต. สมชาย', 'FMO: ร.อ. ธีระศักดิ์', 'GSO: ร.ท. อนันต์']"
-      />
-    </div>
-
-    <!-- SATELLITE SUMMARY BAR -->
-    <SatelliteSummary :satellites="dashboardData.satellites" />
-
-    <!-- INTERACTIVE DASHBOARD STAGE (รองรับลาก ขยับเลื่อน ปรับขนาด และปรับค่าต่างๆ ได้อิสระทุกชิ้น) -->
+    <!-- INTERACTIVE DASHBOARD STAGE (100% โมดูลาร์ - ขยับเลื่อน ย้าย ปรับขนาด และเพิ่มซ้ำได้ทุกส่วนไม่มีข้อยกเว้น) -->
     <div
       ref="stageRef"
       class="dashboard-stage relative transition-all"
@@ -1000,63 +935,80 @@ const getChartData = (widgetId) => {
         :snap="snapToGrid"
         @change="onWidgetChange"
         @select="selectedWidgetId = widget.id"
+        @maximize="openMaximizeModal"
       >
+        <!-- 0. KPI OPERATIONAL OVERVIEW -->
+        <KpiOverviewWidget
+          v-if="(widget.baseType || widget.id.split('-instance-')[0]) === 'kpi-overview'"
+          :dashboard-data="dashboardData"
+          class="h-full p-2.5"
+        />
+
+        <!-- 0.1 SATELLITE SUMMARY CARDS -->
+        <SatelliteSummary
+          v-else-if="(widget.baseType || widget.id.split('-instance-')[0]) === 'satellite-summary'"
+          :satellites="dashboardData.satellites"
+          :satellite-id="widget.satelliteId || 'all'"
+          class="h-full p-2.5"
+        />
+
         <!-- 1. ORBIT TRACKER -->
         <OrbitTrackerWidget
-          v-if="widget.id === 'orbit-tracker'"
+          v-else-if="(widget.baseType || widget.id.split('-instance-')[0]) === 'orbit-tracker'"
           :satellites="dashboardData.satellites"
           :passes="dashboardData.passes"
         />
 
         <!-- 2. PASS COUNTDOWN -->
         <PassCountdownWidget
-          v-else-if="widget.id === 'pass-countdown'"
+          v-else-if="(widget.baseType || widget.id.split('-instance-')[0]) === 'pass-countdown'"
           :passes="dashboardData.passes"
           :editing="isEditing"
         />
 
         <!-- 3. ALTITUDE & ORBITAL STATS -->
         <SatelliteAltitudeWidget
-          v-else-if="widget.id === 'altitude'"
+          v-else-if="(widget.baseType || widget.id.split('-instance-')[0]) === 'altitude'"
           :satellites="dashboardData.satellites"
+          :satellite-id="widget.satelliteId"
         />
 
         <!-- 4. SPACECRAFT ATTITUDE -->
         <AttitudeWidget
-          v-else-if="widget.id === 'attitude'"
+          v-else-if="(widget.baseType || widget.id.split('-instance-')[0]) === 'attitude'"
         />
 
         <!-- 5. SPACE WEATHER -->
         <SpaceWeatherWidget
-          v-else-if="widget.id === 'weather'"
+          v-else-if="(widget.baseType || widget.id.split('-instance-')[0]) === 'weather'"
           :weather="dashboardData.weather"
           class="h-full"
         />
 
         <!-- 6. TODAY'S PASSES -->
         <TodayPassesWidget
-          v-else-if="widget.id === 'passes'"
+          v-else-if="(widget.baseType || widget.id.split('-instance-')[0]) === 'passes'"
           :passes="dashboardData.passes"
           class="h-full"
         />
 
         <!-- 7. MISSION OPERATORS -->
         <DutyOperatorsWidget
-          v-else-if="widget.id === 'operators'"
+          v-else-if="(widget.baseType || widget.id.split('-instance-')[0]) === 'operators'"
           :operations="dashboardData.operations"
           class="h-full"
         />
 
         <!-- 8. INDIVIDUAL TELEMETRY CHARTS (แต่ละกราฟเป็นอิสระต่อกัน) -->
         <TelemetryChart
-          v-else-if="widget.id.startsWith('chart-')"
-          :title="getChartConfig(widget.id)?.title || widget.title"
+          v-else-if="(widget.baseType || widget.id).startsWith('chart-')"
+          :title="getChartConfig(widget.baseType || widget.id)?.title || widget.title"
           :labels="chartLabels"
-          :data="getChartData(widget.id)"
-          :unit="getChartConfig(widget.id)?.unit || ''"
-          :color="getChartConfig(widget.id)?.color || '#38bdf8'"
-          :fill-color="getChartConfig(widget.id)?.fillColor || 'rgba(56, 189, 248, 0.08)'"
-          :type="getChartConfig(widget.id)?.type || 'line'"
+          :data="getChartData(widget.baseType || widget.id)"
+          :unit="getChartConfig(widget.baseType || widget.id)?.unit || ''"
+          :color="getChartConfig(widget.baseType || widget.id)?.color || '#38bdf8'"
+          :fill-color="getChartConfig(widget.baseType || widget.id)?.fillColor || 'rgba(56, 189, 248, 0.08)'"
+          :type="getChartConfig(widget.baseType || widget.id)?.type || 'line'"
         />
       </DashboardWidget>
     </div>
@@ -1070,10 +1022,135 @@ const getChartData = (widgetId) => {
     <!-- Widget Library Modal -->
     <WidgetLibraryModal
       v-model="showLibraryModal"
+      :active-widgets="activeWidgetList"
       :active-widget-ids="activeWidgetList.map(w => w.id)"
+      @add-widget="addWidgetFromLibrary"
       @toggle-widget="toggleWidgetFromLibrary"
       @reset-layout="resetToDefault"
     />
+
+    <!-- Maximize Modal (ขยายวิดเจ็ตเต็มจอเพื่อดูรายละเอียดสูงและภาพรวมคมชัด) -->
+    <Teleport to="body">
+      <div
+        v-if="maximizedWidget"
+        class="fixed inset-0 z-[999] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+        @click.self="closeMaximizeModal"
+      >
+        <div
+          class="relative w-full max-w-7xl h-[92vh] flex flex-col rounded-2xl border border-slate-700 bg-[#0e1625] shadow-2xl shadow-black/95 overflow-hidden"
+          :style="{
+            boxShadow: `0 0 50px ${(maximizedWidget.satelliteColor || '#38bdf8')}35`
+          }"
+        >
+          <!-- Modal Header -->
+          <header class="flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-[#111c2e] to-[#0c1422] border-b border-slate-700/80 flex-shrink-0">
+            <div class="flex items-center gap-3 min-w-0">
+              <div
+                class="w-3.5 h-3.5 rounded-full flex-shrink-0 animate-pulse"
+                :style="{
+                  backgroundColor: maximizedWidget.satelliteColor || '#38bdf8',
+                  boxShadow: `0 0 12px ${maximizedWidget.satelliteColor || '#38bdf8'}`
+                }"
+              ></div>
+              <div class="min-w-0">
+                <h3 class="text-base sm:text-lg font-black font-prompt text-white tracking-wide truncate">
+                  {{ maximizedWidget.title }}
+                </h3>
+                <span class="text-xs text-slate-300 font-mono hidden sm:inline">
+                  [FULLSCREEN HIGH-DEFINITION OPERATOR VIEW] · กด ESC หรือคลิกปุ่มปิดเพื่อกลับสู่แดชบอร์ด
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="w-8 h-8 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-600 flex items-center justify-center transition-colors cursor-pointer flex-shrink-0"
+              title="ปิดหน้าต่างเต็มจอ (Esc)"
+              @click="closeMaximizeModal"
+            >
+              <X class="w-4 h-4" />
+            </button>
+          </header>
+
+          <!-- Modal Body with Expanded Component -->
+          <div class="flex-1 min-h-0 overflow-auto p-4 bg-[#0a0f18]">
+            <!-- 0. KPI OPERATIONAL OVERVIEW -->
+            <KpiOverviewWidget
+              v-if="(maximizedWidget.baseType || maximizedWidget.id.split('-instance-')[0]) === 'kpi-overview'"
+              :dashboard-data="dashboardData"
+              class="h-full"
+            />
+
+            <!-- 0.1 SATELLITE SUMMARY CARDS -->
+            <SatelliteSummary
+              v-else-if="(maximizedWidget.baseType || maximizedWidget.id.split('-instance-')[0]) === 'satellite-summary'"
+              :satellites="dashboardData.satellites"
+              :satellite-id="maximizedWidget.satelliteId || 'all'"
+              class="h-full"
+            />
+
+            <!-- 1. ORBIT TRACKER -->
+            <OrbitTrackerWidget
+              v-else-if="(maximizedWidget.baseType || maximizedWidget.id.split('-instance-')[0]) === 'orbit-tracker'"
+              :satellites="dashboardData.satellites"
+              :passes="dashboardData.passes"
+            />
+
+            <!-- 2. PASS COUNTDOWN -->
+            <PassCountdownWidget
+              v-else-if="(maximizedWidget.baseType || maximizedWidget.id.split('-instance-')[0]) === 'pass-countdown'"
+              :passes="dashboardData.passes"
+              :editing="false"
+            />
+
+            <!-- 3. ALTITUDE & ORBITAL STATS -->
+            <SatelliteAltitudeWidget
+              v-else-if="(maximizedWidget.baseType || maximizedWidget.id.split('-instance-')[0]) === 'altitude'"
+              :satellites="dashboardData.satellites"
+              :satellite-id="maximizedWidget.satelliteId"
+            />
+
+            <!-- 4. SPACECRAFT ATTITUDE -->
+            <AttitudeWidget
+              v-else-if="(maximizedWidget.baseType || maximizedWidget.id.split('-instance-')[0]) === 'attitude'"
+            />
+
+            <!-- 5. SPACE WEATHER -->
+            <SpaceWeatherWidget
+              v-else-if="(maximizedWidget.baseType || maximizedWidget.id.split('-instance-')[0]) === 'weather'"
+              :weather="dashboardData.weather"
+              class="h-full"
+            />
+
+            <!-- 6. TODAY'S PASSES -->
+            <TodayPassesWidget
+              v-else-if="(maximizedWidget.baseType || maximizedWidget.id.split('-instance-')[0]) === 'passes'"
+              :passes="dashboardData.passes"
+              class="h-full"
+            />
+
+            <!-- 7. MISSION OPERATORS -->
+            <DutyOperatorsWidget
+              v-else-if="(maximizedWidget.baseType || maximizedWidget.id.split('-instance-')[0]) === 'operators'"
+              :operations="dashboardData.operations"
+              class="h-full"
+            />
+
+            <!-- 8. INDIVIDUAL TELEMETRY CHARTS -->
+            <TelemetryChart
+              v-else-if="(maximizedWidget.baseType || maximizedWidget.id).startsWith('chart-')"
+              :title="getChartConfig(maximizedWidget.baseType || maximizedWidget.id)?.title || maximizedWidget.title"
+              :labels="chartLabels"
+              :data="getChartData(maximizedWidget.baseType || maximizedWidget.id)"
+              :unit="getChartConfig(maximizedWidget.baseType || maximizedWidget.id)?.unit || ''"
+              :color="getChartConfig(maximizedWidget.baseType || maximizedWidget.id)?.color || '#38bdf8'"
+              :fill-color="getChartConfig(maximizedWidget.baseType || maximizedWidget.id)?.fillColor || 'rgba(56, 189, 248, 0.08)'"
+              :type="getChartConfig(maximizedWidget.baseType || maximizedWidget.id)?.type || 'line'"
+            />
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 

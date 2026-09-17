@@ -2,8 +2,8 @@
 /**
  * ============================================================================
  * ไฟล์: src/components/common/BaseModal.vue
- * วัตถุประสงค์: กล่องข้อความแบบป๊อปอัป (Modal Window) สไตล์โมเดิร์น สุภาพ สบายตา
- * ใช้สำหรับการสร้าง/แก้ไขข้อมูล และดูรายละเอียด
+ * วัตถุประสงค์: กล่องข้อความแบบป๊อปอัป (Modal Window) ธีมดำเทาไททาเนียม
+ * คอนทราสต์คมชัด รองรับทั้งเดสก์ท็อปและจอมือถือ
  * ============================================================================
  */
 import { watch, onMounted, onUnmounted } from 'vue'
@@ -65,7 +65,7 @@ const sizeClasses = {
     >
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 dark:bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6"
+        class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6"
         @click.self="closeOnClickOutside && close()"
       >
         <Transition
@@ -77,22 +77,22 @@ const sizeClasses = {
           leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         >
           <div
-            class="relative w-full bg-white dark:bg-space-850 rounded-2xl border border-slate-200 dark:border-space-700 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+            class="relative w-full bg-space-850 rounded-2xl border border-space-700 shadow-2xl flex flex-col max-h-[92vh] overflow-hidden"
             :class="sizeClasses[size] || sizeClasses.md"
           >
             <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-slate-100 dark:border-space-750 flex items-center justify-between bg-slate-50/50 dark:bg-space-900/40">
+            <div class="px-5 sm:px-6 py-4 border-b border-space-750 flex items-center justify-between bg-space-900/60">
               <div>
-                <h3 class="text-base font-semibold text-slate-900 dark:text-white font-prompt">
+                <h3 class="text-base font-bold text-white font-prompt">
                   {{ title }}
                 </h3>
-                <p v-if="subtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                <p v-if="subtitle" class="text-xs text-zinc-400 mt-0.5 font-prompt">
                   {{ subtitle }}
                 </p>
               </div>
               <button
                 type="button"
-                class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-space-750 transition-colors"
+                class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-space-800 transition-colors cursor-pointer"
                 @click="close"
               >
                 <X class="w-5 h-5" />
@@ -100,12 +100,12 @@ const sizeClasses = {
             </div>
 
             <!-- Modal Body -->
-            <div class="p-6 overflow-y-auto text-sm text-slate-600 dark:text-slate-300">
+            <div class="p-5 sm:p-6 overflow-y-auto text-sm text-slate-100 font-prompt">
               <slot />
             </div>
 
             <!-- Modal Footer -->
-            <div v-if="$slots.footer" class="px-6 py-3 border-t border-slate-100 dark:border-space-750 bg-slate-50/50 dark:bg-space-900/40 flex items-center justify-end gap-2.5">
+            <div v-if="$slots.footer" class="px-5 sm:px-6 py-3.5 border-t border-space-750 bg-space-900/60 flex items-center justify-end gap-2.5">
               <slot name="footer" />
             </div>
           </div>

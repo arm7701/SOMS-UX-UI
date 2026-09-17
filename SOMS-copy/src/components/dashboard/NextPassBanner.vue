@@ -199,42 +199,42 @@ const navigateToCreateReport = () => {
         </div>
 
         <div class="flex items-baseline gap-3 flex-wrap">
-          <h2 class="text-xl sm:text-2xl font-black font-prompt text-white tracking-tight flex items-center gap-2">
+          <h2 class="text-xl sm:text-2xl font-bold font-prompt text-white tracking-normal flex items-center gap-2">
             <Orbit class="w-6 h-6 text-cyan-400" />
             <span>{{ currentOrNextPass.satName }}</span>
           </h2>
-          <span class="text-sm sm:text-base font-bold text-amber-300 font-prompt">
+          <span class="text-sm sm:text-base font-semibold text-amber-300 font-prompt">
             {{ currentOrNextPass.sat_seq ? `DayPass-${currentOrNextPass.sat_seq}` : 'Operational Pass' }}
           </span>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs">
-          <div class="bg-space-950/90 backdrop-blur-xs p-3 rounded-xl border border-space-700">
-            <span class="text-slate-300 block text-xs font-prompt font-semibold">ช่วงเวลาผ่าน (เวลาไทย):</span>
-            <span class="font-mono font-black text-white text-xs sm:text-sm mt-0.5 block">
+          <div class="bg-[#182840]/90 backdrop-blur-xs p-3 rounded-xl border border-slate-600/60">
+            <span class="text-slate-300 block text-xs font-prompt font-medium">ช่วงเวลาผ่าน (เวลาไทย):</span>
+            <span class="font-mono font-bold text-white text-xs sm:text-sm mt-0.5 block">
               {{ currentOrNextPass.aos_time_local }} – {{ currentOrNextPass.los_time_local }}
             </span>
           </div>
 
-          <div class="bg-space-950/90 backdrop-blur-xs p-3 rounded-xl border border-space-700">
-            <span class="text-slate-300 block text-xs font-prompt font-semibold">เวลาสากล (UTC):</span>
-            <span class="font-mono font-black text-white text-xs sm:text-sm mt-0.5 block">
+          <div class="bg-[#182840]/90 backdrop-blur-xs p-3 rounded-xl border border-slate-600/60">
+            <span class="text-slate-300 block text-xs font-prompt font-medium">เวลาสากล (UTC):</span>
+            <span class="font-mono font-bold text-white text-xs sm:text-sm mt-0.5 block">
               {{ currentOrNextPass.aos_time_utc }} (UTC)
             </span>
           </div>
 
-          <div class="bg-space-950/90 backdrop-blur-xs p-3 rounded-xl border border-space-700">
-            <span class="text-slate-300 block text-xs font-prompt font-semibold">มุมยกสูงสุด (Max El):</span>
-            <span class="font-mono font-black text-white text-xs sm:text-sm flex items-center gap-1 mt-0.5">
+          <div class="bg-[#182840]/90 backdrop-blur-xs p-3 rounded-xl border border-slate-600/60">
+            <span class="text-slate-300 block text-xs font-prompt font-medium">มุมยกสูงสุด (Max El):</span>
+            <span class="font-mono font-bold text-white text-xs sm:text-sm flex items-center gap-1 mt-0.5">
               <span>{{ currentOrNextPass.maxElevation }}°</span>
               <span v-if="currentOrNextPass.maxElevation < 5" class="text-xs text-rose-400 font-bold">(Abort)</span>
               <span v-else class="text-xs text-emerald-400 font-bold">(Ready)</span>
             </span>
           </div>
 
-          <div class="bg-space-950/90 backdrop-blur-xs p-3 rounded-xl border border-space-700">
-            <span class="text-slate-300 block text-xs font-prompt font-semibold">ระยะเวลาผ่านสถานี:</span>
-            <span class="font-mono font-black text-white text-xs sm:text-sm mt-0.5 block">
+          <div class="bg-[#182840]/90 backdrop-blur-xs p-3 rounded-xl border border-slate-600/60">
+            <span class="text-slate-300 block text-xs font-prompt font-medium">ระยะเวลาผ่านสถานี:</span>
+            <span class="font-mono font-bold text-white text-xs sm:text-sm mt-0.5 block">
               {{ currentOrNextPass.duration_min }}น. {{ currentOrNextPass.duration_sec }}วิ.
             </span>
           </div>
@@ -242,26 +242,26 @@ const navigateToCreateReport = () => {
       </div>
 
       <!-- Right: Real-time Countdown Timer & Action Buttons -->
-      <div class="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end justify-between gap-4 pt-2 lg:pt-0 border-t lg:border-t-0 border-space-700">
+      <div class="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end justify-between gap-4 pt-2 lg:pt-0 border-t lg:border-t-0 border-slate-700/60">
         <div class="text-left lg:text-right">
-          <span class="text-xs font-bold text-slate-200 uppercase tracking-wider block font-prompt">
+          <span class="text-xs font-semibold text-slate-200 uppercase tracking-wide block font-prompt">
             {{ countdown.label }}
           </span>
 
           <div class="flex items-center gap-2 mt-1.5 font-mono">
-            <div class="bg-space-950/95 px-3 py-2 rounded-xl border border-space-700 text-center min-w-[56px] shadow-md">
-              <span class="text-3xl sm:text-4xl font-black text-white tracking-tight">{{ countdown.hours }}</span>
-              <span class="block text-xs text-slate-300 font-bold uppercase mt-0.5">ชม.</span>
+            <div class="bg-[#101c2e] px-3 py-2 rounded-xl border border-slate-600/70 text-center min-w-[56px] shadow-md">
+              <span class="text-3xl sm:text-4xl font-bold text-white tracking-tight">{{ countdown.hours }}</span>
+              <span class="block text-xs text-slate-300 font-medium uppercase mt-0.5">ชม.</span>
             </div>
-            <span class="text-2xl font-black text-cyan-400 animate-pulse">:</span>
-            <div class="bg-space-950/95 px-3 py-2 rounded-xl border border-space-700 text-center min-w-[56px] shadow-md">
-              <span class="text-3xl sm:text-4xl font-black text-white tracking-tight">{{ countdown.minutes }}</span>
-              <span class="block text-xs text-slate-300 font-bold uppercase mt-0.5">นาที</span>
+            <span class="text-2xl font-bold text-cyan-400 animate-pulse">:</span>
+            <div class="bg-[#101c2e] px-3 py-2 rounded-xl border border-slate-600/70 text-center min-w-[56px] shadow-md">
+              <span class="text-3xl sm:text-4xl font-bold text-white tracking-tight">{{ countdown.minutes }}</span>
+              <span class="block text-xs text-slate-300 font-medium uppercase mt-0.5">นาที</span>
             </div>
-            <span class="text-2xl font-black text-cyan-400 animate-pulse">:</span>
-            <div class="bg-space-950/95 px-3 py-2 rounded-xl border border-space-700 text-center min-w-[56px] shadow-md">
-              <span class="text-3xl sm:text-4xl font-black text-white tracking-tight">{{ countdown.seconds }}</span>
-              <span class="block text-xs text-slate-300 font-bold uppercase mt-0.5">วินาที</span>
+            <span class="text-2xl font-bold text-cyan-400 animate-pulse">:</span>
+            <div class="bg-[#101c2e] px-3 py-2 rounded-xl border border-slate-600/70 text-center min-w-[56px] shadow-md">
+              <span class="text-3xl sm:text-4xl font-bold text-white tracking-tight">{{ countdown.seconds }}</span>
+              <span class="block text-xs text-slate-300 font-medium uppercase mt-0.5">วินาที</span>
             </div>
           </div>
         </div>

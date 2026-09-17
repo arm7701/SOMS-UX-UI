@@ -3,7 +3,7 @@
  * ============================================================================
  * ไฟล์: src/components/common/CommandPalette.vue
  * วัตถุประสงค์: กล่องค้นหาคำสั่งด่วนทั่วทั้งระบบ (Global Command Palette - Ctrl+K)
- * ช่วยให้เจ้าหน้าที่ปฏิบัติการค้นหาหน้าจอ, สลับดาวเทียม หรือดำเนินการด่วนได้ทันที
+ * ธีมดำเทาไททาเนียม คอนทราสต์คมชัดทุกผลลัพธ์
  * ============================================================================
  */
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
@@ -27,7 +27,6 @@ import {
   Database,
   Orbit,
   ArrowRight,
-  Sparkles,
   ClipboardList
 } from 'lucide-vue-next'
 
@@ -88,19 +87,16 @@ const filteredCommands = computed(() => {
   const q = query.value.trim().toLowerCase()
   if (!q) return allCommands.value
 
-  return allCommands.value.filter(cmd => {
-    return (
-      cmd.label.toLowerCase().includes(q) ||
-      cmd.desc.toLowerCase().includes(q) ||
-      cmd.group.toLowerCase().includes(q)
-    )
+  return allCommands.value.filter(item => {
+    return item.label.toLowerCase().includes(q) ||
+      (item.desc && item.desc.toLowerCase().includes(q)) ||
+      item.group.toLowerCase().includes(q)
   })
 })
 
 const close = () => {
   emit('update:modelValue', false)
   query.value = ''
-  selectedIndex.value = 0
 }
 
 const executeCommand = (cmd) => {
@@ -112,7 +108,6 @@ const executeCommand = (cmd) => {
   }
 }
 
-// เลื่อนลูกศรขึ้น/ลง
 const onKeydown = (e) => {
   if (!props.modelValue) return
 
@@ -167,24 +162,24 @@ onUnmounted(() => {
 <template>
   <div
     v-if="modelValue"
-    class="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-slate-950/60 backdrop-blur-sm transition-opacity"
+    class="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/80 backdrop-blur-sm transition-opacity"
     @click.self="close"
   >
     <div
-      class="w-full max-w-xl bg-white/95 dark:bg-space-900/95 backdrop-blur-xl rounded-2xl border border-sky-200/90 dark:border-sky-800/60 shadow-2xl shadow-sky-950/30 overflow-hidden flex flex-col max-h-[80vh] transition-all animate-in fade-in zoom-in-95 duration-150"
+      class="w-full max-w-xl bg-space-850/98 backdrop-blur-xl rounded-2xl border border-space-700 shadow-2xl overflow-hidden flex flex-col max-h-[80vh] transition-all"
     >
       <!-- Search Input Header -->
-      <div class="relative border-b border-sky-100 dark:border-sky-900/50 p-4 flex items-center gap-3">
-        <Search class="w-5 h-5 text-sky-500 flex-shrink-0" />
+      <div class="relative border-b border-space-750 p-4 flex items-center gap-3 bg-space-900/60">
+        <Search class="w-5 h-5 text-zinc-400 flex-shrink-0" />
         <input
           ref="searchInput"
           v-model="query"
           type="text"
           placeholder="พิมพ์ค้นหาหน้าจอ, คำสั่ง, หรือชื่อดาวเทียม... (เช่น รายงาน, NAPA, แผนที่)"
-          class="w-full bg-transparent text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none font-prompt"
+          class="w-full bg-transparent text-sm text-white placeholder-zinc-400 focus:outline-none font-prompt"
         />
         <div class="flex items-center gap-1">
-          <kbd class="px-2 py-0.5 text-[10px] font-mono font-semibold text-slate-500 bg-slate-100 dark:bg-space-800 rounded border border-slate-200 dark:border-space-700">ESC</kbd>
+          <kbd class="px-2 py-0.5 text-[10px] font-mono font-semibold text-zinc-400 bg-space-800 rounded border border-space-700">ESC</kbd>
         </div>
       </div>
 
@@ -192,7 +187,7 @@ onUnmounted(() => {
       <div class="overflow-y-auto p-2 space-y-1 flex-1">
         <div
           v-if="filteredCommands.length === 0"
-          class="p-8 text-center text-slate-400 text-xs"
+          class="p-8 text-center text-zinc-400 text-xs font-prompt"
         >
           ไม่พบคำสั่งหรือข้อมูลที่ตรงกับ "{{ query }}"
         </div>
@@ -201,49 +196,47 @@ onUnmounted(() => {
           v-for="(cmd, idx) in filteredCommands"
           :key="cmd.id"
           type="button"
-          class="w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-colors font-prompt"
+          class="w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-colors font-prompt cursor-pointer"
           :class="idx === selectedIndex
-            ? 'bg-gradient-to-r from-sky-500/15 to-blue-500/10 text-sky-700 dark:text-sky-300 border-l-4 border-sky-500'
-            : 'text-slate-700 dark:text-slate-200 hover:bg-sky-50/70 dark:hover:bg-space-800/70'"
+            ? 'bg-zinc-800 text-white border-l-4 border-slate-200'
+            : 'text-slate-200 hover:bg-space-800/70 hover:text-white'"
           @click="executeCommand(cmd)"
           @mouseenter="selectedIndex = idx"
         >
           <div class="flex items-center gap-3 min-w-0">
             <div
               class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
-              :class="idx === selectedIndex ? 'bg-sky-500 text-white shadow-xs' : 'bg-slate-100 dark:bg-space-800 text-slate-500 dark:text-slate-400'"
+              :class="idx === selectedIndex ? 'bg-zinc-700 text-white shadow-xs' : 'bg-space-800 text-zinc-400'"
             >
               <component :is="cmd.icon" class="w-4 h-4" />
             </div>
             <div class="min-w-0">
-              <span class="text-xs font-semibold block truncate">
+              <span class="text-xs font-semibold block truncate text-white">
                 {{ cmd.label }}
               </span>
-              <span class="text-[11px] text-slate-400 dark:text-slate-400 block truncate">
+              <span class="text-[11px] text-zinc-400 block truncate mt-0.5">
                 {{ cmd.desc }}
               </span>
             </div>
           </div>
 
-          <div class="flex items-center gap-2 flex-shrink-0 ml-3">
-            <span class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-space-800 text-slate-500 dark:text-slate-400">
+          <div class="flex items-center gap-2 flex-shrink-0 pl-2">
+            <span class="text-[10px] px-2 py-0.5 rounded bg-space-800 border border-space-700 text-zinc-400 font-mono">
               {{ cmd.group }}
             </span>
-            <ArrowRight class="w-3.5 h-3.5 opacity-50" />
+            <ArrowRight class="w-3.5 h-3.5 text-zinc-400 opacity-60" />
           </div>
         </button>
       </div>
 
-      <!-- Footer Help Hints -->
-      <div class="p-2.5 bg-slate-50/80 dark:bg-space-950/60 border-t border-slate-100 dark:border-space-800 flex items-center justify-between text-[11px] text-slate-400 font-prompt">
+      <!-- Footer Quick Keys -->
+      <div class="px-4 py-2.5 border-t border-space-750 bg-space-900/60 text-[11px] text-zinc-400 flex items-center justify-between font-prompt">
         <div class="flex items-center gap-3">
-          <span>กด <kbd class="px-1.5 py-0.5 bg-white dark:bg-space-800 rounded border text-[10px]">↑</kbd> <kbd class="px-1.5 py-0.5 bg-white dark:bg-space-800 rounded border text-[10px]">↓</kbd> เพื่อเลือก</span>
-          <span>กด <kbd class="px-1.5 py-0.5 bg-white dark:bg-space-800 rounded border text-[10px]">Enter</kbd> เพื่อเปิด</span>
+          <span><kbd class="px-1 py-0.5 rounded bg-space-800 border border-space-700 text-[10px]">↑↓</kbd> นำทาง</span>
+          <span><kbd class="px-1 py-0.5 rounded bg-space-800 border border-space-700 text-[10px]">Enter</kbd> เลือก</span>
+          <span><kbd class="px-1 py-0.5 rounded bg-space-800 border border-space-700 text-[10px]">ESC</kbd> ปิด</span>
         </div>
-        <div class="flex items-center gap-1 text-sky-600 dark:text-sky-400 font-medium">
-          <Sparkles class="w-3.5 h-3.5" />
-          <span>SOIS Quick Navigation</span>
-        </div>
+        <span>{{ filteredCommands.length }} คำสั่ง</span>
       </div>
     </div>
   </div>

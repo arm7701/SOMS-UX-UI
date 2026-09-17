@@ -113,15 +113,15 @@ const handleDelete = async () => {
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-space-700">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
       <div>
         <div class="flex items-center gap-2">
-          <Target class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-slate-900 dark:text-white">
+          <Target class="w-6 h-6 text-zinc-300" />
+          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white">
             จัดการภารกิจดาวเทียม (Missions)
           </h1>
         </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p class="text-xs text-zinc-400 mt-1">
           กำหนดประเภทและรายการภารกิจปฏิบัติการดาวเทียมสำหรับเลือกใช้ในรายงาน
         </p>
       </div>
@@ -129,10 +129,10 @@ const handleDelete = async () => {
       <div>
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 hover:from-zinc-600 hover:to-slate-700 text-white text-xs font-semibold border border-zinc-500/60 shadow-md shadow-black/40 transition-all active:scale-[0.98]"
           @click="openAddModal"
         >
-          <Plus class="w-4 h-4" />
+          <Plus class="w-4 h-4 text-zinc-200" />
           <span>เพิ่มภารกิจใหม่</span>
         </button>
       </div>
@@ -146,18 +146,18 @@ const handleDelete = async () => {
       :default-page-size="25"
     >
       <template #cell(index)="{ index }">
-        <span class="font-mono text-xs text-slate-400 font-semibold">{{ index }}</span>
+        <span class="font-mono text-xs text-zinc-400 font-semibold">{{ index }}</span>
       </template>
 
       <template #cell(mission_name)="{ value }">
-        <span class="font-semibold text-xs text-slate-800 dark:text-slate-100">{{ value }}</span>
+        <span class="font-semibold text-xs text-white">{{ value }}</span>
       </template>
 
       <template #actions="{ row }">
         <div class="flex items-center justify-center gap-1.5">
           <button
             type="button"
-            class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-space-700 dark:text-slate-300 dark:hover:bg-space-800 text-xs transition-colors"
+            class="p-1.5 rounded-lg border border-zinc-700 bg-zinc-850 text-zinc-300 hover:bg-zinc-750 hover:text-white hover:border-zinc-500 text-xs transition-colors shadow-2xs"
             title="แก้ไขภารกิจ"
             @click="openEditModal(row)"
           >
@@ -165,7 +165,7 @@ const handleDelete = async () => {
           </button>
           <button
             type="button"
-            class="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900 dark:text-rose-400 dark:hover:bg-rose-950/40 text-xs transition-colors"
+            class="p-1.5 rounded-lg border border-rose-900/60 bg-rose-950/40 text-rose-300 hover:bg-rose-900/50 hover:border-rose-700 text-xs transition-colors shadow-2xs"
             title="ลบภารกิจ"
             @click="confirmDelete(row)"
           >
@@ -183,27 +183,27 @@ const handleDelete = async () => {
     >
       <form id="mission-form" class="space-y-4" @submit.prevent="handleSubmit">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            ชื่อภารกิจ (Mission Name) <span class="text-rose-500">*</span>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">
+            ชื่อภารกิจ (Mission Name) <span class="text-rose-400">*</span>
           </label>
           <input
             v-model="formData.mission_name"
             type="text"
             required
             placeholder="เช่น Housekeeping Telemetry Acquisition"
-            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500"
           />
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">
             คำอธิบาย/หมายเหตุ
           </label>
           <textarea
             v-model="formData.mission_note"
             rows="3"
             placeholder="วัตถุประสงค์และรายละเอียดของภารกิจ"
-            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500"
           ></textarea>
         </div>
       </form>
@@ -211,7 +211,7 @@ const handleDelete = async () => {
       <template #footer>
         <button
           type="button"
-          class="px-4 py-2 text-xs font-medium rounded-xl border border-slate-300 dark:border-space-600 hover:bg-slate-100 dark:hover:bg-space-700 text-slate-700 dark:text-slate-200"
+          class="px-4 py-2 text-xs font-medium rounded-xl border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200"
           @click="showModal = false"
         >
           ยกเลิก
@@ -219,7 +219,7 @@ const handleDelete = async () => {
         <button
           type="submit"
           form="mission-form"
-          class="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+          class="px-5 py-2 text-xs font-semibold rounded-xl bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 hover:from-zinc-600 hover:to-slate-700 border border-zinc-500/60 text-white shadow-xs"
         >
           บันทึกภารกิจ
         </button>

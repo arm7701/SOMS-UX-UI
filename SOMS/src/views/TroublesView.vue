@@ -123,15 +123,15 @@ const handleDelete = async () => {
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-space-700">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
       <div>
         <div class="flex items-center gap-2">
-          <AlertOctagon class="w-6 h-6 text-amber-500" />
-          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-slate-900 dark:text-white">
+          <AlertOctagon class="w-6 h-6 text-amber-400" />
+          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white">
             ปัญหาและระบบย่อย (Sub/Troubles)
           </h1>
         </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p class="text-xs sm:text-sm text-slate-300 font-medium font-prompt mt-1">
           ระบบจัดหมวดหมู่ข้อขัดข้องตามระบบย่อยของดาวเทียมสำหรับนำไปใช้บันทึกในรายงาน
         </p>
       </div>
@@ -139,10 +139,10 @@ const handleDelete = async () => {
       <div>
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0c1424] hover:bg-[#121f38] text-cyan-200 hover:text-white border border-cyan-700/60 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer font-prompt"
           @click="openAddModal"
         >
-          <Plus class="w-4 h-4" />
+          <Plus class="w-4 h-4 text-cyan-400" />
           <span>เพิ่มข้อขัดข้องใหม่</span>
         </button>
       </div>
@@ -156,16 +156,16 @@ const handleDelete = async () => {
       :default-page-size="25"
     >
       <template #cell(index)="{ index }">
-        <span class="font-mono text-xs text-slate-400 font-semibold">{{ index }}</span>
+        <span class="font-mono text-xs text-zinc-400 font-semibold">{{ index }}</span>
       </template>
 
       <template #cell(trouble_name)="{ value }">
-        <span class="font-semibold text-xs text-slate-800 dark:text-slate-100">{{ value }}</span>
+        <span class="font-semibold text-xs text-white">{{ value }}</span>
       </template>
 
       <template #cell(subsystem_name)="{ value }">
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-space-800 text-xs font-medium text-slate-700 dark:text-slate-300">
-          <Cpu class="w-3.5 h-3.5 text-blue-500" />
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-850 border border-zinc-750 text-xs font-medium text-zinc-200">
+          <Cpu class="w-3.5 h-3.5 text-zinc-400" />
           <span>{{ value }}</span>
         </div>
       </template>
@@ -174,7 +174,7 @@ const handleDelete = async () => {
         <div class="flex items-center justify-center gap-1.5">
           <button
             type="button"
-            class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-space-700 dark:text-slate-300 dark:hover:bg-space-800 text-xs transition-colors"
+            class="p-1.5 rounded-lg border border-zinc-700 bg-zinc-850 text-zinc-300 hover:bg-zinc-750 hover:text-white hover:border-zinc-500 text-xs transition-colors shadow-2xs"
             title="แก้ไขข้อขัดข้อง"
             @click="openEditModal(row)"
           >
@@ -182,7 +182,7 @@ const handleDelete = async () => {
           </button>
           <button
             type="button"
-            class="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900 dark:text-rose-400 dark:hover:bg-rose-950/40 text-xs transition-colors"
+            class="p-1.5 rounded-lg border border-rose-900/60 bg-rose-950/40 text-rose-300 hover:bg-rose-900/50 hover:border-rose-700 text-xs transition-colors shadow-2xs"
             title="ลบข้อขัดข้อง"
             @click="confirmDelete(row)"
           >
@@ -200,26 +200,26 @@ const handleDelete = async () => {
     >
       <form id="trouble-form" class="space-y-4" @submit.prevent="handleSubmit">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            ชื่อข้อขัดข้อง (Trouble Name) <span class="text-rose-500">*</span>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">
+            ชื่อข้อขัดข้อง (Trouble Name) <span class="text-rose-400">*</span>
           </label>
           <input
             v-model="formData.trouble_name"
             type="text"
             required
             placeholder="เช่น UHF Signal Attenuation"
-            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500"
           />
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            ระบบย่อย (Subsystem) <span class="text-rose-500">*</span>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">
+            ระบบย่อย (Subsystem) <span class="text-rose-400">*</span>
           </label>
           <select
             v-model="formData.sub_id"
             required
-            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white focus:outline-none focus:border-zinc-500"
           >
             <option value="" disabled>-- เลือกระบบย่อย --</option>
             <option v-for="sub in dataStore.lookups.subsystems" :key="sub.sub_id" :value="sub.sub_id">
@@ -229,14 +229,14 @@ const handleDelete = async () => {
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">
             คำอธิบาย/แนวทางแก้ไข (Note)
           </label>
           <textarea
             v-model="formData.trouble_note"
             rows="3"
             placeholder="ลักษณะอาการ สาเหตุ หรือแนวทางแก้ไขเบื้องต้น"
-            class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500"
           ></textarea>
         </div>
       </form>
@@ -244,7 +244,7 @@ const handleDelete = async () => {
       <template #footer>
         <button
           type="button"
-          class="px-4 py-2 text-xs font-medium rounded-xl border border-slate-300 dark:border-space-600 hover:bg-slate-100 dark:hover:bg-space-700 text-slate-700 dark:text-slate-200"
+          class="px-4 py-2 text-xs font-medium rounded-xl border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200"
           @click="showModal = false"
         >
           ยกเลิก
@@ -252,7 +252,7 @@ const handleDelete = async () => {
         <button
           type="submit"
           form="trouble-form"
-          class="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+          class="px-5 py-2 text-xs font-semibold rounded-xl bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 hover:from-zinc-600 hover:to-slate-700 border border-zinc-500/60 text-white shadow-xs"
         >
           บันทึกข้อขัดข้อง
         </button>

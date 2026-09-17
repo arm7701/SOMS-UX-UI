@@ -376,45 +376,22 @@ watch(selectedSatId, () => {
 
 <template>
   <div class="w-full h-full flex flex-col flex-1 min-h-0 bg-transparent overflow-hidden">
-    <!-- Widget Top Header Bar -->
-    <div class="px-3.5 py-2 bg-[#0d1117] border-b border-space-700/80 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
-      <!-- Title & Live Status -->
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg bg-cyan-950/40 border border-cyan-700/60 flex items-center justify-center text-cyan-400">
-          <Globe2 class="w-4 h-4 animate-pulse" />
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h3 class="text-base font-bold font-prompt text-white tracking-wide">
-              Orbit Tracker
-            </h3>
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-950/80 border border-emerald-600 text-emerald-300 font-prompt">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              REALTIME
-            </span>
-          </div>
-          <p class="text-xs text-slate-200 font-medium font-prompt mt-0.5">
-            แผนที่ติดตามวงโคจรและสถานีรับสัญญาณภาคพื้นดินแบบสด
-          </p>
-        </div>
+    <!-- Tactical Controls Bar (ดาวเทียมและมุมมอง) -->
+    <div class="px-3.5 py-2 bg-[#0a0f18] border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
+      <!-- Satellite Selector Pills -->
+      <div class="inline-flex rounded-lg bg-[#06090e] p-1 border border-slate-750/90 shadow-inner">
+        <button
+          v-for="sat in SAT_CONFIGS"
+          :key="sat.noradId"
+          type="button"
+          class="px-3 py-1 text-xs font-semibold font-prompt rounded-md transition-all cursor-pointer flex items-center gap-1.5"
+          :class="selectedSatId === sat.noradId ? 'bg-slate-750 text-white font-bold shadow-xs border border-slate-600' : 'text-slate-300 hover:text-white'"
+          @click="selectedSatId = sat.noradId"
+        >
+          <span class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: sat.color }"></span>
+          <span>{{ sat.name }}</span>
+        </button>
       </div>
-
-      <!-- Controls: Satellite Pills & View Modes -->
-      <div class="flex items-center gap-2 flex-wrap">
-        <!-- Satellite Selector Pills -->
-        <div class="inline-flex rounded-lg bg-[#090b0f] p-1 border border-space-700">
-          <button
-            v-for="sat in SAT_CONFIGS"
-            :key="sat.noradId"
-            type="button"
-            class="px-3 py-1 text-xs sm:text-sm font-semibold font-prompt rounded-md transition-all cursor-pointer flex items-center gap-1.5"
-            :class="selectedSatId === sat.noradId ? 'bg-zinc-700 text-white font-bold shadow-xs border border-zinc-500' : 'text-slate-300 hover:text-white'"
-            @click="selectedSatId = sat.noradId"
-          >
-            <span class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: sat.color }"></span>
-            <span>{{ sat.name }}</span>
-          </button>
-        </div>
 
         <!-- Quick View Controls -->
         <div class="inline-flex items-center gap-1">
@@ -453,7 +430,6 @@ watch(selectedSatId, () => {
           </button>
         </div>
       </div>
-    </div>
 
     <!-- Main Map Stage -->
     <div class="relative w-full flex-1 min-h-[260px] bg-[#090b0f] overflow-hidden">

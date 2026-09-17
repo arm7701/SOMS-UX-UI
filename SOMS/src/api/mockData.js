@@ -133,80 +133,107 @@ export const mockTroubles = [
   }
 ]
 
-export const mockPasses = [
-  {
-    id: 101,
-    satellite_id: 46320,
-    sat_name: 'NAPA-1 N',
-    aos_date_utc: '2026-09-11',
-    aos_time_utc: '03:15:20',
-    los_date_utc: '2026-09-11',
-    los_time_utc: '03:26:45',
-    aos_date_local: '2026-09-11',
-    aos_time_local: '10:15:20',
-    los_date_local: '2026-09-11',
-    los_time_local: '10:26:45',
-    duration_min: 11,
-    duration_sec: 25,
-    maxEl: 68.4,
-    sat_seq: 1,
-    comments: 'DayPass-1 สัญญาณสมบูรณ์'
-  },
-  {
-    id: 102,
-    satellite_id: 46320,
-    sat_name: 'NAPA-1 N',
-    aos_date_utc: '2026-09-11',
-    aos_time_utc: '04:52:10',
-    los_date_utc: '2026-09-11',
-    los_time_utc: '05:01:30',
-    aos_date_local: '2026-09-11',
-    aos_time_local: '11:52:10',
-    los_date_local: '2026-09-11',
-    los_time_local: '12:01:30',
-    duration_min: 9,
-    duration_sec: 20,
-    maxEl: 24.1,
-    sat_seq: 2,
-    comments: 'DayPass-2 พาสมุมต่ำ'
-  },
-  {
-    id: 103,
-    satellite_id: 48963,
-    sat_name: 'NAPA-2 N',
-    aos_date_utc: '2026-09-11',
-    aos_time_utc: '06:10:00',
-    los_date_utc: '2026-09-11',
-    los_time_utc: '06:22:15',
-    aos_date_local: '2026-09-11',
-    aos_time_local: '13:10:00',
-    los_date_local: '2026-09-11',
-    los_time_local: '13:22:15',
-    duration_min: 12,
-    duration_sec: 15,
-    maxEl: 82.5,
-    sat_seq: 1,
-    comments: 'DayPass-1 พาสมุมสูงมาก (Overhead)'
-  },
-  {
-    id: 104,
-    satellite_id: 48963,
-    sat_name: 'NAPA-2 N',
-    aos_date_utc: '2026-09-11',
-    aos_time_utc: '15:40:00',
-    los_date_utc: '2026-09-11',
-    los_time_utc: '15:49:50',
-    aos_date_local: '2026-09-11',
-    aos_time_local: '22:40:00',
-    los_date_local: '2026-09-11',
-    los_time_local: '22:49:50',
-    duration_min: 9,
-    duration_sec: 50,
-    maxEl: 3.8,
-    sat_seq: 3,
-    comments: 'มุมยกต่ำกว่า 5 องศา (Abort)'
-  }
-]
+export function getDynamicPasses() {
+  const now = new Date()
+  const pad = (n) => String(n).padStart(2, '0')
+  const toDateStr = (d) => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`
+  const toTimeStr = (d) => `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`
+  const toLocalTimeStr = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+  const toLocalDateStr = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+
+  // Pass 0: 45 นาทีที่ผ่านมา
+  const p0Aos = new Date(now.getTime() - 55 * 60 * 1000)
+  const p0Los = new Date(p0Aos.getTime() + 10 * 60 * 1000)
+
+  // Pass 1: กำลังจะมาถึงในอีกประมาณ 25 นาที (Upcoming Overhead)
+  const p1Aos = new Date(now.getTime() + 25 * 60 * 1000 + 40 * 1000)
+  const p1Los = new Date(p1Aos.getTime() + 11 * 60 * 1000 + 35 * 1000)
+
+  // Pass 2: ในอีก 98 นาที (Medium Elevation)
+  const p2Aos = new Date(now.getTime() + 98 * 60 * 1000)
+  const p2Los = new Date(p2Aos.getTime() + 9 * 60 * 1000 + 40 * 1000)
+
+  // Pass 3: ในอีก 185 นาที (Overhead Night Pass)
+  const p3Aos = new Date(now.getTime() + 185 * 60 * 1000)
+  const p3Los = new Date(p3Aos.getTime() + 12 * 60 * 1000 + 15 * 1000)
+
+  return [
+    {
+      id: 101,
+      satellite_id: 46320,
+      sat_name: 'NAPA-1 N',
+      aos_date_utc: toDateStr(p0Aos),
+      aos_time_utc: toTimeStr(p0Aos),
+      los_date_utc: toDateStr(p0Los),
+      los_time_utc: toTimeStr(p0Los),
+      aos_date_local: toLocalDateStr(p0Aos),
+      aos_time_local: toLocalTimeStr(p0Aos),
+      los_date_local: toLocalDateStr(p0Los),
+      los_time_local: toLocalTimeStr(p0Los),
+      duration_min: 10,
+      duration_sec: 0,
+      maxEl: 44.5,
+      sat_seq: 1,
+      comments: 'DayPass-1 ผ่านเสร็จสิ้น สมบูรณ์ 100%'
+    },
+    {
+      id: 102,
+      satellite_id: 48963,
+      sat_name: 'NAPA-2 N',
+      aos_date_utc: toDateStr(p1Aos),
+      aos_time_utc: toTimeStr(p1Aos),
+      los_date_utc: toDateStr(p1Los),
+      los_time_utc: toTimeStr(p1Los),
+      aos_date_local: toLocalDateStr(p1Aos),
+      aos_time_local: toLocalTimeStr(p1Aos),
+      los_date_local: toLocalDateStr(p1Los),
+      los_time_local: toLocalTimeStr(p1Los),
+      duration_min: 11,
+      duration_sec: 35,
+      maxEl: 82.5,
+      sat_seq: 1,
+      comments: 'DayPass-1 พาสมุมสูงมาก (Overhead) รอเข้าสถานี'
+    },
+    {
+      id: 103,
+      satellite_id: 46320,
+      sat_name: 'NAPA-1 N',
+      aos_date_utc: toDateStr(p2Aos),
+      aos_time_utc: toTimeStr(p2Aos),
+      los_date_utc: toDateStr(p2Los),
+      los_time_utc: toTimeStr(p2Los),
+      aos_date_local: toLocalDateStr(p2Aos),
+      aos_time_local: toLocalTimeStr(p2Aos),
+      los_date_local: toLocalDateStr(p2Los),
+      los_time_local: toLocalTimeStr(p2Los),
+      duration_min: 9,
+      duration_sec: 40,
+      maxEl: 28.3,
+      sat_seq: 2,
+      comments: 'DayPass-2 พาสมุมปานกลาง'
+    },
+    {
+      id: 104,
+      satellite_id: 48963,
+      sat_name: 'NAPA-2 N',
+      aos_date_utc: toDateStr(p3Aos),
+      aos_time_utc: toTimeStr(p3Aos),
+      los_date_utc: toDateStr(p3Los),
+      los_time_utc: toTimeStr(p3Los),
+      aos_date_local: toLocalDateStr(p3Aos),
+      aos_time_local: toLocalTimeStr(p3Aos),
+      los_date_local: toLocalDateStr(p3Los),
+      los_time_local: toLocalTimeStr(p3Los),
+      duration_min: 12,
+      duration_sec: 15,
+      maxEl: 64.1,
+      sat_seq: 2,
+      comments: 'NightPass-1 พาสกลางคืน'
+    }
+  ]
+}
+
+export const mockPasses = getDynamicPasses()
 
 export const mockReports = [
   {
@@ -375,34 +402,63 @@ export async function mockApiHandler(path, method = 'GET', body = null) {
   const cleanPath = path.split('?')[0]
 
   if (cleanPath === '/auth/session') {
+    const savedUser = typeof window !== 'undefined' ? localStorage.getItem('soms_mock_user') : null
+    if (savedUser) {
+      try {
+        return {
+          user: JSON.parse(savedUser),
+          csrfToken: 'mock-csrf-token-abc-123',
+          setupRequired: false
+        }
+      } catch (e) {}
+    }
     return {
-      user: mockUsers[0],
-      csrfToken: 'mock-csrf-token-abc-123',
+      user: null,
+      csrfToken: '',
       setupRequired: false
     }
   }
 
   if (cleanPath === '/auth/login') {
+    const { username, password } = body || {}
+    // ตรวจสอบความถูกต้องของรหัสผ่านในโหมดจำลอง (Mock Verification)
+    if (username === 'developer' && password && password !== 'password1234') {
+      const err = new Error('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบและลองใหม่อีกครั้ง')
+      err.status = 401
+      throw err
+    }
+    if (username && username !== 'developer' && !mockUsers.some(u => u.rbac_username === username)) {
+      const err = new Error('ไม่พบบัญชีผู้ใช้งานนี้ในระบบฐานข้อมูล')
+      err.status = 404
+      throw err
+    }
+    const matched = mockUsers.find(u => u.rbac_username === username) || mockUsers[0]
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('soms_mock_user', JSON.stringify(matched))
+    }
     return {
-      user: mockUsers[0],
+      user: matched,
       csrfToken: 'mock-csrf-token-abc-123',
       setupRequired: false
     }
   }
 
   if (cleanPath === '/auth/logout') {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('soms_mock_user')
+    }
     return { success: true }
   }
 
   if (cleanPath === '/dashboard') {
     return {
       satellites: [
-        { norad_id: 46320, sat_name: 'NAPA-1 N', altitude_km: 495.24, epoch_date: '2026-09-11', epoch_time: '06:45:00' },
-        { norad_id: 48963, sat_name: 'NAPA-2 N', altitude_km: 508.82, epoch_date: '2026-09-11', epoch_time: '07:12:30' }
+        { norad_id: 46320, sat_name: 'NAPA-1 N', altitude_km: 495.24, epoch_date: new Date().toISOString().slice(0, 10), epoch_time: '06:45:00' },
+        { norad_id: 48963, sat_name: 'NAPA-2 N', altitude_km: 508.82, epoch_date: new Date().toISOString().slice(0, 10), epoch_time: '07:12:30' }
       ],
       weather: mockSpaceWeather[0],
-      passes: mockPasses,
-      operations: mockOperations.filter(o => o.operation_date === '2026-09-11'),
+      passes: getDynamicPasses(),
+      operations: mockOperations,
       altitudeHistory: mockAltitudeHistory
     }
   }
@@ -421,7 +477,7 @@ export async function mockApiHandler(path, method = 'GET', body = null) {
   }
 
   if (cleanPath === '/passes') {
-    return mockPasses
+    return getDynamicPasses()
   }
 
   if (cleanPath === '/reports') {

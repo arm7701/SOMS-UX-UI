@@ -165,15 +165,15 @@ const handleDelete = async () => {
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-space-700">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
       <div>
         <div class="flex items-center gap-2">
-          <ShieldCheck class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-slate-900 dark:text-white">
+          <ShieldCheck class="w-6 h-6 text-zinc-300" />
+          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white">
             จัดการผู้ใช้งาน (User Management)
           </h1>
         </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p class="text-xs text-zinc-400 mt-1">
           กำหนดสิทธิ์การเข้าถึง บัญชีผู้ปฏิบัติหน้าที่ และการควบคุมรหัสผ่าน
         </p>
       </div>
@@ -181,10 +181,10 @@ const handleDelete = async () => {
       <div>
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 hover:from-zinc-600 hover:to-slate-700 text-white text-xs font-semibold border border-zinc-500/60 shadow-md shadow-black/40 transition-all active:scale-[0.98]"
           @click="openAddModal"
         >
-          <Plus class="w-4 h-4" />
+          <Plus class="w-4 h-4 text-zinc-200" />
           <span>เพิ่มผู้ใช้งานใหม่</span>
         </button>
       </div>
@@ -199,19 +199,19 @@ const handleDelete = async () => {
     >
       <template #cell(rbac_fullname)="{ value }">
         <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-full bg-slate-100 dark:bg-space-800 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs font-bold">
+          <div class="w-7 h-7 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300 flex items-center justify-center text-xs font-bold">
             <User class="w-3.5 h-3.5" />
           </div>
-          <span class="font-semibold text-xs text-slate-800 dark:text-slate-100">{{ value }}</span>
+          <span class="font-semibold text-xs text-white">{{ value }}</span>
         </div>
       </template>
 
       <template #cell(rbac_username)="{ value }">
-        <span class="font-mono text-xs text-blue-700 dark:text-blue-400 font-semibold">{{ value }}</span>
+        <span class="font-mono text-xs text-zinc-200 font-bold">{{ value }}</span>
       </template>
 
       <template #cell(rbac_role)="{ value }">
-        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-zinc-800 text-zinc-200 border border-zinc-700">
           {{ value }}
         </span>
       </template>
@@ -230,7 +230,7 @@ const handleDelete = async () => {
           <button
             v-if="row.has_password"
             type="button"
-            class="p-1.5 rounded-lg border border-sky-200 text-sky-600 hover:bg-sky-50 dark:border-sky-900 dark:text-sky-400 dark:hover:bg-sky-950/40 text-xs transition-colors"
+            class="p-1.5 rounded-lg border border-amber-800/80 text-amber-300 bg-amber-950/40 hover:bg-amber-900/50 text-xs transition-colors shadow-2xs"
             title="รีเซ็ตรหัสผ่าน (ผู้ใช้จะต้องตั้งรหัสผ่านใหม่)"
             @click="confirmResetPassword(row)"
           >
@@ -240,7 +240,7 @@ const handleDelete = async () => {
           <!-- Edit -->
           <button
             type="button"
-            class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-space-700 dark:text-slate-300 dark:hover:bg-space-800 text-xs transition-colors"
+            class="p-1.5 rounded-lg border border-zinc-700 bg-zinc-850 text-zinc-300 hover:bg-zinc-750 hover:text-white hover:border-zinc-500 text-xs transition-colors shadow-2xs"
             title="แก้ไขข้อมูลผู้ใช้"
             @click="openEditModal(row)"
           >
@@ -250,7 +250,7 @@ const handleDelete = async () => {
           <!-- Delete -->
           <button
             type="button"
-            class="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900 dark:text-rose-400 dark:hover:bg-rose-950/40 text-xs transition-colors"
+            class="p-1.5 rounded-lg border border-rose-900/60 bg-rose-950/40 text-rose-300 hover:bg-rose-900/50 hover:border-rose-700 text-xs transition-colors shadow-2xs"
             title="ลบผู้ใช้"
             @click="confirmDelete(row)"
           >
@@ -269,64 +269,64 @@ const handleDelete = async () => {
       <form id="user-form" class="space-y-4" @submit.prevent="handleSubmit">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              ยศ ชื่อ-สกุล <span class="text-rose-500">*</span>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">
+              ยศ ชื่อ-สกุล <span class="text-rose-400">*</span>
             </label>
             <input
               v-model="formData.rbac_fullname"
               type="text"
               required
               placeholder="เช่น น.ต. สมชาย ดวงดาว"
-              class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500"
             />
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              ชื่อย่อ <span class="text-rose-500">*</span>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">
+              ชื่อย่อ <span class="text-rose-400">*</span>
             </label>
             <input
               v-model="formData.rbac_shortname"
               type="text"
               required
               placeholder="เช่น สมชาย"
-              class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500"
             />
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">
               ตำแหน่งราชการ
             </label>
             <input
               v-model="formData.rbac_position"
               type="text"
               placeholder="เช่น นายทหารควบคุมภารกิจ"
-              class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500"
             />
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Username <span class="text-rose-500">*</span>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">
+              Username <span class="text-rose-400">*</span>
             </label>
             <input
               v-model="formData.rbac_username"
               type="text"
               required
               placeholder="ไม่ต้องใส่ @rtaf.mi.th"
-              class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono"
+              class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 font-mono"
             />
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              ตำแหน่งปฏิบัติงานประจำ (Role) <span class="text-rose-500">*</span>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">
+              ตำแหน่งปฏิบัติงานประจำ (Role) <span class="text-rose-400">*</span>
             </label>
             <select
               v-model="formData.rbac_role"
               required
-              class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white focus:outline-none focus:border-zinc-500"
             >
               <option value="-">- (ทั่วไป)</option>
               <option value="MD">Mission Director (MD)</option>
@@ -336,13 +336,13 @@ const handleDelete = async () => {
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              สถานะการใช้งาน <span class="text-rose-500">*</span>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">
+              สถานะการใช้งาน <span class="text-rose-400">*</span>
             </label>
             <select
               v-model="formData.rbac_status"
               required
-              class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white focus:outline-none focus:border-zinc-500"
             >
               <option value="Active">Active (เปิดใช้งาน)</option>
               <option value="Notactive">Notactive (ระงับการใช้งาน)</option>
@@ -350,14 +350,14 @@ const handleDelete = async () => {
           </div>
 
           <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <label class="block text-xs font-semibold text-zinc-300 mb-1">
               {{ isEditing ? 'เปลี่ยนรหัสผ่าน (เว้นว่างไว้หากไม่ต้องการเปลี่ยน)' : 'รหัสผ่านเริ่มต้น (หรือเว้นว่างเพื่อให้ผู้ใช้ตั้งเอง)' }}
             </label>
             <input
               v-model="formData.password"
               type="password"
               placeholder="รหัสผ่าน 10-72 ตัวอักษร"
-              class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono"
+              class="w-full px-3 py-2 text-sm rounded-xl border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 font-mono"
             />
           </div>
         </div>
@@ -366,7 +366,7 @@ const handleDelete = async () => {
       <template #footer>
         <button
           type="button"
-          class="px-4 py-2 text-xs font-medium rounded-xl border border-slate-300 dark:border-space-600 hover:bg-slate-100 dark:hover:bg-space-700 text-slate-700 dark:text-slate-200"
+          class="px-4 py-2 text-xs font-medium rounded-xl border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200"
           @click="showModal = false"
         >
           ยกเลิก
@@ -374,7 +374,7 @@ const handleDelete = async () => {
         <button
           type="submit"
           form="user-form"
-          class="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+          class="px-5 py-2 text-xs font-semibold rounded-xl bg-gradient-to-r from-zinc-700 via-slate-700 to-zinc-800 hover:from-zinc-600 hover:to-slate-700 border border-zinc-500/60 text-white shadow-xs"
         >
           บันทึกข้อมูล
         </button>

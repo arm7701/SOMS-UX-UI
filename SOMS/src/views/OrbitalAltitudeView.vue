@@ -58,15 +58,15 @@ const formattedTableData = computed(() => {
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-space-700">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
       <div>
         <div class="flex items-center gap-2">
-          <LineChart class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-slate-900 dark:text-white">
+          <LineChart class="w-6 h-6 text-zinc-300" />
+          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white">
             ระดับความสูงของวงโคจร (Orbital Altitude)
           </h1>
         </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p class="text-xs text-zinc-400 mt-1">
           ประวัติการลดระดับและการรักษาระดับความสูงของดาวเทียมในแต่ละ Epoch Cycle
         </p>
       </div>
@@ -81,23 +81,23 @@ const formattedTableData = computed(() => {
     >
       <template #cell(date_display)="{ row, value }">
         <div class="flex items-center gap-2">
-          <span class="font-mono text-xs font-semibold text-slate-800 dark:text-slate-100">{{ value }}</span>
-          <span v-if="row.isToday" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/50 dark:text-rose-400">
+          <span class="font-mono text-xs font-semibold text-white">{{ value }}</span>
+          <span v-if="row.isToday" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-950/60 text-rose-300 border border-rose-800/80">
             TODAY
           </span>
         </div>
       </template>
 
       <template #cell(napa1_alt)="{ value }">
-        <div class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50/60 dark:bg-blue-950/40 px-2.5 py-1 rounded-lg">
-          <Orbit class="w-3.5 h-3.5" />
+        <div class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-zinc-100 bg-zinc-800/90 border border-zinc-700 px-2.5 py-1 rounded-lg">
+          <Orbit class="w-3.5 h-3.5 text-zinc-400" />
           <span>{{ value }}</span>
         </div>
       </template>
 
       <template #cell(napa2_alt)="{ value }">
-        <div class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-purple-700 dark:text-purple-400 bg-purple-50/60 dark:bg-purple-950/40 px-2.5 py-1 rounded-lg">
-          <Orbit class="w-3.5 h-3.5" />
+        <div class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-zinc-200 bg-zinc-850 border border-zinc-750 px-2.5 py-1 rounded-lg">
+          <Orbit class="w-3.5 h-3.5 text-zinc-400" />
           <span>{{ value }}</span>
         </div>
       </template>

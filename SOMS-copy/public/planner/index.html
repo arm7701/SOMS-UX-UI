@@ -31,12 +31,35 @@
     <div>
       <div class="ac-hdr" onclick="acToggle('ac-sats')">
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ac-title">Satellites</span>
-          <button class="btns" onclick="event.stopPropagation();fetchAllTLEs()" style="font-size:9px;padding:2px 6px">⬇ Fetch All</button>
+          <span class="ac-title ac-title-sats"><span class="ac-badge ac-badge-sky">🛰️</span> SATELLITES</span>
+          <button class="btns" onclick="event.stopPropagation();fetchAllTLEs()" style="font-size:9px;padding:2px 8px;font-weight:700;border-color:#38bdf8;color:#38bdf8" title="ดึง TLE ของดาวเทียมที่เลือกทั้งหมด">⬇ Fetch All</button>
         </div>
         <span class="ac-tog" id="tog-ac-sats">−</span>
       </div>
       <div class="ac-body" id="ac-sats">
+        <!-- Modern Dynamic Category Dropdown & Filter Bar -->
+        <div class="sat-filter-box">
+          <div style="margin-bottom:6px">
+            <select id="sat-category-select" onchange="onCategoryChange(this.value)" class="planner-select" style="width:100%;font-size:11.5px;padding:5px 8px;font-weight:600">
+              <option value="all">🌐 ทุกหมวดหมู่ (All Satellites - 22)</option>
+              <option value="gov">🇹🇭 Thai Government (4)</option>
+              <option value="sen">🇪🇺 Sentinel-2 (10m) (3)</option>
+              <option value="g2">🇺🇸 BlackSky Gen-2 (1.0m) (11)</option>
+              <option value="g3">🇺🇸 BlackSky Gen-3 (0.35m) (4)</option>
+              <option value="bs">🇺🇸 All BlackSky (15)</option>
+              <option value="custom">⚙️ Custom / Added</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:5px;margin-bottom:6px;align-items:center">
+            <input type="text" id="sat-search-input" placeholder="🔍 ค้นหาชื่อ / NORAD..." oninput="onSearchSat(this.value)" class="planner-input" style="flex:1;font-size:11px;padding:5px 8px" />
+            <button type="button" class="btns" onclick="selectFilteredSats(true)" style="padding:4px 7px;font-size:10px" title="เลือกดาวเทียมทั้งหมดที่แสดง">เลือกหมด</button>
+            <button type="button" class="btns" onclick="selectFilteredSats(false)" style="padding:4px 7px;font-size:10px" title="ยกเลิกทั้งหมดที่แสดง">ไม่เลือก</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#94a3b8;margin-bottom:6px;padding:0 2px">
+            <span id="sat-count-badge" style="color:#cbd5e1">ทั้งหมด 22 ดาวเทียม</span>
+            <span id="sat-selected-badge" style="color:#38bdf8;font-weight:700">เลือกแล้ว 6 ดวง</span>
+          </div>
+        </div>
         <div id="satlist"></div>
       </div>
     </div>
@@ -44,7 +67,7 @@
     <!-- 2. Add Satellite -->
     <div>
       <div class="ac-hdr" onclick="acToggle('ac-add')">
-        <span class="ac-title">Add Satellite</span>
+        <span class="ac-title ac-title-add"><span class="ac-badge ac-badge-indigo">➕</span> ADD SATELLITE</span>
         <div style="display:flex;gap:2px;align-items:center" onclick="event.stopPropagation()">
           <button class="addtab act" id="at-norad" onclick="switchAddTab('norad')">NORAD ID</button>
           <button class="addtab" id="at-tle" onclick="switchAddTab('tle')">Paste TLE</button>
@@ -68,7 +91,7 @@
     <!-- 3. Sensor Specs -->
     <div id="specbox" style="display:none">
       <div class="ac-hdr" onclick="acToggle('ac-spec')">
-        <span class="ac-title">Sensor Specs</span>
+        <span class="ac-title ac-title-spec"><span class="ac-badge ac-badge-emerald">⚙️</span> SENSOR SPECS</span>
         <div style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">
           <select id="specsel" onchange="loadSpec()" style="width:auto;padding:2px 5px;font-size:10px"></select>
           <button class="btns" onclick="saveSpec()" title="บันทึกค่า">💾</button>
@@ -91,7 +114,7 @@
     <!-- 4. Saved Targets -->
     <div>
       <div class="ac-hdr" onclick="acToggle('ac-tgts')">
-        <span class="ac-title">Saved Targets</span>
+        <span class="ac-title ac-title-tgts"><span class="ac-badge ac-badge-rose">📍</span> SAVED TARGETS</span>
         <div style="display:flex;gap:5px;align-items:center">
           <button class="btns" onclick="event.stopPropagation();saveTarget()" style="font-size:9px;padding:2px 6px">+ Save</button>
           <span class="ac-tog" id="tog-ac-tgts">−</span>
@@ -107,7 +130,7 @@
     <!-- 5. Target Location -->
     <div>
       <div class="ac-hdr" onclick="acToggle('ac-loc')">
-        <span class="ac-title">Target Location</span>
+        <span class="ac-title ac-title-loc"><span class="ac-badge ac-badge-amber">🎯</span> TARGET LOCATION</span>
         <span class="ac-tog" id="tog-ac-loc">−</span>
       </div>
       <div class="ac-body" id="ac-loc">
@@ -122,7 +145,7 @@
     <!-- 6. Parameters -->
     <div>
       <div class="ac-hdr" onclick="acToggle('ac-params')">
-        <span class="ac-title">Parameters</span>
+        <span class="ac-title ac-title-params"><span class="ac-badge ac-badge-purple">⏱️</span> PARAMETERS</span>
         <span class="ac-tog" id="tog-ac-params">−</span>
       </div>
       <div class="ac-body" id="ac-params">
@@ -141,7 +164,7 @@
     <!-- 7. Summary -->
     <div id="stats" style="display:none">
       <div class="ac-hdr" onclick="acToggle('ac-summary')">
-        <span class="ac-title">Summary</span>
+        <span class="ac-title ac-title-summary"><span class="ac-badge ac-badge-teal">📊</span> SUMMARY</span>
         <span class="ac-tog" id="tog-ac-summary">−</span>
       </div>
       <div class="ac-body" id="ac-summary">
@@ -161,7 +184,7 @@
   </div>
 </div>
 
-<div id="panel-resize"></div>
+<div id="panel-resize" title="ลากเพื่อปรับขนาดความสูงของตารางรอบพาส"></div>
 <div id="panel">
   <div id="filterbar">
     <div style="display:flex;gap:4px;margin-right:8px">
@@ -174,7 +197,14 @@
     <button class="fbtn" onclick="setFilter('good',this)">Good ✓</button>
     <button class="fbtn" onclick="setFilter('feasible',this)">Feasible</button>
     <button class="fbtn" onclick="setFilter('day',this)">Daytime</button>
-    <span id="rescount"></span>
+    
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <span id="rescount"></span>
+      <button class="fbtn" id="btn-toggle-panel" onclick="togglePanelCollapse()" title="ย่อ / ขยายตารางรอบพาส" style="display:flex;align-items:center;gap:4px;padding:3px 8px;cursor:pointer">
+        <span id="panel-toggle-icon">🔽</span>
+        <span id="panel-toggle-text">ย่อตาราง</span>
+      </button>
+    </div>
   </div>
 
   <!-- Passes tab -->
@@ -198,13 +228,15 @@
   </div>
 
   <!-- Timeline tab -->
-  <div id="view-timeline" style="display:none;height:185px;overflow:hidden">
+  <div id="view-timeline" style="display:none;height:100%;overflow:hidden">
     <div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-bottom:1px solid #283548;background:#151c27;flex-shrink:0">
       <span style="font-size:10px;color:#e2e8f0;font-weight:600;text-transform:uppercase;letter-spacing:.4px">Target</span>
       <select id="tl-target" onchange="drawTimeline()" style="width:160px;padding:2px 6px;font-size:11px"></select>
       <span style="font-size:10px;color:#94a3b8;margin-left:6px">Good ✓ = border สีขาว</span>
     </div>
-    <canvas id="tlcanvas" style="width:100%;display:block"></canvas>
+    <div style="flex:1;min-height:0;overflow:auto;position:relative">
+      <canvas id="tlcanvas" style="width:100%;display:block"></canvas>
+    </div>
   </div>
 </div>
 

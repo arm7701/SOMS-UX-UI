@@ -63,17 +63,17 @@ const badgeClasses = computed(() => {
 </script>
 
 <template>
-  <div class="bg-[#0c121e]/92 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 shadow-lg hover:border-cyan-500/40 hover:shadow-cyan-950/20 transition-all duration-200 flex flex-col justify-between">
+  <div class="bg-[#132238]/95 backdrop-blur-md rounded-2xl p-5 border border-slate-600/60 shadow-lg hover:border-cyan-500/50 hover:shadow-cyan-900/25 transition-all duration-200 flex flex-col justify-between">
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0">
-        <p class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300 font-prompt truncate">
+        <p class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-300 font-prompt truncate">
           {{ title }}
         </p>
         <div class="mt-2 flex items-baseline gap-2 flex-wrap">
-          <span class="text-3xl lg:text-4xl font-black tracking-tight font-mono text-white" :class="colorClasses.value">
+          <span class="text-3xl lg:text-4xl font-extrabold tracking-tight font-mono text-white" :class="colorClasses.value">
             {{ value }}
           </span>
-          <span v-if="unit" class="text-base font-bold text-slate-200 font-prompt">
+          <span v-if="unit" class="text-base font-semibold text-slate-300 font-prompt">
             {{ unit }}
           </span>
         </div>
@@ -84,13 +84,13 @@ const badgeClasses = computed(() => {
     </div>
 
     <!-- รายละเอียดข้อมูลย่อย เติมเต็มพื้นที่ให้สมบูรณ์ ไม่ว่างเปล่า คอนทราสต์สูง -->
-    <div v-if="$slots.default || (items && items.length)" class="mt-3.5 pt-3 border-t border-slate-750/80">
+    <div v-if="$slots.default || (items && items.length)" class="mt-3.5 pt-3 border-t border-slate-700/60">
       <slot>
         <div class="flex flex-wrap gap-1.5">
           <span
             v-for="(it, i) in items"
             :key="i"
-            class="px-2.5 py-1 rounded-lg bg-[#0e1626] border border-slate-700/80 text-xs font-prompt text-slate-100 font-semibold shadow-xs"
+            class="px-2.5 py-1 rounded-lg bg-[#182840] border border-slate-600 text-xs font-prompt text-slate-100 font-medium shadow-xs"
           >
             {{ it }}
           </span>
@@ -98,8 +98,8 @@ const badgeClasses = computed(() => {
       </slot>
     </div>
 
-    <div v-if="subtitle || badge" class="mt-3 pt-2.5 border-t border-slate-750/80 flex items-center justify-between text-xs gap-2">
-      <span class="text-slate-300 font-medium truncate font-prompt text-xs sm:text-sm">
+    <div v-if="subtitle || badge" class="mt-3 pt-2.5 border-t border-slate-700/60 flex items-center justify-between text-xs gap-2">
+      <span class="text-slate-300 font-normal truncate font-prompt text-xs sm:text-sm">
         {{ subtitle }}
       </span>
       <span v-if="badge" class="px-2.5 py-1 rounded-full text-xs font-mono font-bold border flex-shrink-0" :class="badgeClasses">

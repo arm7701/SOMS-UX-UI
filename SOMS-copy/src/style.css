@@ -9,50 +9,50 @@
    ========================================================================== */
 
 :root, .dark {
-  /* โทนดำเทา ทรงพลัง เรียบหรู คมชัด ระดับ Military Aerospace Command Center */
-  --bg-app: #090b0f;
-  --bg-surface: #141821;
-  --bg-surface-elevated: #1a202b;
-  --border-color: #2d3543;
-  --border-focus: #cbd5e1;
+  /* โทนแอโรสเปซเนวีสว่างขึ้น สบายตา มีมิติ สวยงาม คมชัด ไม่มืดทึบ */
+  --bg-app: #0c1728;
+  --bg-surface: #132238;
+  --bg-surface-elevated: #1a2c47;
+  --border-color: #2b4162;
+  --border-focus: #38bdf8;
 
   --text-primary: #ffffff;
   --text-secondary: #f1f5f9;
   --text-muted: #94a3b8;
 
-  --brand-primary: #f1f5f9;
-  --brand-hover: #ffffff;
+  --brand-primary: #38bdf8;
+  --brand-hover: #7dd3fc;
 
-  --shadow-card: 0 4px 24px 0 rgba(0, 0, 0, 0.65);
-  --shadow-elevated: 0 8px 36px 0 rgba(0, 0, 0, 0.85);
+  --shadow-card: 0 8px 30px 0 rgba(0, 0, 0, 0.45);
+  --shadow-elevated: 0 14px 44px 0 rgba(0, 0, 0, 0.6);
 }
 
-/* Global Font & Spacing Overrides (ใช้ฟอนต์ Prompt ทั้งระบบ พร้อมปรับระยะบรรทัดและช่องไฟ) */
+/* Global Font & Spacing Overrides (ปรับช่องไฟและขนาดตัวอักษรให้อ่านง่าย สบายตา สวยงามทุกมุมมอง) */
 * {
   font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 html, body {
   font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  letter-spacing: 0.018em;
-  line-height: 1.68;
+  letter-spacing: 0.005em;
+  line-height: 1.65;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #090b0f;
+  background-color: #0c1728;
   color: #f1f5f9;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Prompt', sans-serif !important;
-  letter-spacing: 0.012em;
-  line-height: 1.38;
-  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  font-weight: 700;
   color: #ffffff;
 }
 
 p, span, div, td, th, label, input, button, select, textarea {
-  letter-spacing: 0.018em;
+  letter-spacing: 0.005em;
 }
 
 /* Typography Helpers (ให้ทุกคลาสใช้ Prompt ทั้งหมดอย่างสมบูรณ์) */
@@ -79,6 +79,50 @@ p, span, div, td, th, label, input, button, select, textarea {
   background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #94a3b8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   Tactile Command Console Panels & 2.5D Aerospace Surfaces
+   ========================================================================== */
+.command-panel {
+  background: linear-gradient(180deg, rgba(23, 33, 50, 0.94) 0%, rgba(13, 19, 31, 0.97) 100%);
+  border: 1px solid rgba(71, 85, 105, 0.55);
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(16px);
+}
+
+.command-panel-subtle {
+  background: linear-gradient(180deg, rgba(20, 29, 44, 0.85) 0%, rgba(11, 16, 26, 0.92) 100%);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+  border-top: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+/* High-Visibility Widget Category Themes */
+.cat-kpi { --cat-color: #10b981; --cat-glow: rgba(16, 185, 129, 0.45); }
+.cat-orbit { --cat-color: #06b6d4; --cat-glow: rgba(6, 182, 212, 0.45); }
+.cat-countdown { --cat-color: #f59e0b; --cat-glow: rgba(245, 158, 11, 0.45); }
+.cat-fleet { --cat-color: #0284c7; --cat-glow: rgba(2, 132, 199, 0.45); }
+.cat-weather { --cat-color: #f97316; --cat-glow: rgba(249, 115, 22, 0.45); }
+.cat-altitude { --cat-color: #34d399; --cat-glow: rgba(52, 211, 153, 0.45); }
+.cat-attitude { --cat-color: #fbbf24; --cat-glow: rgba(251, 191, 36, 0.45); }
+.cat-passes { --cat-color: #3b82f6; --cat-glow: rgba(59, 130, 246, 0.45); }
+.cat-operators { --cat-color: #a855f7; --cat-glow: rgba(168, 85, 247, 0.45); }
+.cat-chart { --cat-color: #818cf8; --cat-glow: rgba(129, 140, 248, 0.45); }
+
+/* Video Wall Mode (โหมดผนังจอห้องควบคุม 10+ จอต่อกัน) */
+.video-wall-mode {
+  letter-spacing: 0.025em;
+}
+
+.video-wall-mode .widget-header-title {
+  font-size: 1.15rem !important;
+  font-weight: 900 !important;
+}
+
+.video-wall-mode .stat-value {
+  font-size: 2.35rem !important;
+  font-weight: 900 !important;
 }
 
 /* Custom Scrollbar */

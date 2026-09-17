@@ -27,7 +27,7 @@ export default defineConfig({
     port: 3000,
     host: true,
     watch: {
-      ignored: ['**/reference_original/**', '**/.git/**']
+      ignored: ['**/reference_original/**', '**/.git/**', '**/.temp_edge*/**', '**/temp_edge*/**']
     },
     // ตั้งค่า Reverse Proxy เฉพาะเมื่อผู้พัฒนาได้ระบุ VITE_API_TARGET ไว้เท่านั้น (ป้องกันการค้างเชื่อมต่อ IP ภายนอก)
     proxy: process.env.VITE_API_TARGET ? {

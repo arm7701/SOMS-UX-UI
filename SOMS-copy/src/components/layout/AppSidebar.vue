@@ -80,7 +80,7 @@ const handleLinkClick = () => {
                 :to="item.path"
                 class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 font-prompt group"
                 :class="isActive(item.path)
-                  ? 'bg-[#131d2e] text-white font-bold border border-cyan-500/50 shadow-sm shadow-cyan-950/50'
+                  ? 'bg-[#1b2b44] text-white font-bold border border-cyan-400/60 shadow-md shadow-cyan-950/40'
                   : 'text-slate-200 hover:bg-space-800 hover:text-white'"
                 @click="handleLinkClick"
               >
@@ -106,7 +106,7 @@ const handleLinkClick = () => {
                 :to="item.path"
                 class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 font-prompt group"
                 :class="isActive(item.path)
-                  ? 'bg-[#131d2e] text-white font-bold border border-cyan-500/50 shadow-sm shadow-cyan-950/50'
+                  ? 'bg-[#1b2b44] text-white font-bold border border-cyan-400/60 shadow-md shadow-cyan-950/40'
                   : 'text-slate-200 hover:bg-space-800 hover:text-white'"
                 @click="handleLinkClick"
               >
@@ -132,7 +132,7 @@ const handleLinkClick = () => {
                 :to="item.path"
                 class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 font-prompt group"
                 :class="isActive(item.path)
-                  ? 'bg-[#131d2e] text-white font-bold border border-cyan-500/50 shadow-sm shadow-cyan-950/50'
+                  ? 'bg-[#1b2b44] text-white font-bold border border-cyan-400/60 shadow-md shadow-cyan-950/40'
                   : 'text-slate-200 hover:bg-space-800 hover:text-white'"
                 @click="handleLinkClick"
               >

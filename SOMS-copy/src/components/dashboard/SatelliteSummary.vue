@@ -26,6 +26,10 @@ const props = defineProps({
   satellites: {
     type: Array,
     default: () => []
+  },
+  satelliteId: {
+    type: [String, Number],
+    default: 'all'
   }
 })
 
@@ -100,32 +104,76 @@ const SATELLITE_DETAILS = [
       { name: 'PAYLOAD', status: 'ARMED' }
     ],
     nextPass: 'ในอีก 24 นาที (BMA GS • 82.5° Overhead)',
-    tleAge: '0.9 ชม. (Fresh)',
-    accentColor: 'border-emerald-500/30 text-emerald-400',
+    tleAge: '42 นาที (Real-time)',
+    accentColor: 'border-sky-500/30 text-sky-400',
     icon: Activity
+  },
+  {
+    noradId: 58016,
+    name: 'THEOS-2',
+    internationalId: '2023-156A',
+    type: 'Very High Resolution EO (สำรวจและถ่ายภาพทางยุทธการ)',
+    description: 'ดาวเทียมสำรวจและตรวจการณ์โลกรายละเอียดสูงมากระดับ 50 เซนติเมตรของประเทศไทย',
+    orbitType: 'SSO (Sun-Synchronous)',
+    defaultAltitude: 621.15,
+    velocity: '7.55',
+    inclination: '97.85',
+    period: '97.1',
+    apogee: '624.0',
+    perigee: '618.3',
+    meanMotion: '14.83',
+    eccentricity: '0.00041',
+    adcsMode: 'Nadir-Pointing (ล็อกพิกัดภาพถ่าย)',
+    batteryVolt: '32.4 V',
+    batterySoc: '99%',
+    tempObdh: '+16.2 °C',
+    rfComm: 'X / S-Band (Active)',
+    subsystems: [
+      { name: 'ADCS', status: 'OK' },
+      { name: 'EPS', status: 'OK' },
+      { name: 'COMM', status: 'OK' },
+      { name: 'OBDH', status: 'OK' },
+      { name: 'PAYLOAD', status: 'READY' }
+    ],
+    nextPass: 'ในอีก 142 นาที (BMA GS • 45.2° El)',
+    tleAge: '2.1 ชม. (Fresh)',
+    accentColor: 'border-emerald-500/30 text-emerald-400',
+    icon: Orbit
   }
 ]
+
+const displayedSatellites = computed(() => {
+  if (!props.satelliteId || props.satelliteId === 'all') {
+    return SATELLITE_DETAILS
+  }
+  const target = String(props.satelliteId).toLowerCase()
+  const matches = SATELLITE_DETAILS.filter(s =>
+    String(s.noradId) === target ||
+    s.name.toLowerCase().includes(target)
+  )
+  return matches.length > 0 ? matches : SATELLITE_DETAILS
+})
 </script>
 
 <template>
-  <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+  <div :class="displayedSatellites.length === 1 ? 'grid grid-cols-1 gap-4' : 'grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'">
     <div
-      v-for="sat in SATELLITE_DETAILS"
+      v-for="sat in displayedSatellites"
       :key="sat.noradId"
-      class="bg-[#0c121e]/92 backdrop-blur-md rounded-2xl p-5 border border-slate-700/80 shadow-xl hover:border-cyan-500/40 hover:shadow-cyan-950/20 transition-all duration-200 flex flex-col justify-between space-y-4"
+      class="bg-[#132238]/95 backdrop-blur-md rounded-2xl p-5 border border-slate-600/60 shadow-xl hover:border-cyan-500/50 hover:shadow-cyan-900/30 transition-all duration-200 flex flex-col justify-between space-y-4"
     >
       <!-- Top Card Header -->
-      <div class="flex items-start justify-between gap-3 pb-3.5 border-b border-slate-750/80">
+      <div class="flex items-start justify-between gap-3 pb-3.5 border-b border-slate-700/60">
         <div>
           <div class="flex items-center gap-2.5 flex-wrap">
             <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse"></span>
-            <h3 class="text-lg sm:text-xl font-bold font-prompt text-white tracking-wide">
+            <h3 class="text-lg sm:text-xl font-bold font-prompt text-white tracking-normal">
               {{ sat.name }}
             </h3>
-            <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-[#111927] border border-cyan-800/60 text-cyan-300 shadow-xs">
+            <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-[#192b45] border border-cyan-600/50 text-cyan-200 shadow-xs">
               NORAD: {{ sat.noradId }}
             </span>
-            <span class="px-2.5 py-1 rounded-md text-xs font-mono font-medium bg-[#111927] border border-slate-700 text-slate-200">
+            <span class="px-2.5 py-1 rounded-md text-xs font-mono font-medium bg-[#192b45] border border-slate-600 text-slate-200">
               {{ sat.internationalId }}
             </span>
             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-950/90 border border-emerald-500/80 text-emerald-300 shadow-xs shadow-emerald-950/50">
@@ -133,12 +181,12 @@ const SATELLITE_DETAILS = [
               <span>OPERATIONAL</span>
             </span>
           </div>
-          <p class="text-sm text-slate-300 mt-1.5 font-prompt font-medium">
+          <p class="text-sm text-slate-200 mt-1.5 font-prompt font-normal leading-relaxed">
             {{ sat.description }}
           </p>
         </div>
 
-        <div class="w-12 h-12 rounded-xl bg-[#121c2d] text-cyan-300 flex items-center justify-center border border-cyan-700/40 flex-shrink-0 shadow-sm shadow-cyan-950/50">
+        <div class="w-12 h-12 rounded-xl bg-[#182942] text-cyan-300 flex items-center justify-center border border-cyan-600/50 flex-shrink-0 shadow-sm shadow-cyan-950/50">
           <component :is="sat.icon" class="w-6 h-6 text-cyan-300" />
         </div>
       </div>
@@ -146,65 +194,65 @@ const SATELLITE_DETAILS = [
       <!-- Orbital & Telemetry Grid (เต็มพื้นที่ 4 คอลัมน์ ตัวหนังสือใหญ่ชัดเจน) -->
       <div>
         <div class="flex items-center justify-between text-xs sm:text-sm text-slate-200 font-prompt mb-2.5">
-          <span class="uppercase tracking-wider font-bold text-slate-200">พารามิเตอร์การบินและวงโคจร (Orbital Telemetry)</span>
-          <span class="font-mono text-cyan-300/90 font-semibold">ประเภทวงโคจร: {{ sat.orbitType }}</span>
+          <span class="uppercase tracking-wide font-bold text-slate-200">พารามิเตอร์การบินและวงโคจร (Orbital Telemetry)</span>
+          <span class="font-mono text-cyan-300 font-semibold">ประเภทวงโคจร: {{ sat.orbitType }}</span>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <!-- Altitude -->
-          <div class="p-3.5 rounded-xl bg-[#0f1728]/95 border border-slate-700/80 hover:border-cyan-500/40 transition-colors shadow-2xs">
-            <span class="text-xs text-slate-300 block font-prompt uppercase font-semibold">ความสูงวงโคจร</span>
-            <div class="mt-1 font-mono font-black text-xl text-white tracking-tight">
+          <div class="p-3.5 rounded-xl bg-[#182840] border border-slate-600/60 hover:border-cyan-400/50 transition-colors shadow-2xs">
+            <span class="text-xs text-slate-300 block font-prompt uppercase font-medium tracking-wide">ความสูงวงโคจร</span>
+            <div class="mt-1 font-mono font-bold text-xl sm:text-2xl text-white tracking-tight">
               {{ formatNumber(getSatData(sat.noradId)?.altitude_km, 2, sat.defaultAltitude) }}
-              <span class="text-xs font-bold text-slate-400 ml-0.5">km</span>
+              <span class="text-xs font-medium text-slate-400 ml-0.5">km</span>
             </div>
           </div>
 
           <!-- Velocity -->
-          <div class="p-3.5 rounded-xl bg-[#0f1728]/95 border border-slate-700/80 hover:border-cyan-500/40 transition-colors shadow-2xs">
-            <span class="text-xs text-slate-300 block font-prompt uppercase font-semibold">ความเร็วการโคจร</span>
-            <div class="mt-1 font-mono font-black text-xl text-cyan-300 tracking-tight">
+          <div class="p-3.5 rounded-xl bg-[#182840] border border-slate-600/60 hover:border-cyan-400/50 transition-colors shadow-2xs">
+            <span class="text-xs text-slate-300 block font-prompt uppercase font-medium tracking-wide">ความเร็วการโคจร</span>
+            <div class="mt-1 font-mono font-bold text-xl sm:text-2xl text-cyan-300 tracking-tight">
               {{ sat.velocity }}
-              <span class="text-xs font-bold text-slate-400 ml-0.5">km/s</span>
+              <span class="text-xs font-medium text-slate-400 ml-0.5">km/s</span>
             </div>
           </div>
 
           <!-- Inclination -->
-          <div class="p-3.5 rounded-xl bg-[#0f1728]/95 border border-slate-700/80 hover:border-cyan-500/40 transition-colors shadow-2xs">
-            <span class="text-xs text-slate-300 block font-prompt uppercase font-semibold">มุมเอียงวงโคจร</span>
-            <div class="mt-1 font-mono font-black text-xl text-amber-300 tracking-tight">
+          <div class="p-3.5 rounded-xl bg-[#182840] border border-slate-600/60 hover:border-cyan-400/50 transition-colors shadow-2xs">
+            <span class="text-xs text-slate-300 block font-prompt uppercase font-medium tracking-wide">มุมเอียงวงโคจร</span>
+            <div class="mt-1 font-mono font-bold text-xl sm:text-2xl text-amber-300 tracking-tight">
               {{ sat.inclination }}°
             </div>
           </div>
 
           <!-- Orbital Period -->
-          <div class="p-3.5 rounded-xl bg-[#0f1728]/95 border border-slate-700/80 hover:border-cyan-500/40 transition-colors shadow-2xs">
-            <span class="text-xs text-slate-300 block font-prompt uppercase font-semibold">คาบการโคจร</span>
-            <div class="mt-1 font-mono font-black text-xl text-emerald-300 tracking-tight">
+          <div class="p-3.5 rounded-xl bg-[#182840] border border-slate-600/60 hover:border-cyan-400/50 transition-colors shadow-2xs">
+            <span class="text-xs text-slate-300 block font-prompt uppercase font-medium tracking-wide">คาบการโคจร</span>
+            <div class="mt-1 font-mono font-bold text-xl sm:text-2xl text-emerald-300 tracking-tight">
               {{ sat.period }}
-              <span class="text-xs font-bold text-slate-400 ml-0.5">min</span>
+              <span class="text-xs font-medium text-slate-400 ml-0.5">min</span>
             </div>
           </div>
 
           <!-- Apogee / Perigee -->
-          <div class="p-3 rounded-xl bg-[#0f1728]/95 border border-slate-700/80 hover:border-cyan-500/40 transition-colors shadow-2xs">
-            <span class="text-xs text-slate-300 block font-prompt uppercase font-semibold">Apogee / Perigee</span>
+          <div class="p-3 rounded-xl bg-[#182840] border border-slate-600/60 hover:border-cyan-400/50 transition-colors shadow-2xs">
+            <span class="text-xs text-slate-300 block font-prompt uppercase font-medium tracking-wide">Apogee / Perigee</span>
             <div class="mt-1 font-mono font-bold text-sm text-slate-100">
-              {{ sat.apogee }} / {{ sat.perigee }} <span class="text-slate-400 text-xs">km</span>
+              {{ sat.apogee }} / {{ sat.perigee }} <span class="text-slate-400 text-xs font-normal">km</span>
             </div>
           </div>
 
           <!-- Mean Motion -->
-          <div class="p-3 rounded-xl bg-[#0f1728]/95 border border-slate-700/80 hover:border-cyan-500/40 transition-colors shadow-2xs">
-            <span class="text-xs text-slate-300 block font-prompt uppercase font-semibold">จำนวนรอบ/วัน</span>
+          <div class="p-3 rounded-xl bg-[#182840] border border-slate-600/60 hover:border-cyan-400/50 transition-colors shadow-2xs">
+            <span class="text-xs text-slate-300 block font-prompt uppercase font-medium tracking-wide">จำนวนรอบ/วัน</span>
             <div class="mt-1 font-mono font-bold text-sm text-slate-100">
-              {{ sat.meanMotion }} <span class="text-slate-400 text-xs">rev/d</span>
+              {{ sat.meanMotion }} <span class="text-slate-400 text-xs font-normal">rev/d</span>
             </div>
           </div>
 
           <!-- Power & Battery -->
-          <div class="p-3 rounded-xl bg-[#0f1728]/95 border border-slate-700/80 hover:border-cyan-500/40 transition-colors shadow-2xs">
-            <span class="text-xs text-slate-300 block font-prompt uppercase font-semibold">พลังงานไฟฟ้า (EPS)</span>
+          <div class="p-3 rounded-xl bg-[#182840] border border-slate-600/60 hover:border-cyan-400/50 transition-colors shadow-2xs">
+            <span class="text-xs text-slate-300 block font-prompt uppercase font-medium tracking-wide">พลังงานไฟฟ้า (EPS)</span>
             <div class="mt-1 font-mono font-bold text-sm text-emerald-300 flex items-center gap-1.5">
               <Zap class="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
               <span>{{ sat.batteryVolt }} ({{ sat.batterySoc }})</span>
@@ -212,8 +260,8 @@ const SATELLITE_DETAILS = [
           </div>
 
           <!-- Thermal -->
-          <div class="p-3 rounded-xl bg-[#0f1728]/95 border border-slate-700/80 hover:border-cyan-500/40 transition-colors shadow-2xs">
-            <span class="text-xs text-slate-300 block font-prompt uppercase font-semibold">อุณหภูมิบอร์ด (TCS)</span>
+          <div class="p-3 rounded-xl bg-[#182840] border border-slate-600/60 hover:border-cyan-400/50 transition-colors shadow-2xs">
+            <span class="text-xs text-slate-300 block font-prompt uppercase font-medium tracking-wide">อุณหภูมิบอร์ด (TCS)</span>
             <div class="mt-1 font-mono font-bold text-sm text-cyan-300 flex items-center gap-1.5">
               <Thermometer class="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
               <span>{{ sat.tempObdh }}</span>
@@ -223,29 +271,29 @@ const SATELLITE_DETAILS = [
       </div>
 
       <!-- Subsystems Health & Contact Status Bar -->
-      <div class="pt-3.5 border-t border-slate-750/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm font-prompt">
+      <div class="pt-3.5 border-t border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm font-prompt">
         <!-- Subsystems Badges -->
         <div class="flex items-center gap-2 flex-wrap">
           <span class="text-xs font-bold text-slate-300">ระบบย่อย:</span>
           <span
             v-for="sub in sat.subsystems"
             :key="sub.name"
-            class="px-2.5 py-1 rounded-lg bg-[#0e1626] border border-slate-700 text-xs font-mono text-slate-100 font-bold shadow-xs inline-flex items-center gap-1.5"
+            class="px-2.5 py-1 rounded-lg bg-[#182840] border border-slate-600 text-xs font-mono text-slate-100 font-semibold shadow-xs inline-flex items-center gap-1.5"
           >
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399] animate-pulse"></span>
             <span>{{ sub.name }}:</span>
-            <span class="text-emerald-300 font-black">{{ sub.status }}</span>
+            <span class="text-emerald-300 font-bold">{{ sub.status }}</span>
           </span>
         </div>
 
         <!-- Next Pass Notice & TLE Epoch -->
         <div class="text-left sm:text-right flex sm:flex-col items-start sm:items-end justify-between gap-1 text-xs font-prompt">
           <div>
-            <span class="text-slate-300 font-medium">พาสถัดไป: </span>
+            <span class="text-slate-300 font-normal">พาสถัดไป: </span>
             <span class="font-bold text-amber-300 text-sm">{{ sat.nextPass }}</span>
           </div>
           <div>
-            <span class="text-slate-300 font-medium">บันทึกล่าสุด: </span>
+            <span class="text-slate-300 font-normal">บันทึกล่าสุด: </span>
             <span class="font-mono text-slate-100 font-semibold">
               {{ getSatData(sat.noradId)?.epoch_time ? `${getSatData(sat.noradId)?.epoch_date} ${getSatData(sat.noradId)?.epoch_time} UTC` : sat.tleAge }}
             </span>

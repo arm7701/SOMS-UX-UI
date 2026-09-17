@@ -4,52 +4,55 @@
 
 /* ==========================================================================
    CSS Variables & Global Theme Styles (Satellite Operations Information System)
-   ธีมไล่ฟ้าสว่าง (Bright Sky & Celestial Azure Gradient)
-   ฟอนต์ระบบทั้งหมด: Prompt (จัดระยะบรรทัดและช่องไฟตัวอักษรให้อ่านง่าย สบายตา)
+   ธีมโทนดำเทาไททาเนียม (Obsidian Charcoal & Titanium Slate Theme)
+   ฟอนต์ระบบทั้งหมด: Prompt (คอนทราสต์คมชัด สบายตา ไม่กลืนกับพื้นหลัง)
    ========================================================================== */
 
 :root, .dark {
-  /* โทนมืดอวกาศล้ำสมัย สบายตา เหมาะสำหรับใช้งานในห้องควบคุมและที่แสงน้อย (Low-Light Dark Room Command Center) */
-  --bg-app: #030816;
-  --bg-surface: #08172f;
-  --bg-surface-elevated: #0d203e;
-  --border-color: rgba(56, 189, 248, 0.25);
+  /* โทนแอโรสเปซเนวีสว่างขึ้น สบายตา มีมิติ สวยงาม คมชัด ไม่มืดทึบ */
+  --bg-app: #0c1728;
+  --bg-surface: #132238;
+  --bg-surface-elevated: #1a2c47;
+  --border-color: #2b4162;
   --border-focus: #38bdf8;
 
   --text-primary: #ffffff;
-  --text-secondary: #e0f2fe;
-  --text-muted: #93c5fd;
+  --text-secondary: #f1f5f9;
+  --text-muted: #94a3b8;
 
   --brand-primary: #38bdf8;
   --brand-hover: #7dd3fc;
 
-  --shadow-card: 0 8px 32px 0 rgba(1, 6, 20, 0.75);
-  --shadow-elevated: 0 14px 44px 0 rgba(1, 6, 20, 0.9);
+  --shadow-card: 0 8px 30px 0 rgba(0, 0, 0, 0.45);
+  --shadow-elevated: 0 14px 44px 0 rgba(0, 0, 0, 0.6);
 }
 
-/* Global Font & Spacing Overrides (ใช้ฟอนต์ Prompt ทั้งระบบ พร้อมปรับระยะบรรทัดและช่องไฟ) */
+/* Global Font & Spacing Overrides (ปรับช่องไฟและขนาดตัวอักษรให้อ่านง่าย สบายตา สวยงามทุกมุมมอง) */
 * {
   font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 html, body {
   font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  letter-spacing: 0.018em;
-  line-height: 1.68;
+  letter-spacing: 0.005em;
+  line-height: 1.65;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #0c1728;
+  color: #f1f5f9;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Prompt', sans-serif !important;
-  letter-spacing: 0.012em;
-  line-height: 1.38;
-  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 p, span, div, td, th, label, input, button, select, textarea {
-  letter-spacing: 0.018em;
+  letter-spacing: 0.005em;
 }
 
 /* Typography Helpers (ให้ทุกคลาสใช้ Prompt ทั้งหมดอย่างสมบูรณ์) */
@@ -59,57 +62,91 @@ p, span, div, td, th, label, input, button, select, textarea {
   font-family: 'Prompt', sans-serif !important;
 }
 
-/* Custom Utilities for Bright Sky Theme */
-.bg-gradient-sky {
-  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 50%, #38bdf8 100%);
+/* Custom Titanium Gradient Utilities */
+.bg-gradient-titanium {
+  background: linear-gradient(135deg, #374151 0%, #1f2937 50%, #111827 100%);
 }
 
-.bg-gradient-sky-subtle {
-  background: linear-gradient(135deg, rgba(2, 132, 199, 0.1) 0%, rgba(14, 165, 233, 0.06) 100%);
+.bg-gradient-titanium-button {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 50%, #1f2937 100%);
 }
 
-.sky-gradient-text {
-  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+.bg-gradient-titanium-button:hover {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 50%, #374151 100%);
+}
+
+.titanium-gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #94a3b8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.dark .sky-gradient-text {
-  background: linear-gradient(135deg, #38bdf8 0%, #7dd3fc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* ==========================================================================
+   Tactile Command Console Panels & 2.5D Aerospace Surfaces
+   ========================================================================== */
+.command-panel {
+  background: linear-gradient(180deg, rgba(23, 33, 50, 0.94) 0%, rgba(13, 19, 31, 0.97) 100%);
+  border: 1px solid rgba(71, 85, 105, 0.55);
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(16px);
+}
+
+.command-panel-subtle {
+  background: linear-gradient(180deg, rgba(20, 29, 44, 0.85) 0%, rgba(11, 16, 26, 0.92) 100%);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+  border-top: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+/* High-Visibility Widget Category Themes */
+.cat-kpi { --cat-color: #10b981; --cat-glow: rgba(16, 185, 129, 0.45); }
+.cat-orbit { --cat-color: #06b6d4; --cat-glow: rgba(6, 182, 212, 0.45); }
+.cat-countdown { --cat-color: #f59e0b; --cat-glow: rgba(245, 158, 11, 0.45); }
+.cat-fleet { --cat-color: #0284c7; --cat-glow: rgba(2, 132, 199, 0.45); }
+.cat-weather { --cat-color: #f97316; --cat-glow: rgba(249, 115, 22, 0.45); }
+.cat-altitude { --cat-color: #34d399; --cat-glow: rgba(52, 211, 153, 0.45); }
+.cat-attitude { --cat-color: #fbbf24; --cat-glow: rgba(251, 191, 36, 0.45); }
+.cat-passes { --cat-color: #3b82f6; --cat-glow: rgba(59, 130, 246, 0.45); }
+.cat-operators { --cat-color: #a855f7; --cat-glow: rgba(168, 85, 247, 0.45); }
+.cat-chart { --cat-color: #818cf8; --cat-glow: rgba(129, 140, 248, 0.45); }
+
+/* Video Wall Mode (โหมดผนังจอห้องควบคุม 10+ จอต่อกัน) */
+.video-wall-mode {
+  letter-spacing: 0.025em;
+}
+
+.video-wall-mode .widget-header-title {
+  font-size: 1.15rem !important;
+  font-weight: 900 !important;
+}
+
+.video-wall-mode .stat-value {
+  font-size: 2.35rem !important;
+  font-weight: 900 !important;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #090b0f;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #bae6fd;
+  background: #2d3543;
   border-radius: 9999px;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: #10274a;
-}
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #7dd3fc;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #1d4ed8;
+  background: #4b5563;
 }
 
 /* Table Utilities */
 .table-container {
-  @apply overflow-x-auto rounded-xl border border-sky-200/80 dark:border-sky-800/40 bg-white/95 dark:bg-space-850/95 shadow-sm;
+  @apply overflow-x-auto rounded-xl border border-space-700 bg-space-850 shadow-sm;
 }
 
 /* Transitions */
@@ -124,43 +161,67 @@ p, span, div, td, th, label, input, button, select, textarea {
 }
 
 /* ==========================================================================
-   High-Contrast Typography Overrides (แก้ปัญหาสีฟอนต์กลืนกับพื้นหลัง 100%)
-   ปรับเฉดสีข้อความรองและป้ายกำกับให้อ่านง่าย ชัดเจน ไม่โดนพื้นหลังกลืน
+   High-Contrast Typography Overrides (ป้องกันฟอนต์กลืนกับพื้นหลัง 100%)
    ========================================================================== */
-.dark .text-slate-400,
-.dark .text-slate-500,
 .text-slate-400,
-.text-slate-500 {
-  color: #bae6fd !important; /* สีนภาสว่าง (Luminous Sky Blue) สบายตา คมชัด */
+.dark .text-slate-400 {
+  color: #94a3b8 !important; /* เทาเงินสว่าง Titanium อ่านง่าย คอนทราสต์สูง */
 }
 
+.text-slate-500,
+.dark .text-slate-500 {
+  color: #cbd5e1 !important; /* แพลตินัมสว่าง ชัดเจน ไม่มืดทึบ */
+}
+
+.text-slate-600,
 .dark .text-slate-600 {
-  color: #e0f2fe !important; /* สีฟ้าสว่างใส */
+  color: #e2e8f0 !important; /* เทาเงินสว่างมาก */
 }
 
+.text-slate-700,
+.text-slate-800,
 .dark .text-slate-700,
 .dark .text-slate-800 {
-  color: #f8fafc !important; /* ขาวนวล คมชัด */
+  color: #f8fafc !important; /* ขาวนวล คมชัดเด่น */
 }
 
 /* ปรับสีหัวตารางและข้อความกำกับให้อ่านได้ทันที */
-.dark thead th,
-thead th {
-  color: #bae6fd !important;
+thead th,
+.dark thead th {
+  color: #f1f5f9 !important;
   font-weight: 600 !important;
+  background-color: #1a202b;
 }
 
+tbody td,
 .dark tbody td {
   color: #f1f5f9 !important;
 }
 
+label,
 .dark label {
-  color: #e0f2fe !important;
+  color: #e2e8f0 !important;
+  font-weight: 500;
 }
 
-/* ปรับสี Placeholder และ Hint ข้อความ */
+/* ปรับสี Placeholder และ Input */
 ::placeholder {
-  color: #7dd3fc !important;
-  opacity: 0.75;
+  color: #94a3b8 !important;
+  opacity: 0.85;
 }
 
+input, select, textarea {
+  background-color: #10141b;
+  color: #ffffff;
+}
+
+/* ป้องกันเบราว์เซอร์ (Chrome, Edge) บังคับพื้นหลังขาวเวลา Autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #12141a inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}

@@ -3,12 +3,7 @@
  * ============================================================================
  * ไฟล์: src/components/common/DataTable.vue
  * วัตถุประสงค์: ตารางข้อมูลอเนกประสงค์ (Modern Responsive Data Table)
- * คุณสมบัติ:
- *   - ค้นหาแบบ Real-time ทันที
- *   - จัดเรียงคอลัมน์ (Sorting Asc/Desc)
- *   - แบ่งหน้า (Pagination) เลือกจำนวนแถวได้
- *   - ดีไซน์สบายตา อ่านง่าย มี Contrast คมชัด ไม่กลืนกับพื้นหลัง
- *   - รองรับ Slots สำหรับปรับแต่งการแสดงผลในแต่ละคอลัมน์
+ * ธีมดำเทาไททาเนียม คอนทราสต์คมชัดทุกเซลล์ พร้อมระบบค้นหาและแบ่งหน้า
  * ============================================================================
  */
 import { ref, computed } from 'vue'
@@ -18,7 +13,6 @@ const props = defineProps({
   columns: {
     type: Array,
     required: true
-    // [{ key: 'id', label: 'ID', sortable: true, align: 'center', width: '80px' }]
   },
   data: {
     type: Array,
@@ -108,16 +102,16 @@ const changePage = (p) => {
 </script>
 
 <template>
-  <div class="bg-white dark:bg-space-850 rounded-xl border border-slate-200 dark:border-space-700 shadow-sm overflow-hidden flex flex-col">
+  <div class="bg-space-850 rounded-2xl border border-space-700 shadow-md overflow-hidden flex flex-col">
     <!-- Header Control: Search & Actions -->
-    <div class="p-4 border-b border-slate-200 dark:border-space-700 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/50 dark:bg-space-900/40">
+    <div class="p-3.5 sm:p-4 border-b border-space-700 flex flex-col sm:flex-row items-center justify-between gap-3 bg-space-900/60">
       <div v-if="searchable" class="relative w-full sm:w-72">
-        <Search class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <Search class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
         <input
           v-model="searchQuery"
           type="text"
           :placeholder="searchPlaceholder"
-          class="w-full pl-9 pr-4 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
+          class="w-full pl-9 pr-4 py-1.5 text-xs sm:text-sm rounded-xl border border-space-600 bg-space-800 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-400 transition-colors font-prompt"
           @input="currentPage = 1"
         />
       </div>
@@ -129,18 +123,18 @@ const changePage = (p) => {
     </div>
 
     <!-- Mobile Swipe Indicator Hint -->
-    <div class="px-4 py-1.5 bg-blue-50/50 dark:bg-space-900/60 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between border-b border-slate-100 dark:border-space-750 sm:hidden select-none">
-      <span class="flex items-center gap-1.5">
-        <span class="text-blue-500">↔</span>
+    <div class="px-4 py-1.5 bg-space-900/80 text-[11px] text-zinc-300 flex items-center justify-between border-b border-space-750 sm:hidden select-none">
+      <span class="flex items-center gap-1.5 font-prompt">
+        <span class="text-zinc-400">↔</span>
         <span>สามารถปัดเลื่อนตารางซ้าย-ขวาเพื่อดูข้อมูล</span>
       </span>
-      <span class="font-mono text-[10px] text-slate-400">{{ sortedData.length }} รายการ</span>
+      <span class="font-mono text-[10px] text-zinc-400">{{ sortedData.length }} รายการ</span>
     </div>
 
     <!-- Table Body -->
     <div class="overflow-x-auto scrollbar-thin">
-      <table class="w-full text-left text-sm text-slate-700 dark:text-slate-200 border-collapse">
-        <thead class="bg-slate-100/80 dark:bg-space-800 text-slate-700 dark:text-slate-300 text-xs font-semibold uppercase tracking-wider border-b border-slate-200 dark:border-space-700 select-none">
+      <table class="w-full text-left text-xs sm:text-sm text-slate-100 border-collapse">
+        <thead class="bg-space-800 text-zinc-200 text-[11px] sm:text-xs font-semibold uppercase tracking-wider border-b border-space-700 select-none">
           <tr>
             <th
               v-for="col in columns"
@@ -148,7 +142,7 @@ const changePage = (p) => {
               scope="col"
               class="py-3.5 px-3.5 sm:px-4 transition-colors font-prompt"
               :class="[
-                col.sortable ? 'cursor-pointer hover:bg-slate-200/60 dark:hover:bg-space-700' : '',
+                col.sortable ? 'cursor-pointer hover:bg-space-750' : '',
                 col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
               ]"
               :style="{ width: col.width || 'auto', minWidth: col.minWidth || (col.width ? col.width : '100px') }"
@@ -156,14 +150,14 @@ const changePage = (p) => {
             >
               <div class="inline-flex items-center gap-1.5" :class="col.align === 'center' ? 'justify-center' : col.align === 'right' ? 'justify-end' : ''">
                 <span>{{ col.label }}</span>
-                <span v-if="col.sortable" class="inline-flex flex-col text-slate-400">
+                <span v-if="col.sortable" class="inline-flex flex-col text-zinc-400">
                   <ChevronUp
                     class="w-3 h-3 -mb-1"
-                    :class="sortKey === col.key && sortOrder === 'asc' ? 'text-blue-600 dark:text-blue-400' : 'opacity-40'"
+                    :class="sortKey === col.key && sortOrder === 'asc' ? 'text-white' : 'opacity-30'"
                   />
                   <ChevronDown
                     class="w-3 h-3"
-                    :class="sortKey === col.key && sortOrder === 'desc' ? 'text-blue-600 dark:text-blue-400' : 'opacity-40'"
+                    :class="sortKey === col.key && sortOrder === 'desc' ? 'text-white' : 'opacity-30'"
                   />
                 </span>
               </div>
@@ -173,16 +167,16 @@ const changePage = (p) => {
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-200/70 dark:divide-space-750">
+        <tbody class="divide-y divide-space-750">
           <tr
             v-for="(row, idx) in paginatedData"
             :key="row.id || row.report_id || row.mission_id || row.trouble_id || row.rbac_id || idx"
-            class="hover:bg-slate-50/80 dark:hover:bg-space-800/60 transition-colors"
+            class="hover:bg-space-800/60 transition-colors"
           >
             <td
               v-for="col in columns"
               :key="col.key"
-              class="py-3.5 px-3.5 sm:px-4 align-middle font-prompt"
+              class="py-3.5 px-3.5 sm:px-4 align-middle font-prompt text-slate-100"
               :class="col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'"
               :style="{ minWidth: col.minWidth || (col.width ? col.width : '100px') }"
             >
@@ -197,11 +191,11 @@ const changePage = (p) => {
 
           <!-- Empty State -->
           <tr v-if="paginatedData.length === 0">
-            <td :colspan="columns.length + ($slots.actions ? 1 : 0)" class="py-12 text-center text-slate-400">
+            <td :colspan="columns.length + ($slots.actions ? 1 : 0)" class="py-12 text-center text-zinc-400">
               <div class="flex flex-col items-center justify-center gap-2">
-                <Inbox class="w-8 h-8 opacity-40" />
-                <p class="text-sm font-medium">ไม่พบข้อมูลที่ค้นหา</p>
-                <p v-if="searchQuery" class="text-xs text-slate-500">ลองเปลี่ยนคำค้นหาหรือตัวกรอง</p>
+                <Inbox class="w-8 h-8 opacity-40 text-zinc-400" />
+                <p class="text-sm font-medium text-slate-200">ไม่พบข้อมูลที่ค้นหา</p>
+                <p v-if="searchQuery" class="text-xs text-zinc-400">ลองเปลี่ยนคำค้นหาหรือตัวกรอง</p>
               </div>
             </td>
           </tr>
@@ -210,12 +204,12 @@ const changePage = (p) => {
     </div>
 
     <!-- Pagination Footer -->
-    <div class="p-3 border-t border-slate-200 dark:border-space-700 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-space-900/40">
+    <div class="p-3.5 border-t border-space-700 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-300 bg-space-900/60">
       <div class="flex items-center gap-2">
         <span>แสดง</span>
         <select
           v-model="pageSize"
-          class="px-2 py-1 rounded border border-slate-300 dark:border-space-600 bg-white dark:bg-space-800 text-slate-700 dark:text-slate-200 focus:outline-none"
+          class="px-2 py-1 rounded-lg border border-space-600 bg-space-800 text-white focus:outline-none font-mono"
           @change="currentPage = 1"
         >
           <option :value="10">10 แถว</option>
@@ -226,24 +220,24 @@ const changePage = (p) => {
         <span>จากทั้งหมด {{ sortedData.length }} รายการ</span>
       </div>
 
-      <div class="flex items-center gap-1">
+      <div class="flex items-center gap-1.5">
         <button
           type="button"
           :disabled="currentPage <= 1"
-          class="p-1.5 rounded-lg border border-slate-200 dark:border-space-700 hover:bg-slate-100 dark:hover:bg-space-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          class="p-1.5 rounded-lg border border-space-700 bg-space-800 hover:bg-space-700 text-slate-200 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
           @click="changePage(currentPage - 1)"
         >
           <ChevronLeft class="w-4 h-4" />
         </button>
 
-        <span class="px-3 py-1 font-medium text-slate-700 dark:text-slate-300">
+        <span class="px-3 py-1 font-semibold text-white font-mono">
           หน้า {{ currentPage }} / {{ totalPages }}
         </span>
 
         <button
           type="button"
           :disabled="currentPage >= totalPages"
-          class="p-1.5 rounded-lg border border-slate-200 dark:border-space-700 hover:bg-slate-100 dark:hover:bg-space-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          class="p-1.5 rounded-lg border border-space-700 bg-space-800 hover:bg-space-700 text-slate-200 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
           @click="changePage(currentPage + 1)"
         >
           <ChevronRight class="w-4 h-4" />

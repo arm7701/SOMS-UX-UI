@@ -1,19 +1,41 @@
-
 // ─── Satellite catalogue ──────────────────────────────────────────────────────
 const SATS = {
-  '46320': { name:'NAPA-1',      color:'#38bdf8', maxRoll:20,  swathKm:19,   imageDurSec:4.500, preRollSec:3.0, gsKms:6.20, gsdM:5.0,  conf:true  },
-  '48963': { name:'NAPA-2',      color:'#58a6ff', maxRoll:20,  swathKm:19,   imageDurSec:4.775, preRollSec:3.0, gsKms:6.18, gsdM:1.0,  conf:true  },
-  '58016': { name:'THEOS-2',     color:'#3fb950', maxRoll:45,  swathKm:10.3, imageDurSec:3.0,   preRollSec:1.5, gsKms:6.90, gsdM:0.5,  conf:false },
-  '33396': { name:'THEOS-1',     color:'#d29922', maxRoll:30,  swathKm:22,   imageDurSec:4.0,   preRollSec:2.0, gsKms:6.60, gsdM:2.5,  conf:false },
-  '40697': { name:'Sentinel-2A', color:'#c084fc', maxRoll:20.6,swathKm:290,  imageDurSec:30.0,  preRollSec:2.0, gsKms:7.16, gsdM:10.0, conf:true  },
-  '42063': { name:'Sentinel-2B', color:'#e879f9', maxRoll:20.6,swathKm:290,  imageDurSec:30.0,  preRollSec:2.0, gsKms:7.16, gsdM:10.0, conf:true  },
-  '60989': { name:'Sentinel-2C', color:'#a855f7', maxRoll:20.6,swathKm:290,  imageDurSec:30.0,  preRollSec:2.0, gsKms:7.16, gsdM:10.0, conf:true  },
-  '39084': { name:'Landsat 8',   color:'#f78166', maxRoll:7.5, swathKm:185,  imageDurSec:24.0,  preRollSec:2.0, gsKms:7.00, gsdM:30.0, conf:true  },
-  '49260': { name:'Landsat 9',   color:'#ff9f1c', maxRoll:7.5, swathKm:185,  imageDurSec:24.0,  preRollSec:2.0, gsKms:7.00, gsdM:30.0, conf:true  },
+  // 🇹🇭 Thai Government (gov)
+  '48963': { name:'NAPA-2',      org:'Royal Thai Air Force', country:'TH', gen:'gov', color:'#e65100', maxRoll:20,   swathKm:19,   imageDurSec:4.775, preRollSec:3.0, gsKms:6.18, gsdM:1.0,  conf:true  },
+  '46320': { name:'NAPA-1',      org:'Royal Thai Air Force', country:'TH', gen:'gov', color:'#38bdf8', maxRoll:20,   swathKm:19,   imageDurSec:4.500, preRollSec:3.0, gsKms:6.20, gsdM:5.0,  conf:true  },
+  '33396': { name:'THEOS-1',     org:'GISTDA',               country:'TH', gen:'gov', color:'#f57c00', maxRoll:30,   swathKm:22,   imageDurSec:3.500, preRollSec:2.0, gsKms:7.20, gsdM:2.0,  conf:false },
+  '58016': { name:'THEOS-2',     org:'GISTDA',               country:'TH', gen:'gov', color:'#ffa000', maxRoll:45,   swathKm:10.3, imageDurSec:3.000, preRollSec:1.5, gsKms:6.90, gsdM:0.5,  conf:false },
+
+  // 🇪🇺 Sentinel-2 (10m) (sen)
+  '40697': { name:'Sentinel-2A', org:'ESA / Copernicus',     country:'EU', gen:'sen', color:'#2e7d32', maxRoll:0,    swathKm:290,  imageDurSec:24.0,  preRollSec:0.0, gsKms:7.40, gsdM:10.0, conf:false },
+  '42063': { name:'Sentinel-2B', org:'ESA / Copernicus',     country:'EU', gen:'sen', color:'#388e3c', maxRoll:0,    swathKm:290,  imageDurSec:24.0,  preRollSec:0.0, gsKms:7.40, gsdM:10.0, conf:false },
+  '60989': { name:'Sentinel-2C', org:'ESA / Copernicus',     country:'EU', gen:'sen', color:'#43a047', maxRoll:0,    swathKm:290,  imageDurSec:24.0,  preRollSec:0.0, gsKms:7.40, gsdM:10.0, conf:false },
+
+  // 🇺🇸 BlackSky Gen-2 (1.0m) (g2)
+  '43812': { name:'Global-2',    org:'BlackSky',             country:'US', gen:'g2',  color:'#1565c0', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '44499': { name:'Global-4',    org:'BlackSky',             country:'US', gen:'g2',  color:'#1976d2', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '47971': { name:'Global-9',    org:'BlackSky',             country:'US', gen:'g2',  color:'#1e88e5', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '49469': { name:'Global-14',   org:'BlackSky',             country:'US', gen:'g2',  color:'#2196f3', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '49772': { name:'Global-12',   org:'BlackSky',             country:'US', gen:'g2',  color:'#42a5f5', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '49773': { name:'Global-13',   org:'BlackSky',             country:'US', gen:'g2',  color:'#64b5f6', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '49949': { name:'Global-17',   org:'BlackSky',             country:'US', gen:'g2',  color:'#0288d1', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '49950': { name:'Global-16',   org:'BlackSky',             country:'US', gen:'g2',  color:'#0277bd', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '52196': { name:'Global-18',   org:'BlackSky',             country:'US', gen:'g2',  color:'#039be5', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '55982': { name:'Global-19',   org:'BlackSky',             country:'US', gen:'g2',  color:'#0288d1', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+  '55983': { name:'Global-5',    org:'BlackSky',             country:'US', gen:'g2',  color:'#01579b', maxRoll:45,   swathKm:6.0,  imageDurSec:2.000, preRollSec:1.0, gsKms:6.90, gsdM:0.9,  conf:false },
+
+  // 🇺🇸 BlackSky Gen-3 (0.35m) (g3)
+  '63027': { name:'Global-31',   org:'BlackSky',             country:'US', gen:'g3',  color:'#6a1b9a', maxRoll:45,   swathKm:7.0,  imageDurSec:2.000, preRollSec:0.8, gsKms:6.85, gsdM:0.35, conf:false },
+  '64231': { name:'Global-32',   org:'BlackSky',             country:'US', gen:'g3',  color:'#7b1fa2', maxRoll:45,   swathKm:7.0,  imageDurSec:2.000, preRollSec:0.8, gsKms:6.85, gsdM:0.35, conf:false },
+  '66554': { name:'Global-33',   org:'BlackSky',             country:'US', gen:'g3',  color:'#8e24aa', maxRoll:45,   swathKm:7.0,  imageDurSec:2.000, preRollSec:0.8, gsKms:6.85, gsdM:0.35, conf:false },
+  '68098': { name:'Global-34',   org:'BlackSky',             country:'US', gen:'g3',  color:'#9c27b0', maxRoll:45,   swathKm:7.0,  imageDurSec:2.000, preRollSec:0.8, gsKms:6.85, gsdM:0.35, conf:false },
 };
 
-// Default checked satellites
-const DEFAULT_CHECKED = new Set(['46320','48963','58016','40697','42063','39084']);
+// Default checked satellites (เริ่มเลือกดาวเทียมหลัก 6 ดวง)
+const DEFAULT_CHECKED = new Set(['48963','46320','58016','33396','40697','43812']);
+
+let selectedCategory = 'all';
+let satSearchQuery = '';
 
 const BUILTIN_IDS = Object.keys(SATS);
 
@@ -97,11 +119,18 @@ let pLayers = [], tgtMarker = null, map = null;
 
 // ─── Tab switching ────────────────────────────────────────────────────────────
 function switchTab(tab) {
-  document.getElementById('view-passes').style.display   = tab==='passes'   ? 'block'  : 'none';
-  document.getElementById('view-timeline').style.display = tab==='timeline' ? 'flex'   : 'none';
-  document.getElementById('view-timeline').style.flexDirection = 'column';
-  document.getElementById('tab-passes').classList.toggle('act',   tab==='passes');
-  document.getElementById('tab-timeline').classList.toggle('act', tab==='timeline');
+  const vp = document.getElementById('view-passes');
+  const vt = document.getElementById('view-timeline');
+  if (vp) {
+    vp.style.display = tab==='passes' ? 'flex' : 'none';
+    vp.style.flexDirection = 'column';
+  }
+  if (vt) {
+    vt.style.display = tab==='timeline' ? 'flex' : 'none';
+    vt.style.flexDirection = 'column';
+  }
+  document.getElementById('tab-passes')?.classList.toggle('act', tab==='passes');
+  document.getElementById('tab-timeline')?.classList.toggle('act', tab==='timeline');
   if (tab==='timeline') { updateTimelineTargetList(); drawTimeline(); }
 }
 
@@ -343,23 +372,98 @@ function addCustomTLE() {
 }
 
 
+
+function onCategoryChange(cat) {
+  selectedCategory = cat || 'all';
+  buildSatList();
+}
+
+function onSearchSat(q) {
+  satSearchQuery = (q || '').trim().toLowerCase();
+  buildSatList();
+}
+
+function getFilteredSatIds() {
+  return getOrderedSatIds().filter(id => {
+    const s = SATS[id];
+    if (!s) return false;
+    // Category check
+    if (selectedCategory === 'gov' && s.gen !== 'gov') return false;
+    if (selectedCategory === 'sen' && s.gen !== 'sen') return false;
+    if (selectedCategory === 'g2' && s.gen !== 'g2') return false;
+    if (selectedCategory === 'g3' && s.gen !== 'g3') return false;
+    if (selectedCategory === 'bs' && !['g2', 'g3'].includes(s.gen)) return false;
+    if (selectedCategory === 'custom' && !s.isCustom && s.gen !== 'custom') return false;
+    // Search query check
+    if (satSearchQuery) {
+      const matchName = s.name.toLowerCase().includes(satSearchQuery);
+      const matchId   = id.includes(satSearchQuery);
+      const matchOrg  = (s.org||'').toLowerCase().includes(satSearchQuery);
+      if (!matchName && !matchId && !matchOrg) return false;
+    }
+    return true;
+  });
+}
+
+function selectFilteredSats(select) {
+  const visible = getFilteredSatIds();
+  visible.forEach(id => {
+    const chk = document.getElementById('chk_' + id);
+    if (chk) chk.checked = select;
+    if (select) DEFAULT_CHECKED.add(id);
+    else DEFAULT_CHECKED.delete(id);
+  });
+  updateSpecBox();
+  updateSatBadges();
+}
+
+function updateSatBadges() {
+  const visible = getFilteredSatIds();
+  const total = Object.keys(SATS).length;
+  const countBadge = document.getElementById('sat-count-badge');
+  if (countBadge) {
+    countBadge.textContent = selectedCategory === 'all' && !satSearchQuery
+      ? `ทั้งหมด ${total} ดาวเทียม`
+      : `แสดง ${visible.length} จาก ${total} ดาวเทียม`;
+  }
+  const selectedBadge = document.getElementById('sat-selected-badge');
+  if (selectedBadge) {
+    const selectedCount = Object.keys(SATS).filter(id => document.getElementById('chk_' + id)?.checked).length;
+    selectedBadge.textContent = `เลือกแล้ว ${selectedCount} ดวง`;
+  }
+}
+
 function buildSatList() {
   const el = document.getElementById('satlist');
+  if (!el) return;
   el.innerHTML = '';
   const specSel = document.getElementById('specsel');
-  specSel.innerHTML = '';
+  if (specSel) specSel.innerHTML = '';
   let dragSrcId = null;
 
-  getOrderedSatIds().forEach(id => {
+  const filtered = getFilteredSatIds();
+  if (filtered.length === 0) {
+    el.innerHTML = '<div style="padding:16px 8px;text-align:center;color:#94a3b8;font-size:11.5px">ไม่พบดาวเทียมตามเงื่อนไขที่ค้นหา</div>';
+    updateSatBadges();
+    return;
+  }
+
+  filtered.forEach(id => {
     const s = SATS[id];
     if (!s) return;
     const checked = DEFAULT_CHECKED.has(id);
     const hasTLE  = !!TLE_STORE[id];
-    const stHtml  = hasTLE ? `<span style="color:#4ade80;font-size:9.5px;font-weight:600">TLE ✓</span>` : `<span style="color:#94a3b8;font-size:9.5px">no TLE</span>`;
+    const stHtml  = hasTLE
+      ? `<span style="color:#34d399;font-size:9.5px;font-weight:700">TLE ✓</span>`
+      : `<span style="color:#64748b;font-size:9.5px">no TLE</span>`;
     const fetchBtn = s.isCustom
       ? `<button class="sat-fetch" title="Remove" onclick="event.stopPropagation();removeSat('${id}')" style="color:#f87171">✕</button>`
       : `<button class="sat-fetch" id="fb_${id}" title="Fetch TLE" onclick="event.stopPropagation();fetchTLE('${id}')">↓</button>
          <button class="sat-fetch" title="Remove" onclick="event.stopPropagation();removeSat('${id}')" style="color:#f87171">✕</button>`;
+
+    const flagBadge = s.country === 'TH' ? '<span class="country-tag country-th">🇹🇭 TH</span>' :
+                      s.country === 'EU' ? '<span class="country-tag country-eu">🇪🇺 EU</span>' :
+                      s.country === 'US' ? '<span class="country-tag country-us">🇺🇸 US</span>' : '';
 
     const row = document.createElement('div');
     row.className = 'sat-item';
@@ -367,9 +471,12 @@ function buildSatList() {
     row.dataset.id = id;
     row.innerHTML = `
       <span class="sat-drag" title="ลากเพื่อเรียงลำดับ">⠿</span>
-      <input type="checkbox" id="chk_${id}" ${checked?'checked':''} onclick="event.stopPropagation();updateSpecBox()" style="width:14px;height:14px;cursor:pointer;flex-shrink:0;accent-color:#64748b">
+      <input type="checkbox" id="chk_${id}" ${checked?'checked':''} onclick="event.stopPropagation();onSatCheckToggle('${id}')" style="width:14px;height:14px;cursor:pointer;flex-shrink:0;accent-color:#38bdf8">
       <div class="sat-dot" style="background:${s.color}"></div>
-      <span class="sat-name" style="color:#ffffff;font-size:11.5px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.name}</span>
+      <div style="flex:1;min-width:0;display:flex;align-items:center;gap:5px;overflow:hidden">
+        <span class="sat-name" style="color:#ffffff;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</span>
+        ${flagBadge}
+      </div>
       <span class="sat-status" id="st_${id}">${stHtml}</span>
       <button class="sat-edit" title="เปลี่ยนชื่อ" onclick="event.stopPropagation();renameSat('${id}')">✎</button>
       ${fetchBtn}`;
@@ -400,7 +507,6 @@ function buildSatList() {
       row.classList.remove('drag-over');
       const fromId = e.dataTransfer.getData('text/plain') || dragSrcId;
       if (!fromId || fromId === id) return;
-      // Build full ordered list and reorder
       const ids = getOrderedSatIds();
       const fromIdx = ids.indexOf(fromId);
       const toIdx   = ids.indexOf(id);
@@ -413,10 +519,23 @@ function buildSatList() {
     });
 
     el.appendChild(row);
-    specSel.innerHTML += `<option value="${id}">${s.name}</option>`;
+    if (specSel) specSel.innerHTML += `<option value="${id}">${s.name}</option>`;
   });
+
   updateSpecBox();
+  updateSatBadges();
 }
+
+function onSatCheckToggle(id) {
+  const chk = document.getElementById('chk_' + id);
+  if (chk) {
+    if (chk.checked) DEFAULT_CHECKED.add(id);
+    else DEFAULT_CHECKED.delete(id);
+  }
+  updateSpecBox();
+  updateSatBadges();
+}
+
 
 function removeSat(id) {
   if (!SATS[id]) return;
@@ -519,6 +638,16 @@ function getSpecFor(id) {
 // ─── TLE Fetch ────────────────────────────────────────────────────────────────
 // Use allorigins.win which returns JSON { contents: "..." }
 async function fetchTLE(id) {
+  // Strategy 0: Direct from military/SOMS planner backend (http://10.225.120.221:1161/api/planner/tle/${id})
+  async function tryInternal() {
+    const resp = await fetch(`http://10.225.120.221:1161/api/planner/tle/${id}`, { signal: AbortSignal.timeout(6000) });
+    if (!resp.ok) throw new Error('HTTP '+resp.status);
+    const j = await resp.json();
+    const d = j.data;
+    if (!d || !d.line1 || !d.line2) throw new Error('no TLE in response data');
+    return [(d.name || SATS[id]?.name || 'SAT').trim(), d.line1.trim(), d.line2.trim()];
+  }
+
   const btn = document.getElementById('fb_'+id);
   const st  = document.getElementById('st_'+id);
   if (btn) { btn.textContent = '↻'; btn.className = 'sat-fetch loading'; btn.disabled = true; }
@@ -563,6 +692,7 @@ async function fetchTLE(id) {
 
   let result = null;
   const strategies = [
+    { fn: tryInternal,   label: 'SOMS Server (10.225.120.221)' },
     { fn: tryDirect,     label: 'TLE API' },
     { fn: tryAllOrigins, label: 'AllOrigins' },
     { fn: tryCorsproxy,  label: 'CorsProxy' },
@@ -1154,30 +1284,74 @@ function restoreAcState(){
   }catch(e){}
 }
 
+// ─── Panel collapse / expand toggle ───────────────────────────────────────────
+function togglePanelCollapse() {
+  const p = document.getElementById('panel');
+  const ic = document.getElementById('panel-toggle-icon');
+  const tx = document.getElementById('panel-toggle-text');
+  if (!p) return;
+  p.classList.toggle('panel-collapsed');
+  const isC = p.classList.contains('panel-collapsed');
+  if (ic) ic.textContent = isC ? '🔼' : '🔽';
+  if (tx) tx.textContent = isC ? 'ขยายตาราง' : 'ย่อตาราง';
+  if (window.map) {
+    setTimeout(() => { try { window.map.invalidateSize(); } catch(e){} }, 150);
+  }
+}
+
 // ─── Panel resize ─────────────────────────────────────────────────────────────
 (function(){
-  const handle=document.getElementById('panel-resize');
-  const tblwrap=document.getElementById('tblwrap');
-  if(!handle||!tblwrap) return;
-  let d=false,sy=0,sh=0;
-  handle.addEventListener('mousedown',e=>{
-    d=true; sy=e.clientY; sh=tblwrap.offsetHeight;
+  const handle = document.getElementById('panel-resize');
+  const panel = document.getElementById('panel');
+  if (!handle || !panel) return;
+  let d = false, sy = 0, sh = 0;
+
+  handle.addEventListener('mousedown', e => {
+    if (panel.classList.contains('panel-collapsed')) return;
+    d = true; sy = e.clientY; sh = panel.offsetHeight;
     handle.classList.add('dragging');
-    document.body.style.cssText='cursor:row-resize;user-select:none';
+    document.body.style.cssText = 'cursor:row-resize;user-select:none';
     e.preventDefault();
   });
-  document.addEventListener('mousemove',e=>{
-    if(!d) return;
-    const h=Math.min(600,Math.max(40,sh-(e.clientY-sy)));
-    tblwrap.style.height=h+'px';
+
+  document.addEventListener('mousemove', e => {
+    if (!d) return;
+    // Keep panel height within safe bounds (between 120px and min(450px, 48% window height))
+    const maxH = Math.max(160, Math.min(450, Math.floor(window.innerHeight * 0.48)));
+    const minH = 120;
+    const h = Math.min(maxH, Math.max(minH, sh - (e.clientY - sy)));
+    panel.style.height = h + 'px';
+    if (window.map) {
+      try { window.map.invalidateSize(); } catch(err){}
+    }
   });
-  document.addEventListener('mouseup',()=>{
-    if(!d) return; d=false;
+
+  document.addEventListener('mouseup', () => {
+    if (!d) return; d = false;
     handle.classList.remove('dragging');
-    document.body.style.cssText='';
-    try{localStorage.setItem('sat_tbl_h',tblwrap.offsetHeight);}catch(e){}
+    document.body.style.cssText = '';
+    try {
+      localStorage.setItem('sat_panel_h', panel.offsetHeight);
+      localStorage.removeItem('sat_tbl_h'); // Remove legacy key
+    } catch(e) {}
+    if (window.map) {
+      try { window.map.invalidateSize(); } catch(err){}
+    }
   });
-  try{const h=parseInt(localStorage.getItem('sat_tbl_h'));if(h>=40&&h<=600)tblwrap.style.height=h+'px';}catch(e){}
+
+  // Restore saved safe height or reset to default
+  try {
+    localStorage.removeItem('sat_tbl_h'); // Clean out any huge legacy table height
+    const savedH = parseInt(localStorage.getItem('sat_panel_h'));
+    const safeMax = Math.max(160, Math.min(400, Math.floor(window.innerHeight * 0.48)));
+    if (savedH >= 120 && savedH <= safeMax) {
+      panel.style.height = savedH + 'px';
+    } else {
+      panel.style.height = '240px';
+    }
+  } catch(e) {
+    panel.style.height = '240px';
+  }
 })();
 
 function updateClock(){

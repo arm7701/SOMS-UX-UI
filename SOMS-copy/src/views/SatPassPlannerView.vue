@@ -369,16 +369,97 @@ const injectResponsivePlannerStyles = () => {
     }
 
     styleEl.textContent = `
-      /* ป้องกันการล้นจอแนวนอน 100% */
+      /* ป้องกันการล้นจอแนวนอนและแนวตั้ง 100% */
       html, body {
         width: 100% !important;
+        height: 100% !important;
         max-width: 100vw !important;
-        overflow-x: hidden !important;
+        overflow: hidden !important;
         box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
       #hdr {
         transition: padding 0.2s ease !important;
       }
+
+      /* โหมด 0: โหมดรวม Split Mode (ค่าเริ่มต้น) ป้องกันตารางล้นไปบังตัวเลือกและแผนที่ */
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #main {
+        display: flex !important;
+        flex: 1 1 0 !important;
+        min-height: 260px !important;
+        height: auto !important;
+        overflow: hidden !important;
+        position: relative !important;
+      }
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #sb {
+        width: 320px !important;
+        min-width: 250px !important;
+        max-width: 480px !important;
+        height: 100% !important;
+        max-height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        flex-shrink: 0 !important;
+      }
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #mwrap {
+        flex: 1 1 0 !important;
+        min-width: 200px !important;
+        min-height: 0 !important;
+        height: 100% !important;
+        position: relative !important;
+        overflow: hidden !important;
+      }
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #map {
+        width: 100% !important;
+        height: 100% !important;
+        position: absolute !important;
+        inset: 0 !important;
+      }
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #panel {
+        flex: 0 0 240px !important;
+        min-height: 120px !important;
+        max-height: 48vh !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        position: relative !important;
+        z-index: 20 !important;
+      }
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #panel.panel-collapsed {
+        height: 38px !important;
+        min-height: 38px !important;
+        max-height: 38px !important;
+        overflow: hidden !important;
+      }
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #panel.panel-collapsed #view-passes,
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #panel.panel-collapsed #view-timeline {
+        display: none !important;
+      }
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #view-passes {
+        flex: 1 1 0 !important;
+        min-height: 0 !important;
+        height: calc(100% - 38px) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+      }
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #tblwrap {
+        flex: 1 1 0 !important;
+        min-height: 0 !important;
+        height: 100% !important;
+        max-height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      body:not(.mode-map):not(.mode-sats):not(.mode-passes) #view-timeline {
+        flex: 1 1 0 !important;
+        min-height: 0 !important;
+        height: calc(100% - 38px) !important;
+        overflow: hidden !important;
+      }
+
       @media (max-width: 860px) {
         #hdr {
           height: 38px !important;
@@ -641,27 +722,27 @@ watch(() => appStore.refreshTrigger, () => {
     :class="isFullscreen ? 'fixed inset-0 z-50 bg-[#090b0f] p-2 sm:p-3 overflow-hidden flex flex-col' : 'space-y-4'"
   >
     <!-- Top Header & Multifunctional Toolbar -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 pb-3 border-b border-space-700 bg-space-850 p-3 sm:p-4 rounded-2xl border shadow-md">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 pb-3.5 border-b border-slate-700/80 bg-gradient-to-r from-[#141e32] via-[#0f1728] to-[#121c2e] p-4 sm:p-5 rounded-3xl border border-slate-700/80 shadow-xl">
       <div>
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-space-800 border border-space-700 text-zinc-300 flex items-center justify-center flex-shrink-0">
-            <Compass class="w-4 h-4 sm:w-5 sm:h-5" />
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-cyan-950 to-slate-900 border border-cyan-500/50 text-cyan-400 flex items-center justify-center flex-shrink-0 shadow-lg shadow-cyan-950/40">
+            <Compass class="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <div>
             <div class="flex items-center gap-2 flex-wrap">
-              <h1 class="text-base sm:text-xl font-bold font-prompt text-white tracking-tight">
+              <h1 class="text-lg sm:text-2xl font-black font-prompt text-white tracking-wide flex items-center gap-2">
                 SAT PASS PLANNER
               </h1>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-space-800 text-zinc-300 border border-space-600">
-                MULTIFUNCTION v3
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold font-mono bg-cyan-950/80 text-cyan-300 border border-cyan-700/70 shadow-xs">
+                22 SATS ACTIVE
               </span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-sky-950/60 text-sky-400 border border-sky-800/60 flex items-center gap-1">
-                <Radio class="w-2.5 h-2.5 animate-pulse" />
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold font-mono bg-sky-950/80 text-sky-300 border border-sky-600/70 flex items-center gap-1.5 shadow-xs">
+                <Radio class="w-3 h-3 text-emerald-400 animate-pulse" />
                 SOMS INTEGRATED
               </span>
             </div>
-            <p class="text-[11px] sm:text-xs text-zinc-400 mt-0.5">
-              ศูนย์วางแผนและจำลองการโคจรผ่านดาวเทียม (SGP4 Orbital Propagator & Target Feasibility) เชื่อมโยงระบบ SOMS
+            <p class="text-xs sm:text-sm text-slate-300 font-medium mt-0.5 font-prompt">
+              ศูนย์วางแผนและจำลองการโคจรผ่านดาวเทียม (SGP4 Orbital Propagator & Target Feasibility)
             </p>
           </div>
         </div>
@@ -934,7 +1015,7 @@ watch(() => appStore.refreshTrigger, () => {
           src="/planner/index.html"
           title="Satellite Pass Planner Workspace"
           class="w-full border-0 transition-all"
-          :class="isFullscreen ? 'h-full min-h-0' : 'h-[72vh] sm:h-[calc(100vh-14rem)] min-h-[580px] lg:min-h-[700px]'"
+          :class="isFullscreen ? 'h-full min-h-0' : 'h-[76vh] sm:h-[calc(100vh-13rem)] min-h-[620px] lg:min-h-[720px]'"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
           @load="onIframeLoad"
         ></iframe>

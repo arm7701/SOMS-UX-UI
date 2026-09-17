@@ -3,7 +3,7 @@
  * ============================================================================
  * ไฟล์: src/components/dashboard/TelemetryChart.vue
  * วัตถุประสงค์: คอมโพเนนต์กราฟแสดงข้อมูลวงโคจรและค่าทางเทคนิค (Chart.js)
- * ปรับสีเส้นแกนและตัวหนังสืออัตโนมัติตามธีม Light/Dark Mode อย่างสบายตา
+ * ธีมดำเทาไททาเนียม: เส้นกราฟและตัวเลขบนแกนชัดเจน ไม่กลืนกับพื้นหลัง
  * ============================================================================
  */
 import { ref, onMounted, onUnmounted, watch } from 'vue'
@@ -17,8 +17,8 @@ const props = defineProps({
   labels: { type: Array, default: () => [] },
   data: { type: Array, default: () => [] },
   unit: { type: String, default: '' },
-  color: { type: String, default: '#2563eb' },
-  fillColor: { type: String, default: 'rgba(37, 99, 235, 0.08)' },
+  color: { type: String, default: '#cbd5e1' },
+  fillColor: { type: String, default: 'rgba(203, 213, 225, 0.08)' },
   type: { type: String, default: 'line' } // 'line' | 'bar'
 })
 
@@ -33,9 +33,8 @@ const renderChart = () => {
     chartInstance = null
   }
 
-  const isDark = appStore.isDark
-  const textColor = isDark ? '#bae6fd' : '#1e293b'
-  const gridColor = isDark ? 'rgba(56, 189, 248, 0.12)' : 'rgba(226, 232, 240, 0.8)'
+  const textColor = '#f1f5f9'
+  const gridColor = 'rgba(255, 255, 255, 0.12)'
 
   const ctx = canvasRef.value.getContext('2d')
   chartInstance = new Chart(ctx, {
@@ -66,11 +65,11 @@ const renderChart = () => {
           display: false
         },
         tooltip: {
-          backgroundColor: '#040d1a',
+          backgroundColor: '#0d1117',
           titleColor: '#ffffff',
-          bodyColor: '#e2e8f0',
-          borderColor: '#38bdf8',
-          borderWidth: 1.5,
+          bodyColor: '#f1f5f9',
+          borderColor: '#334155',
+          borderWidth: 1,
           padding: 10,
           cornerRadius: 8,
           callbacks: {
@@ -81,16 +80,16 @@ const renderChart = () => {
       scales: {
         x: {
           grid: { color: gridColor },
-          ticks: { color: textColor, font: { size: 12, weight: 'bold' } }
+          ticks: { color: textColor, font: { size: 12, family: 'Prompt', weight: '600' } }
         },
         y: {
           grid: { color: gridColor },
-          ticks: { color: textColor, font: { size: 12, weight: 'bold' } },
+          ticks: { color: textColor, font: { size: 12, family: 'Prompt', weight: '600' } },
           title: {
             display: Boolean(props.unit),
             text: props.unit,
             color: textColor,
-            font: { size: 12, weight: 'bold' }
+            font: { size: 12, family: 'Prompt', weight: '600' }
           }
         }
       }
@@ -98,27 +97,25 @@ const renderChart = () => {
   })
 }
 
-watch([() => props.data, () => props.labels, () => appStore.isDark], () => {
+const chartContainer = ref(null)
+let resizeObserver = null
+
+watch([() => props.data, () => props.labels], () => {
   renderChart()
 })
 
-let chartResizeObserver = null
-const containerRef = ref(null)
-
 onMounted(() => {
   renderChart()
-  if (window.ResizeObserver && containerRef.value) {
-    chartResizeObserver = new ResizeObserver(() => {
-      if (chartInstance) {
-        chartInstance.resize()
-      }
+  if (chartContainer.value) {
+    resizeObserver = new ResizeObserver(() => {
+      chartInstance?.resize()
     })
-    chartResizeObserver.observe(containerRef.value)
+    resizeObserver.observe(chartContainer.value)
   }
 })
 
 onUnmounted(() => {
-  if (chartResizeObserver) chartResizeObserver.disconnect()
+  if (resizeObserver) resizeObserver.disconnect()
   if (chartInstance) {
     chartInstance.destroy()
     chartInstance = null
@@ -127,17 +124,17 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="h-full w-full flex flex-col justify-between p-3.5 bg-transparent font-prompt text-slate-200">
-    <div class="flex items-center justify-between mb-2.5 pb-2 border-b border-sky-500/30 shrink-0">
-      <h4 class="text-sm sm:text-base font-bold text-white uppercase tracking-wider font-prompt truncate pr-2">
+  <div class="w-full h-full flex flex-col p-4 bg-transparent justify-between overflow-hidden">
+    <div class="flex items-center justify-between mb-2 pb-2 border-b border-space-700/60 flex-shrink-0">
+      <h4 class="text-sm font-bold text-white uppercase tracking-wider font-prompt truncate">
         {{ title }}
       </h4>
-      <span v-if="unit" class="text-xs font-mono font-bold text-cyan-200 shrink-0 px-2 py-0.5 rounded bg-sky-950/80 border border-sky-400/40">
+      <span v-if="unit" class="text-xs font-mono text-slate-200 font-bold">
         {{ unit }}
       </span>
     </div>
 
-    <div ref="containerRef" class="flex-1 min-h-[100px] w-full relative">
+    <div ref="chartContainer" class="flex-1 w-full min-h-[140px] relative">
       <canvas ref="canvasRef"></canvas>
     </div>
   </div>

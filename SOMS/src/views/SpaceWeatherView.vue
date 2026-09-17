@@ -49,53 +49,53 @@ const getScaleStatus = (num) => {
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-space-700">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
       <div>
         <div class="flex items-center gap-2">
-          <SunMedium class="w-6 h-6 text-amber-500" />
-          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-slate-900 dark:text-white">
+          <SunMedium class="w-6 h-6 text-amber-400" />
+          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white">
             สภาพอวกาศ (Space Weather)
           </h1>
         </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p class="text-xs text-zinc-400 mt-1">
           การเฝ้าระวังพายุรังสีสุริยะและการรบกวนคลื่นวิทยุสื่อสารดาวเทียมตามมาตรฐาน NOAA
         </p>
       </div>
     </div>
 
     <!-- NOAA Scale Information Card -->
-    <div class="bg-blue-50/50 dark:bg-space-850 p-4 rounded-2xl border border-blue-100 dark:border-space-700 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+    <div class="bg-zinc-900/90 p-5 rounded-2xl border border-zinc-800 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs shadow-md">
       <div class="flex items-start gap-3">
-        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 flex items-center justify-center font-bold flex-shrink-0">
+        <div class="w-8 h-8 rounded-lg bg-zinc-800 text-zinc-200 border border-zinc-700 flex items-center justify-center font-bold flex-shrink-0">
           R
         </div>
         <div>
-          <h4 class="font-bold text-slate-800 dark:text-white">Radio Blackout (R0–R5)</h4>
-          <p class="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+          <h4 class="font-bold text-white">Radio Blackout (R0–R5)</h4>
+          <p class="text-zinc-300 mt-0.5 leading-relaxed">
             การรบกวนชั้นบรรยากาศไอโอโนสเฟียร์จากแสง X-Ray ส่งผลกระทบต่อสัญญาณ UHF/VHF
           </p>
         </div>
       </div>
 
       <div class="flex items-start gap-3">
-        <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300 flex items-center justify-center font-bold flex-shrink-0">
+        <div class="w-8 h-8 rounded-lg bg-amber-950/60 text-amber-300 border border-amber-800/80 flex items-center justify-center font-bold flex-shrink-0">
           S
         </div>
         <div>
-          <h4 class="font-bold text-slate-800 dark:text-white">Solar Radiation Storm (S0–S5)</h4>
-          <p class="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+          <h4 class="font-bold text-white">Solar Radiation Storm (S0–S5)</h4>
+          <p class="text-zinc-300 mt-0.5 leading-relaxed">
             พายุอนุภาคโปรตอนพลังงานสูง ส่งผลต่อวงจรอิเล็กทรอนิกส์และเซ็นเซอร์ดาวเทียม
           </p>
         </div>
       </div>
 
       <div class="flex items-start gap-3">
-        <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300 flex items-center justify-center font-bold flex-shrink-0">
+        <div class="w-8 h-8 rounded-lg bg-purple-950/60 text-purple-300 border border-purple-800/80 flex items-center justify-center font-bold flex-shrink-0">
           G
         </div>
         <div>
-          <h4 class="font-bold text-slate-800 dark:text-white">Geomagnetic Storm (G0–G5)</h4>
-          <p class="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+          <h4 class="font-bold text-white">Geomagnetic Storm (G0–G5)</h4>
+          <p class="text-zinc-300 mt-0.5 leading-relaxed">
             การเหนี่ยวนำสนามแม่เหล็กโลกแปรปรวน เพิ่มแรงต้านอากาศทำให้ดาวเทียมลดระดับความสูง
           </p>
         </div>
@@ -134,7 +134,7 @@ const getScaleStatus = (num) => {
       </template>
 
       <template #cell(spaceweather_note)="{ value }">
-        <span class="text-xs text-slate-600 dark:text-slate-300">
+        <span class="text-xs text-zinc-300">
           {{ value || 'ไม่มีข้อสังเกตเพิ่มเติม' }}
         </span>
       </template>

@@ -98,15 +98,15 @@ const handleDeleteReport = async () => {
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-space-700">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
       <div>
         <div class="flex items-center gap-2">
-          <FileText class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-slate-900 dark:text-white">
+          <FileText class="w-6 h-6 text-zinc-300" />
+          <h1 class="text-xl sm:text-2xl font-bold font-prompt text-white">
             รายงานภารกิจดาวเทียม (Satellite Reports)
           </h1>
         </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p class="text-xs sm:text-sm text-slate-300 font-medium font-prompt mt-1">
           บันทึกผลการปฏิบัติการประจำรอบพาส สภาพระบบ และข้อขัดข้อง
         </p>
       </div>
@@ -114,9 +114,9 @@ const handleDeleteReport = async () => {
       <div>
         <router-link
           to="/reports/new"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0c1424] hover:bg-[#121f38] text-cyan-200 hover:text-white border border-cyan-700/60 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer font-prompt"
         >
-          <Plus class="w-4 h-4" />
+          <Plus class="w-4 h-4 text-cyan-400" />
           <span>สร้างรายงานภารกิจใหม่</span>
         </router-link>
       </div>
@@ -130,13 +130,13 @@ const handleDeleteReport = async () => {
       :default-page-size="25"
     >
       <template #cell(sat_flight_pass)="{ value }">
-        <span class="font-mono font-bold text-xs text-blue-700 dark:text-blue-400">
+        <span class="font-mono font-bold text-xs text-white bg-zinc-800/90 px-2.5 py-1 rounded-md border border-zinc-700/80">
           {{ value }}
         </span>
       </template>
 
       <template #cell(pass_time)="{ value }">
-        <span class="font-mono text-xs text-slate-700 dark:text-slate-300">
+        <span class="font-mono text-xs text-zinc-300 font-medium">
           {{ value }}
         </span>
       </template>
@@ -146,7 +146,7 @@ const handleDeleteReport = async () => {
           <!-- View Detail -->
           <button
             type="button"
-            class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 dark:border-space-700 dark:text-slate-300 dark:hover:bg-space-800 transition-colors"
+            class="p-1.5 rounded-lg border border-zinc-700 bg-zinc-850 text-zinc-300 hover:bg-zinc-750 hover:text-white hover:border-zinc-500 transition-colors shadow-2xs"
             title="ดูรายละเอียดฉบับเต็ม"
             @click="viewReport(row)"
           >
@@ -158,7 +158,7 @@ const handleDeleteReport = async () => {
             :href="api.getPdfUrl(row.report_id)"
             target="_blank"
             rel="noopener noreferrer"
-            class="p-1.5 rounded-lg border border-amber-200 text-amber-600 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:border-amber-900 dark:text-amber-400 transition-colors"
+            class="p-1.5 rounded-lg border border-amber-900/60 text-amber-300 bg-amber-950/40 hover:bg-amber-900/50 hover:border-amber-700 transition-colors shadow-2xs"
             title="เปิดไฟล์ PDF"
           >
             <FileDown class="w-3.5 h-3.5" />
@@ -168,7 +168,7 @@ const handleDeleteReport = async () => {
           <button
             v-if="row.isOwner"
             type="button"
-            class="p-1.5 rounded-lg border border-rose-200 text-rose-600 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:border-rose-900 dark:text-rose-400 transition-colors"
+            class="p-1.5 rounded-lg border border-rose-900/60 text-rose-300 bg-rose-950/40 hover:bg-rose-900/50 hover:border-rose-700 transition-colors shadow-2xs"
             title="ลบรายงาน"
             @click="confirmDeleteReport(row)"
           >
