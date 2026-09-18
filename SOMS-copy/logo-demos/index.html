@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOMS Logo Final Selection — เปรียบเทียบ 2 แบบสุดท้าย (แบบที่ 2 vs แบบที่ 7)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070d18;
+      --card-bg: rgba(15, 25, 44, 0.92);
+      --card-border: rgba(56, 189, 248, 0.25);
+      --card-border-hover: rgba(56, 189, 248, 0.7);
+      --cyan: #38bdf8;
+      --cyan-glow: #00f0ff;
+      --gold: #f59e0b;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+        linear-gradient(to bottom, #070d18, #03070e);
+      color: var(--text-main);
+      font-family: 'Prompt', 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    header {
+      padding: 48px 24px 32px;
+      text-align: center;
+      position: relative;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+      background: rgba(7, 13, 24, 0.75);
+      backdrop-filter: blur(12px);
+    }
+
+    .badge-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 20px;
+      border-radius: 9999px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fbbf24;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 30%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: clamp(15px, 2vw, 17px);
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Toolbar Switcher */
+    .toolbar-container {
+      max-width: 1280px;
+      margin: 28px auto 0;
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: 18px;
+    }
+
+    .theme-btn {
+      background: rgba(30, 41, 59, 0.8);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--cyan);
+      color: #ffffff;
+    }
+
+    .theme-btn.active {
+      background: var(--cyan);
+      color: #04101e;
+      font-weight: 700;
+      border-color: var(--cyan);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Comparison Grid */
+    .comparison-grid {
+      max-width: 1280px;
+      margin: 32px auto 0;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 32px;
+    }
+
+    .finalist-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .finalist-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--card-border-hover);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.25);
+    }
+
+    .card-ribbon {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      background: rgba(14, 165, 233, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      z-index: 2;
+      backdrop-filter: blur(8px);
+    }
+
+    .preview-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 36px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .bg-mode-checker {
+      background-color: #111a28;
+      background-image: 
+        linear-gradient(45deg, #182438 25%, transparent 25%), 
+        linear-gradient(-45deg, #182438 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #182438 75%), 
+        linear-gradient(-45deg, transparent 75%, #182438 75%);
+      background-size: 26px 26px;
+      background-position: 0 0, 0 13px, 13px -13px, -13px 0px;
+    }
+
+    .bg-mode-dark { background: #060c17; }
+    .bg-mode-navy { background: #0f274a; }
+    .bg-mode-light { background: #f8fafc; }
+
+    .preview-stage img {
+      max-width: 82%;
+      max-height: 82%;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.5));
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .finalist-card:hover .preview-stage img {
+      transform: scale(1.08);
+    }
+
+    /* Live Navbar Mockup Demo */
+    .mockup-box {
+      margin: 0 24px;
+      padding: 14px 18px;
+      background: #060c18;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .mockup-img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+    }
+
+    .mockup-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    .mockup-sub {
+      font-size: 10.5px;
+      color: var(--cyan);
+      letter-spacing: 0.5px;
+    }
+
+    /* Card Details */
+    .card-info {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-title-th {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .card-title-en {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--cyan);
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+
+    .card-concept {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .feature-item {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .feature-item::before {
+      content: '✓';
+      color: #34d399;
+      font-weight: 700;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-choose {
+      background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-choose:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+      transform: translateY(-2px);
+    }
+
+    .btn-copy {
+      background: rgba(30, 41, 59, 0.7);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .btn-copy:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--cyan);
+      color: #ffffff;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0284c7;
+      color: #ffffff;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge-top">
+      <span>🎯</span>
+      <span>FINAL SELECTION ROUND — คัดเหลือ 2 แบบสุดท้าย</span>
+    </div>
+    <h1>เปรียบเทียบโลโก้ SOMS: แบบที่ 2 vs แบบที่ 7</h1>
+    <p class="subtitle">
+      ระบบบริหารจัดการการปฏิบัติการดาวเทียมกองทัพอากาศ (Satellite Operations Management System)<br>
+      ลบแบบร่างอื่นๆ ออกทั้งหมดแล้ว เหลือเฉพาะ 2 ตัวเลือกที่คุณสนใจพร้อมจำลองการแสดงผลบน Navbar ให้ชมทันที
+    </p>
+  </header>
+
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px;">
+    <div class="toolbar-container">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <span style="font-size: 14px; font-weight: 600; color: #cbd5e1;">🎨 ทดสอบพื้นหลัง:</span>
+        <button class="theme-btn active" data-bg="bg-mode-checker">🔲 ตารางใส (Checkerboard)</button>
+        <button class="theme-btn" data-bg="bg-mode-dark">🌑 ดำมืด (Dark #060c17)</button>
+        <button class="theme-btn" data-bg="bg-mode-navy">🔵 สีกรมท่า ทอ. (#0f274a)</button>
+        <button class="theme-btn" data-bg="bg-mode-light">☀️ ขาวสว่าง (Light #f8fafc)</button>
+      </div>
+      <div style="font-size: 13.5px; color: #34d399; font-weight: 600;">
+        ✨ ตัดพื้นหลังโปร่งใส 100% ทั้ง 2 แบบ
+      </div>
+    </div>
+  </div>
+
+  <main class="comparison-grid">
+    
+      <article class="finalist-card">
+        <div class="card-ribbon">ตัวเลือก #02</div>
+        
+        <div class="preview-stage bg-mode-checker">
+          <img src="./02_minimalist_aerospace_monogram.png" alt="Minimalist Aerospace Monogram">
+        </div>
+
+        <div style="padding: 0 24px; margin-bottom: 12px;">
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.5px;">จำลองเมื่ออยู่บนแถบ NAVBAR:</div>
+          <div class="mockup-box">
+            <img class="mockup-img" src="./02_minimalist_aerospace_monogram.png" alt="Mockup">
+            <div>
+              <div class="mockup-title">ระบบบริหารจัดการการปฏิบัติการดาวเทียมกองทัพอากาศ</div>
+              <div class="mockup-sub">SATELLITE OPERATIONS MANAGEMENT SYSTEM (SOMS)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-info">
+          <h2 class="card-title-th">แบบที่ 2: โมโนแกรม SOMS มินิมอล & วงแหวนดาวเทียม</h2>
+          <div class="card-title-en">Minimalist Aerospace Monogram</div>
+          <p class="card-concept">ออกแบบสไตล์ Modern Minimalist จัดวางตัวอักษร SOMS อย่างลงตัว โดยดัดแปลงตัว O ให้เป็นลูกโลกสีน้ำเงินเข้มโอบล้อมด้วยวงแหวนดาวเทียมสีทองและฟ้าสว่าง</p>
+
+          <ul class="feature-list">
+            <li class="feature-item">ตัวอักษร SOMS โดดเด่น ชัดเจนในระยะไกล</li><li class="feature-item">สัญลักษณ์ดาวเทียมและวงแหวนเรืองแสงทันสมัย</li><li class="feature-item">เหมาะอย่างยิ่งสำหรับทำ Favicon และไอคอนแอปพลิเคชัน</li><li class="feature-item">กลมกลืนกับธีม Dark Mode ของแดชบอร์ดอย่างสมบูรณ์แบบ</li>
+          </ul>
+
+          <div class="action-row">
+            <button class="btn-action btn-copy" onclick="copyName('02_minimalist_aerospace_monogram.png')">
+              <span>📋</span> คัดลอกชื่อไฟล์
+            </button>
+            <a href="./02_minimalist_aerospace_monogram.png" target="_blank" class="btn-action btn-choose">
+              <span>🔍</span> เปิดดูไฟล์เต็ม
+            </a>
+          </div>
+        </div>
+      </article>
+    
+      <article class="finalist-card">
+        <div class="card-ribbon">ตัวเลือก #07</div>
+        
+        <div class="preview-stage bg-mode-checker">
+          <img src="./07_planetary_ring_horizon.png" alt="Planetary Ring & Titanium Horizon">
+        </div>
+
+        <div style="padding: 0 24px; margin-bottom: 12px;">
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.5px;">จำลองเมื่ออยู่บนแถบ NAVBAR:</div>
+          <div class="mockup-box">
+            <img class="mockup-img" src="./07_planetary_ring_horizon.png" alt="Mockup">
+            <div>
+              <div class="mockup-title">ระบบบริหารจัดการการปฏิบัติการดาวเทียมกองทัพอากาศ</div>
+              <div class="mockup-sub">SATELLITE OPERATIONS MANAGEMENT SYSTEM (SOMS)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-info">
+          <h2 class="card-title-th">แบบที่ 7: ตราวงกลมขอบฟ้าดาวเคราะห์ & วงแหวนนีออนเรืองแสง</h2>
+          <div class="card-title-en">Planetary Ring & Titanium Horizon</div>
+          <p class="card-concept">รูปแบบตราสัญลักษณ์วงกลมพรีเมียม (Circular Badge) พร้อมดาวเคราะห์สุริยุปราคาและวงแหวนนีออนสีฟ้าพาดผ่าน ด้านล่างประดับตัวอักษร SOMS เนื้อโลหะไททาเนียมขัดเงาโค้งตามแนวขอบ</p>
+
+          <ul class="feature-list">
+            <li class="feature-item">ทรงกลมเป็นระเบียบ เรียบหรู สง่างามระดับพรีเมียม</li><li class="feature-item">ตัวอักษร SOMS เนื้อโลหะไททาเนียมสะท้อนแสงมีมิติ</li><li class="feature-item">ประกายแสงดาวเทียมและวงแหวนนีออนทรงพลัง</li><li class="feature-item">เหมาะสำหรับการใช้งานทั้งบนหัวเว็บ Navbar, บัตรประจำตัว, และเอกสารทางการ</li>
+          </ul>
+
+          <div class="action-row">
+            <button class="btn-action btn-copy" onclick="copyName('07_planetary_ring_horizon.png')">
+              <span>📋</span> คัดลอกชื่อไฟล์
+            </button>
+            <a href="./07_planetary_ring_horizon.png" target="_blank" class="btn-action btn-choose">
+              <span>🔍</span> เปิดดูไฟล์เต็ม
+            </a>
+          </div>
+        </div>
+      </article>
+    
+  </main>
+
+  <div class="toast" id="toast">คัดลอกเรียบร้อย</div>
+
+  <script>
+    const themeBtns = document.querySelectorAll('.theme-btn');
+    const stages = document.querySelectorAll('.preview-stage');
+
+    themeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        themeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const newBg = btn.getAttribute('data-bg');
+        stages.forEach(s => {
+          s.classList.remove('bg-mode-checker', 'bg-mode-dark', 'bg-mode-light', 'bg-mode-navy');
+          s.classList.add(newBg);
+        });
+      });
+    });
+
+    function copyName(fname) {
+      navigator.clipboard.writeText(fname).then(() => {
+        const toast = document.getElementById('toast');
+        toast.textContent = 'คัดลอก ' + fname + ' เรียบร้อย!';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      });
+    }
+  </script>
+</body>
+</html>
