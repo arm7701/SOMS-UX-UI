@@ -1044,17 +1044,17 @@ onUnmounted(() => {
       <div class="bg-[#0b1f38]/95 backdrop-blur-2xl rounded-3xl p-7 sm:p-9 border-2 border-sky-400/40 shadow-[0_20px_60px_rgba(2,12,27,0.95),0_0_40px_rgba(56,189,248,0.2)] transition-all font-prompt">
         <!-- Brand Header with Perfectly Sized Hero Emblem -->
         <div class="text-center mb-7">
-          <!-- Hero Logo Container with Luminous Crest Pedestal -->
-          <div class="inline-flex relative group mb-4">
+          <!-- Hero Logo Container with Luminous Crest Pedestal (ขนาดใหญ่สง่างาม เต็มช่องกรอบ) -->
+          <div class="inline-flex relative group mb-5">
             <!-- Glowing Aura Behind Logo -->
-            <div class="absolute -inset-1.5 bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500 animate-pulse-slow"></div>
+            <div class="absolute -inset-2 bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-lg opacity-75 group-hover:opacity-100 transition duration-500 animate-pulse-slow"></div>
 
-            <!-- Logo Pedestal Badge (ใหญ่พอดีช่องกรอบ สมส่วนกับกล่อง) -->
-            <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-b from-[#0e2c52] via-[#091f3a] to-[#051426] border-2 border-sky-400/60 shadow-xl shadow-sky-950/80 flex items-center justify-center p-2 sm:p-2.5">
+            <!-- Logo Pedestal Badge (ใหญ่เด่นชัด สมส่วนเต็มกรอบ) -->
+            <div class="relative w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-b from-[#0e2c52] via-[#091f3a] to-[#051426] border-2 border-sky-400/70 shadow-2xl shadow-sky-950/90 flex items-center justify-center p-2 sm:p-2.5">
               <img
                 src="/src/assets/soms-logo.png"
                 alt="SOMS Emblem"
-                class="w-full h-full object-contain filter drop-shadow-[0_4px_16px_rgba(56,189,248,0.6)] transition-transform duration-300 group-hover:scale-105"
+                class="w-full h-full object-contain filter drop-shadow-[0_6px_22px_rgba(56,189,248,0.7)] transition-transform duration-300 group-hover:scale-105"
                 onerror="this.style.display='none'"
               />
             </div>
