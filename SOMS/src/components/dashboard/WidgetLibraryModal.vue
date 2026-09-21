@@ -252,16 +252,16 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
   >
     <div class="w-full max-w-2xl bg-space-850 rounded-3xl border border-space-700 shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
       <!-- Modal Header -->
-      <div class="px-6 py-4 bg-[#0d1117] border-b border-space-700 flex items-center justify-between gap-4">
+      <div class="px-6 py-4 bg-[#0e2b50] border-b border-sky-700/50 flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white shadow-xs">
+          <div class="w-10 h-10 rounded-xl bg-[#1a4175] border border-sky-500/40 flex items-center justify-center text-white shadow-xs">
             <Sparkles class="w-5 h-5 text-amber-400" />
           </div>
           <div>
             <h2 class="text-base sm:text-lg font-bold font-prompt text-white">
               Widget Library (คลังวิดเจ็ต)
             </h2>
-            <p class="text-xs sm:text-sm text-slate-300 font-prompt font-medium">
+            <p class="text-xs sm:text-sm text-sky-200 font-prompt font-medium">
               เลือกเปิด/ปิด หรือปรับแต่งวิดเจ็ตที่ต้องการให้แสดงบนหน้าแดชบอร์ด
             </p>
           </div>
@@ -269,7 +269,7 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
 
         <button
           type="button"
-          class="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+          class="p-2 rounded-xl text-sky-200 hover:text-white hover:bg-[#1a4175] transition-colors cursor-pointer"
           @click="emit('update:modelValue', false)"
         >
           <X class="w-5 h-5" />
@@ -277,13 +277,13 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
       </div>
 
       <!-- Controls: Category Pills & Search -->
-      <div class="px-6 py-3 bg-[#111622] border-b border-space-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="px-6 py-3 bg-[#0a2342] border-b border-sky-700/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <!-- Category Selector -->
-        <div class="inline-flex rounded-xl bg-[#090b0f] p-1 border border-space-700 flex-wrap">
+        <div class="inline-flex rounded-xl bg-[#0e2b50] p-1 border border-sky-600/40 flex-wrap">
           <button
             type="button"
             class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold font-prompt rounded-lg transition-colors cursor-pointer"
-            :class="activeCategory === 'all' ? 'bg-zinc-700 text-white font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+            :class="activeCategory === 'all' ? 'bg-[#1a4175] text-white font-bold border border-cyan-400/60 shadow-xs' : 'text-sky-200 hover:text-white'"
             @click="activeCategory = 'all'"
           >
             ทั้งหมด (All)
@@ -291,7 +291,7 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
           <button
             type="button"
             class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold font-prompt rounded-lg transition-colors cursor-pointer"
-            :class="activeCategory === 'general' ? 'bg-zinc-700 text-white font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+            :class="activeCategory === 'general' ? 'bg-[#1a4175] text-white font-bold border border-cyan-400/60 shadow-xs' : 'text-sky-200 hover:text-white'"
             @click="activeCategory = 'general'"
           >
             ทั่วไป (General)
@@ -299,7 +299,7 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
           <button
             type="button"
             class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold font-prompt rounded-lg transition-colors cursor-pointer"
-            :class="activeCategory === 'satellite' ? 'bg-zinc-700 text-white font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+            :class="activeCategory === 'satellite' ? 'bg-[#1a4175] text-white font-bold border border-cyan-400/60 shadow-xs' : 'text-sky-200 hover:text-white'"
             @click="activeCategory = 'satellite'"
           >
             ดาวเทียม (Satellite)
@@ -307,7 +307,7 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
           <button
             type="button"
             class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold font-prompt rounded-lg transition-colors cursor-pointer"
-            :class="activeCategory === 'telemetry' ? 'bg-zinc-700 text-white font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+            :class="activeCategory === 'telemetry' ? 'bg-[#1a4175] text-white font-bold border border-cyan-400/60 shadow-xs' : 'text-sky-200 hover:text-white'"
             @click="activeCategory = 'telemetry'"
           >
             กราฟโทรมาตร (Telemetry)
@@ -316,12 +316,12 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
 
         <!-- Search Bar -->
         <div class="relative w-full sm:w-64">
-          <Search class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
+          <Search class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-sky-300" />
           <input
             v-model="searchQuery"
             type="text"
             placeholder="ค้นหาวิดเจ็ต..."
-            class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-space-700 bg-[#090b0f] text-white placeholder-slate-400 font-prompt focus:outline-none focus:border-cyan-500"
+            class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-sky-600/40 bg-[#0e2b50] text-white placeholder-sky-300/60 font-prompt focus:outline-none focus:border-cyan-400"
           />
         </div>
       </div>
@@ -332,7 +332,7 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
           v-for="widget in filteredWidgets"
           :key="widget.id"
           class="p-4 rounded-2xl border transition-all flex items-start justify-between gap-4"
-          :class="isWidgetActive(widget.id) ? 'bg-[#121824] border-zinc-500 shadow-md' : 'bg-[#0a0e16]/80 border-space-700/80 opacity-80 hover:opacity-100'"
+          :class="isWidgetActive(widget.id) ? 'bg-[#1a4175] border-sky-400/60 shadow-md' : 'bg-[#133560]/80 border-sky-600/30 opacity-90 hover:opacity-100'"
         >
           <div class="flex items-start gap-3.5">
             <div
@@ -348,12 +348,12 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
                 </h4>
                 <span
                   class="text-xs px-2.5 py-0.5 rounded-full font-prompt font-bold uppercase tracking-wider"
-                  :class="widget.category === 'satellite' ? 'bg-sky-950/90 text-sky-300 border border-sky-600' : 'bg-zinc-800 text-slate-200 border border-zinc-600'"
+                  :class="widget.category === 'satellite' ? 'bg-sky-950/90 text-sky-300 border border-sky-600' : 'bg-[#133560] text-sky-200 border border-sky-500/40'"
                 >
                   {{ widget.category }}
                 </span>
               </div>
-              <p class="text-xs sm:text-sm text-slate-300 font-prompt mt-1 leading-relaxed font-medium">
+              <p class="text-xs sm:text-sm text-sky-100 font-prompt mt-1 leading-relaxed font-medium">
                 {{ widget.description }}
               </p>
             </div>
@@ -372,7 +372,7 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
             <!-- Add Instance Button (Can be clicked repeatedly to spawn duplicate instances) -->
             <button
               type="button"
-              class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-prompt flex items-center gap-1.5 transition-all cursor-pointer bg-zinc-800 hover:bg-cyan-900 text-cyan-200 hover:text-white border border-zinc-600 hover:border-cyan-500 shadow-xs whitespace-nowrap"
+              class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-prompt flex items-center gap-1.5 transition-all cursor-pointer bg-[#0e2b50] hover:bg-[#1a4175] text-cyan-200 hover:text-white border border-sky-500/40 hover:border-cyan-400 shadow-xs whitespace-nowrap"
               title="เพิ่มวิดเจ็ตนี้ลงบนกระดาน (สามารถเพิ่มซ้ำหลายชิ้นเพื่อดูคนละข้อมูลได้)"
               @click="emit('addWidget', widget.id)"
             >
@@ -395,10 +395,10 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
       </div>
 
       <!-- Footer Bar -->
-      <div class="px-6 py-4 bg-[#0d1117] border-t border-space-700 flex items-center justify-between gap-3">
+      <div class="px-6 py-4 bg-[#0e2b50] border-t border-sky-700/50 flex items-center justify-between gap-3">
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 text-xs sm:text-sm text-slate-300 hover:text-white font-prompt font-semibold transition-colors cursor-pointer"
+          class="inline-flex items-center gap-1.5 text-xs sm:text-sm text-sky-200 hover:text-white font-prompt font-semibold transition-colors cursor-pointer"
           @click="emit('resetLayout')"
         >
           <RotateCcw class="w-4 h-4" />
@@ -407,7 +407,7 @@ const isWidgetActive = (id) => getWidgetCount(id) > 0
 
         <button
           type="button"
-          class="px-6 py-2.5 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white text-xs sm:text-sm font-bold font-prompt border border-zinc-500/70 shadow transition-all cursor-pointer"
+          class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-xs sm:text-sm font-bold font-prompt border border-sky-400/60 shadow-md shadow-sky-500/30 transition-all cursor-pointer"
           @click="emit('update:modelValue', false)"
         >
           เรียบร้อย

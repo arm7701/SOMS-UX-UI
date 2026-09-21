@@ -268,7 +268,7 @@ const updateMapEntities = () => {
             <div class="w-1 h-1 rounded-full bg-white"></div>
           </div>
         </div>
-        <span class="mt-1 px-2 py-0.5 rounded-md text-xs font-bold font-prompt bg-[#090b0f]/95 border border-slate-600 text-white shadow-md whitespace-nowrap" style="border-left: 3px solid ${sat.color}">
+        <span class="mt-1 px-2 py-0.5 rounded-md text-xs font-bold font-prompt bg-[#0e2b50]/95 border border-sky-500/50 text-white shadow-md whitespace-nowrap" style="border-left: 3px solid ${sat.color}">
           ${sat.name}
         </span>
       </div>
@@ -398,7 +398,7 @@ watch(selectedSatId, () => {
           <button
             type="button"
             title="เล็งเป้าหมายดาวเทียม"
-            class="p-2 rounded-lg bg-[#090b0f] border border-space-600 text-slate-200 hover:text-white hover:border-zinc-400 transition-colors cursor-pointer"
+            class="p-2 rounded-lg bg-[#1a4175] border border-sky-500/40 text-sky-200 hover:text-white hover:border-cyan-400 transition-colors cursor-pointer"
             @click="focusSatellite"
           >
             <Crosshair class="w-4 h-4" />
@@ -406,7 +406,7 @@ watch(selectedSatId, () => {
           <button
             type="button"
             title="เล็งเป้าหมายสถานี BMA (ศปอ.ทอ.)"
-            class="p-2 rounded-lg bg-[#090b0f] border border-space-600 text-emerald-400 hover:text-emerald-300 hover:border-emerald-500 transition-colors cursor-pointer"
+            class="p-2 rounded-lg bg-[#1a4175] border border-sky-500/40 text-emerald-400 hover:text-emerald-300 hover:border-emerald-500 transition-colors cursor-pointer"
             @click="focusGroundStation"
           >
             <MapPin class="w-4 h-4" />
@@ -414,7 +414,7 @@ watch(selectedSatId, () => {
           <button
             type="button"
             title="รีเซ็ตมุมมองแผนที่"
-            class="p-2 rounded-lg bg-[#090b0f] border border-space-600 text-slate-300 hover:text-white transition-colors cursor-pointer"
+            class="p-2 rounded-lg bg-[#1a4175] border border-sky-500/40 text-sky-200 hover:text-white transition-colors cursor-pointer"
             @click="resetMapView"
           >
             <RotateCcw class="w-4 h-4" />
@@ -422,7 +422,7 @@ watch(selectedSatId, () => {
           <button
             type="button"
             :title="isSimulating ? 'หยุดชั่วคราว' : 'จำลองต่อ'"
-            class="p-2 rounded-lg bg-[#090b0f] border border-space-600 text-slate-200 hover:text-white transition-colors cursor-pointer"
+            class="p-2 rounded-lg bg-[#1a4175] border border-sky-500/40 text-sky-200 hover:text-white transition-colors cursor-pointer"
             @click="isSimulating = !isSimulating"
           >
             <Pause v-if="isSimulating" class="w-4 h-4" />
@@ -432,61 +432,61 @@ watch(selectedSatId, () => {
       </div>
 
     <!-- Main Map Stage -->
-    <div class="relative w-full flex-1 min-h-[260px] bg-[#090b0f] overflow-hidden">
+    <div class="relative w-full flex-1 min-h-[260px] bg-[#0a2342] overflow-hidden">
       <!-- Leaflet Map Container -->
       <div ref="mapContainer" class="w-full h-full z-0"></div>
 
       <!-- Realtime Telemetry Bottom HUD Bar (เต็มความกว้างด้านล่าง ตัวหนังสือใหญ่ชัดเจน) -->
-      <div class="absolute bottom-3 left-3 right-3 z-10 p-3.5 rounded-xl bg-[#0d1117]/95 backdrop-blur-md border border-space-600 shadow-2xl text-xs space-y-2.5">
-        <div class="flex items-center justify-between gap-3 pb-2 border-b border-space-700 flex-wrap">
+      <div class="absolute bottom-3 left-3 right-3 z-10 p-3.5 rounded-xl bg-[#0e2b50]/95 backdrop-blur-md border border-sky-600/40 shadow-2xl text-xs space-y-2.5">
+        <div class="flex items-center justify-between gap-3 pb-2 border-b border-sky-600/30 flex-wrap">
           <div class="flex items-center gap-2.5">
             <span class="w-3 h-3 rounded-full" :style="{ backgroundColor: currentSat.color }"></span>
             <span class="font-bold font-prompt text-white text-base">{{ currentSat.name }}</span>
-            <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#090b0f] border border-space-600 text-slate-200">NORAD: {{ currentSat.noradId }}</span>
+            <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#1a4175] border border-sky-500/40 text-sky-200">NORAD: {{ currentSat.noradId }}</span>
             <span class="text-xs font-prompt font-bold px-2.5 py-0.5 rounded bg-emerald-950/90 border border-emerald-600 text-emerald-300">
               สถานะ: โคจรปกติ (Active)
             </span>
           </div>
 
-          <div class="flex items-center gap-3 text-xs sm:text-sm font-prompt text-slate-200">
+          <div class="flex items-center gap-3 text-xs sm:text-sm font-prompt text-sky-200">
             <span>สถานี BMA: <strong class="text-emerald-400 font-mono font-bold">{{ GROUND_STATION.shortName }} (13.91°N, 100.60°E)</strong></span>
             <span class="hidden md:inline">รัศมี Footprint: <strong class="text-white font-mono font-bold">{{ GROUND_STATION.footprintKm.toLocaleString() }} km</strong></span>
           </div>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs font-prompt">
-          <div class="p-2 rounded-lg bg-[#090b0f] border border-space-700">
-            <p class="text-slate-300 text-xs font-semibold">พิกัดละติจูด (Lat)</p>
+          <div class="p-2 rounded-lg bg-[#1a4175] border border-sky-600/40">
+            <p class="text-sky-200 text-xs font-semibold">พิกัดละติจูด (Lat)</p>
             <p class="font-mono text-white font-bold text-sm mt-0.5">
               {{ currentSat.lat.toFixed(2) }}° {{ currentSat.lat >= 0 ? 'N' : 'S' }}
             </p>
           </div>
-          <div class="p-2 rounded-lg bg-[#090b0f] border border-space-700">
-            <p class="text-slate-300 text-xs font-semibold">พิกัดลองจิจูด (Lng)</p>
+          <div class="p-2 rounded-lg bg-[#1a4175] border border-sky-600/40">
+            <p class="text-sky-200 text-xs font-semibold">พิกัดลองจิจูด (Lng)</p>
             <p class="font-mono text-white font-bold text-sm mt-0.5">
               {{ currentSat.lng.toFixed(2) }}° {{ currentSat.lng >= 0 ? 'E' : 'W' }}
             </p>
           </div>
-          <div class="p-2 rounded-lg bg-[#090b0f] border border-space-700">
-            <p class="text-slate-300 text-xs font-semibold">ระดับความสูง (Alt)</p>
+          <div class="p-2 rounded-lg bg-[#1a4175] border border-sky-600/40">
+            <p class="text-sky-200 text-xs font-semibold">ระดับความสูง (Alt)</p>
             <p class="font-mono text-cyan-300 font-black text-sm mt-0.5">
               {{ currentSat.altitude.toFixed(1) }} km
             </p>
           </div>
-          <div class="p-2 rounded-lg bg-[#090b0f] border border-space-700">
-            <p class="text-slate-300 text-xs font-semibold">ความเร็ว (Velocity)</p>
+          <div class="p-2 rounded-lg bg-[#1a4175] border border-sky-600/40">
+            <p class="text-sky-200 text-xs font-semibold">ความเร็ว (Velocity)</p>
             <p class="font-mono text-emerald-300 font-black text-sm mt-0.5">
               {{ currentSat.velocity.toFixed(2) }} km/s
             </p>
           </div>
-          <div class="p-2 rounded-lg bg-[#090b0f] border border-space-700">
-            <p class="text-slate-300 text-xs font-semibold">คาบเวลาโคจร (Period)</p>
+          <div class="p-2 rounded-lg bg-[#1a4175] border border-sky-600/40">
+            <p class="text-sky-200 text-xs font-semibold">คาบเวลาโคจร (Period)</p>
             <p class="font-mono text-amber-300 font-bold text-sm mt-0.5">
               {{ currentSat.periodMin }} min
             </p>
           </div>
-          <div class="p-2 rounded-lg bg-[#090b0f] border border-space-700">
-            <p class="text-slate-300 text-xs font-semibold">สภาวะแสง (Solar)</p>
+          <div class="p-2 rounded-lg bg-[#1a4175] border border-sky-600/40">
+            <p class="text-sky-200 text-xs font-semibold">สภาวะแสง (Solar)</p>
             <p class="font-prompt text-amber-300 font-bold text-sm mt-0.5 flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
               <span>ในแสงแดด (Sunlit)</span>
@@ -496,7 +496,7 @@ watch(selectedSatId, () => {
       </div>
 
       <!-- Quick Legend (มุมขวาบน) -->
-      <div class="hidden sm:flex absolute top-3 right-3 z-10 px-3 py-1.5 rounded-lg bg-[#0d1117]/90 backdrop-blur-md border border-space-600 text-xs font-prompt text-slate-100 font-semibold items-center gap-3 shadow-lg">
+      <div class="hidden sm:flex absolute top-3 right-3 z-10 px-3 py-1.5 rounded-lg bg-[#0e2b50]/90 backdrop-blur-md border border-sky-600/40 text-xs font-prompt text-sky-100 font-semibold items-center gap-3 shadow-lg">
         <div class="flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
           <span>BMA GS (ทอ.)</span>
@@ -512,9 +512,9 @@ watch(selectedSatId, () => {
 
 <style scoped>
 :deep(.leaflet-tile) {
-  filter: brightness(0.85) contrast(1.15) !important;
+  filter: brightness(0.9) contrast(1.1) !important;
 }
 :deep(.leaflet-container) {
-  background: #090b0f !important;
+  background: #0a2342 !important;
 }
 </style>

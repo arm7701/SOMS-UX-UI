@@ -17,8 +17,8 @@ const props = defineProps({
   labels: { type: Array, default: () => [] },
   data: { type: Array, default: () => [] },
   unit: { type: String, default: '' },
-  color: { type: String, default: '#cbd5e1' },
-  fillColor: { type: String, default: 'rgba(203, 213, 225, 0.08)' },
+  color: { type: String, default: '#38bdf8' },
+  fillColor: { type: String, default: 'rgba(56, 189, 248, 0.15)' },
   type: { type: String, default: 'line' } // 'line' | 'bar'
 })
 
@@ -33,8 +33,8 @@ const renderChart = () => {
     chartInstance = null
   }
 
-  const textColor = '#f1f5f9'
-  const gridColor = 'rgba(255, 255, 255, 0.12)'
+  const textColor = '#bae6fd'
+  const gridColor = 'rgba(56, 189, 248, 0.15)'
 
   const ctx = canvasRef.value.getContext('2d')
   chartInstance = new Chart(ctx, {
@@ -65,10 +65,10 @@ const renderChart = () => {
           display: false
         },
         tooltip: {
-          backgroundColor: '#0d1117',
+          backgroundColor: '#133560',
           titleColor: '#ffffff',
-          bodyColor: '#f1f5f9',
-          borderColor: '#334155',
+          bodyColor: '#e0f2fe',
+          borderColor: '#235492',
           borderWidth: 1,
           padding: 10,
           cornerRadius: 8,

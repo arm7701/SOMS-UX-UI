@@ -31,6 +31,7 @@ import {
   Radio,
   LockKeyhole
 } from 'lucide-vue-next'
+import SomsLogo from '@/components/common/SomsLogo.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -560,23 +561,23 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="relative min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden bg-[#060911] text-slate-100 font-prompt select-none">
+  <div class="relative min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden bg-gradient-to-br from-[#0a2342] via-[#103b6e] to-[#185396] text-slate-100 font-prompt select-none">
     <!-- 1. Deep Space 3D WebGL Canvas (Tactical Earth & 3D Satellite) -->
     <canvas ref="canvasRef" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
-    <!-- 2. Subtle Dark Titanium Nebulae (โทนดำเทาไททาเนียม ไม่แสบตา) -->
+    <!-- 2. Celestial Sky Ambient Radial Glows (ธีมฟ้าสว่าง Luminous Sky) -->
     <div
-      class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-slate-700/10 blur-[150px] pointer-events-none transition-opacity duration-1000"
+      class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-sky-400/22 blur-[150px] pointer-events-none transition-opacity duration-1000"
       :class="isTransitioning ? 'opacity-20' : 'opacity-100'"
     ></div>
     <div
-      class="absolute -bottom-40 -right-40 w-[650px] h-[650px] rounded-full bg-zinc-700/10 blur-[160px] pointer-events-none transition-opacity duration-1000"
+      class="absolute -bottom-40 -right-40 w-[650px] h-[650px] rounded-full bg-cyan-400/20 blur-[160px] pointer-events-none transition-opacity duration-1000"
       :class="isTransitioning ? 'opacity-20' : 'opacity-100'"
     ></div>
 
     <!-- 3. Tactical Coordinate Grid & Telemetry Lines -->
     <div
-      class="absolute inset-0 bg-[linear-gradient(to_right,#3341550c_1px,transparent_1px),linear-gradient(to_bottom,#3341550c_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none transition-opacity duration-700"
+      class="absolute inset-0 bg-[linear-gradient(to_right,#38bdf80c_1px,transparent_1px),linear-gradient(to_bottom,#38bdf80c_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none transition-opacity duration-700"
       :class="isTransitioning ? 'opacity-20' : 'opacity-100'"
     ></div>
 
@@ -590,56 +591,28 @@ onMounted(() => {
       <!-- ฝั่งซ้าย (Hero Emblem & Authority Branding) -->
       <div class="lg:col-span-7 flex justify-center lg:justify-start w-full">
         <div class="w-full max-w-xl command-card rounded-3xl p-7 sm:p-9 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
-          <!-- Centerpiece Logo with 3D Orbit Rings -->
-          <div class="relative w-48 h-48 sm:w-52 sm:h-52 flex items-center justify-center cursor-pointer" @dblclick="autofillDev" title="Double-click for testing">
-            <!-- 3D Orbit Rings -->
-            <div class="orbit-ring-3d orbit-ring-1">
-              <div class="orbit-satellite-dot dot-1"></div>
-            </div>
-            <div class="orbit-ring-3d orbit-ring-2">
-              <div class="orbit-satellite-dot dot-2"></div>
-            </div>
-            <div class="orbit-ring-3d orbit-ring-3"></div>
-
-            <!-- ISR Official Crest -->
-            <div class="relative z-10 logo-float-container">
-              <img
-                src="/src/assets/png-isr.png"
-                alt="ISR Emblem"
-                class="w-36 sm:w-44 h-auto object-contain filter drop-shadow-[0_0_25px_rgba(148,163,184,0.35)] brightness-110"
-              />
-            </div>
-          </div>
-
-          <!-- Typography & Credentials Notice (คมชัด สีคอนทราสต์สูง อ่านง่าย ไม่กลืนพื้นหลัง) -->
-          <div class="space-y-2.5 max-w-lg">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/60 text-emerald-300 text-xs font-bold tracking-wider uppercase shadow-md">
-              <ShieldCheck class="w-3.5 h-3.5 text-emerald-400" />
-              <span>RESTRICTED ACCESS // LEVEL 4 AUTHORIZATION</span>
-            </div>
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-wide font-prompt leading-tight drop-shadow-md">
-              Satellite Operations
-            </h1>
-            <p class="text-base sm:text-xl uppercase tracking-[0.16em] text-cyan-400 font-black font-prompt drop-shadow-sm">
-              Information System (SOIS)
-            </p>
-            <p class="text-sm sm:text-base text-slate-200 font-semibold font-prompt pt-1 leading-relaxed">
-              ศูนย์ปฏิบัติการทางอวกาศ กองทัพอากาศ · RTAF Space Operations Command
-            </p>
-          </div>
+          <!-- SOMS Official Hero Wordmark & Emblem Logo -->
+          <SomsLogo
+            variant="hero"
+            align="responsive"
+            class="w-full cursor-pointer"
+            @dblclick="autofillDev"
+            title="Double-click for testing"
+          />
 
           <!-- Security Gateway Tags -->
-          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-2 text-xs font-mono font-bold">
-            <span class="px-3 py-1.5 rounded-lg bg-[#070d18] border border-emerald-500/50 text-emerald-300 flex items-center gap-1.5 shadow-sm">
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-2 text-xs font-mono font-bold">
+            <span class="px-2.5 py-1.5 rounded-lg bg-sky-950/70 border border-emerald-500/50 text-emerald-300 flex items-center gap-1.5 shadow-sm">
               <Radio class="w-3.5 h-3.5 text-emerald-400" />
-              <span>GATEWAY: ACTIVE</span>
+              <span>GATEWAY ACTIVE</span>
             </span>
-            <span class="px-3 py-1.5 rounded-lg bg-[#070d18] border border-slate-700 text-slate-200 flex items-center gap-1.5 shadow-sm">
+            <span class="px-2.5 py-1.5 rounded-lg bg-sky-950/70 border border-cyan-500/50 text-cyan-200 flex items-center gap-1.5 shadow-sm">
               <LockKeyhole class="w-3.5 h-3.5 text-cyan-400" />
               <span>ENCRYPTED PROTOCOL</span>
             </span>
-            <span class="px-3 py-1.5 rounded-lg bg-[#070d18] border border-slate-700 text-slate-200 shadow-sm">
-              SECURE DEFENSE NETWORK
+            <span class="px-2.5 py-1.5 rounded-lg bg-sky-950/70 border border-sky-800 text-sky-200 flex items-center gap-1.5 shadow-sm">
+              <ShieldCheck class="w-3.5 h-3.5 text-sky-400" />
+              <span>DEFENSE NETWORK</span>
             </span>
           </div>
         </div>
@@ -691,7 +664,7 @@ onMounted(() => {
                     required
                     autocomplete="username"
                     placeholder="ระบุชื่อผู้ใช้งาน (Username)"
-                    class="w-full pl-11 pr-4 py-3.5 text-base font-bold rounded-xl border-2 border-slate-600 bg-[#060a14] text-white placeholder:text-slate-400 font-prompt focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 transition-all shadow-inner"
+                    class="w-full pl-11 pr-4 py-3.5 text-base font-bold rounded-xl border-2 border-sky-500/40 bg-[#0e2b50] text-white placeholder:text-sky-300/50 font-prompt focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 transition-all shadow-inner"
                   />
                 </div>
               </div>
@@ -709,11 +682,11 @@ onMounted(() => {
                     :type="showPassword ? 'text' : 'password'"
                     autocomplete="current-password"
                     placeholder="ระบุรหัสผ่านเข้าสู่ระบบ"
-                    class="w-full pl-11 pr-11 py-3.5 text-base font-bold rounded-xl border-2 border-slate-600 bg-[#060a14] text-white placeholder:text-slate-400 font-prompt focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 transition-all shadow-inner"
+                    class="w-full pl-11 pr-11 py-3.5 text-base font-bold rounded-xl border-2 border-sky-500/40 bg-[#0e2b50] text-white placeholder:text-sky-300/50 font-prompt focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 transition-all shadow-inner"
                   />
                   <button
                     type="button"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-white transition-colors p-1.5 cursor-pointer"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-sky-200 hover:text-white transition-colors p-1.5 cursor-pointer"
                     title="แสดง/ซ่อนรหัสผ่าน"
                     @click="showPassword = !showPassword"
                   >
@@ -725,11 +698,11 @@ onMounted(() => {
 
               <!-- Remember Me Toggle -->
               <div class="flex items-center justify-between text-sm pt-1">
-                <label class="flex items-center gap-2.5 cursor-pointer text-slate-200 hover:text-white transition-colors font-prompt font-bold">
+                <label class="flex items-center gap-2.5 cursor-pointer text-sky-200 hover:text-white transition-colors font-prompt font-bold">
                   <input
                     v-model="rememberMe"
                     type="checkbox"
-                    class="rounded border-2 border-slate-500 bg-[#060a14] text-cyan-500 focus:ring-cyan-400/20 w-4 h-4 cursor-pointer"
+                    class="rounded border-2 border-sky-400 bg-[#0e2b50] text-cyan-400 focus:ring-cyan-400/20 w-4 h-4 cursor-pointer"
                   />
                   <span>จดจำการเข้าสู่ระบบ</span>
                 </label>
@@ -747,8 +720,8 @@ onMounted(() => {
             </form>
 
             <!-- Card Footer Notice -->
-            <div class="mt-6 pt-4 border-t border-slate-700/80 text-center text-xs sm:text-sm font-prompt">
-              <p class="text-slate-300 font-medium leading-relaxed">
+            <div class="mt-6 pt-4 border-t border-sky-600/30 text-center text-xs sm:text-sm font-prompt">
+              <p class="text-sky-200 font-medium leading-relaxed">
                 ระบบสารสนเทศความมั่นคงทางอวกาศ · สงวนสิทธิ์สำหรับเจ้าหน้าที่เวรปฏิบัติการ
               </p>
             </div>
@@ -765,7 +738,7 @@ onMounted(() => {
       class="fixed inset-0 pointer-events-none z-50"
       :style="{
         opacity: curtainOpacity,
-        background: 'radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.28) 0%, rgba(6, 10, 20, 0.95) 60%, #060911 100%)'
+        background: 'radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.28) 0%, rgba(10, 35, 66, 0.95) 60%, #0a2342 100%)'
       }"
     ></div>
   </div>
@@ -773,11 +746,11 @@ onMounted(() => {
 
 <style scoped>
 .command-card {
-  background: rgba(11, 17, 30, 0.94);
+  background: rgba(19, 53, 96, 0.92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(71, 85, 105, 0.65);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 35px rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(10, 35, 66, 0.85), 0 0 35px rgba(56, 189, 248, 0.2);
 }
 
 /* ============================================================================

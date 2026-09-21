@@ -33,21 +33,15 @@ const isAuthPage = computed(() => {
 </script>
 
 <template>
-  <div
-    class="min-h-screen flex flex-col text-slate-100 font-sans relative selection:bg-cyan-800 selection:text-white overflow-x-hidden"
-    style="background: radial-gradient(ellipse at 50% 0%, #1c2d47 0%, #132238 45%, #0c1728 100%);"
-  >
-    <!-- แสงเรืองรองโทนแอโรสเปซเนวีสว่างตา สบายตาในทุกสภาพแวดล้อม (Tactical Aerospace Ambient Background) -->
+  <div class="min-h-screen flex flex-col bg-gradient-to-br from-[#0a2342] via-[#103b6e] to-[#185396] text-slate-100 font-sans relative selection:bg-sky-500 selection:text-white overflow-x-hidden">
+    <!-- แถบเรืองแสงสีฟ้าสว่างด้านบนสุด (Top Sky Gradient Accent Line) -->
+    <div class="h-1 w-full bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-400 fixed top-0 left-0 right-0 z-50 pointer-events-none shadow-[0_0_16px_rgba(56,189,248,0.9)]"></div>
+
+    <!-- แสงเรืองรองมืดฟ้าไล่สว่าง สว่างขึ้น มีชีวิตชีวา (Ambient Luminous Sky/Cyan Radial Glows) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      <!-- Tactical Coordinate Grid & Telemetry Matrix (ตารางพิกัดยุทธการ ละมุนตา ไม่กลืนข้อความ) -->
-      <div
-        class="absolute inset-0 opacity-60"
-        style="background-image: linear-gradient(to right, rgba(148, 163, 184, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(148, 163, 184, 0.04) 1px, transparent 1px); background-size: 36px 36px;"
-      ></div>
-      <!-- Luminous Cyan, Blue & Sky Ambient Glows (มิติความลึก สว่าง สบายตา ไม่แย่งสายตา) -->
-      <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] rounded-full bg-cyan-500/12 blur-[170px]"></div>
-      <div class="absolute top-1/3 -left-40 w-[700px] h-[700px] rounded-full bg-blue-600/12 blur-[180px]"></div>
-      <div class="absolute -bottom-40 right-1/4 w-[900px] h-[900px] rounded-full bg-sky-600/10 blur-[200px]"></div>
+      <div class="absolute -top-32 -right-32 w-[650px] h-[650px] rounded-full bg-sky-400/25 blur-[120px]"></div>
+      <div class="absolute top-1/3 -left-32 w-[600px] h-[600px] rounded-full bg-blue-400/22 blur-[130px]"></div>
+      <div class="absolute -bottom-32 right-1/4 w-[700px] h-[700px] rounded-full bg-cyan-400/20 blur-[140px]"></div>
     </div>
 
     <!-- Toast Notifications ลอยมุมขวาบน -->

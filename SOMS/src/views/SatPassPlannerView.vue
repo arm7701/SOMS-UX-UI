@@ -719,10 +719,10 @@ watch(() => appStore.refreshTrigger, () => {
 <template>
   <div
     class="transition-all duration-200 font-prompt"
-    :class="isFullscreen ? 'fixed inset-0 z-50 bg-[#090b0f] p-2 sm:p-3 overflow-hidden flex flex-col' : 'space-y-4'"
+    :class="isFullscreen ? 'fixed inset-0 z-50 bg-[#0a2342] p-2 sm:p-3 overflow-hidden flex flex-col' : 'space-y-4'"
   >
     <!-- Top Header & Multifunctional Toolbar -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 pb-3.5 border-b border-slate-700/80 bg-gradient-to-r from-[#141e32] via-[#0f1728] to-[#121c2e] p-4 sm:p-5 rounded-3xl border border-slate-700/80 shadow-xl">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 pb-3.5 border-b border-sky-600/30 bg-gradient-to-r from-[#133560] via-[#0e2b50] to-[#1a4175] p-4 sm:p-5 rounded-3xl border border-sky-600/40 shadow-xl">
       <div>
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-cyan-950 to-slate-900 border border-cyan-500/50 text-cyan-400 flex items-center justify-center flex-shrink-0 shadow-lg shadow-cyan-950/40">
@@ -996,15 +996,15 @@ watch(() => appStore.refreshTrigger, () => {
 
       <!-- Iframe Workspace -->
       <div
-        class="relative w-full rounded-2xl border border-space-700 overflow-hidden bg-[#090b0f] shadow-xl transition-all"
+        class="relative w-full rounded-2xl border border-sky-600/40 overflow-hidden bg-[#0a2342] shadow-xl transition-all"
         :class="isFullscreen ? 'flex-1 h-full min-h-0' : ''"
       >
         <!-- Loading Overlay -->
         <div
           v-if="iframeLoading"
-          class="absolute inset-0 z-10 bg-[#090b0f]/90 backdrop-blur-xs flex flex-col items-center justify-center gap-3 text-slate-300"
+          class="absolute inset-0 z-10 bg-[#0a2342]/90 backdrop-blur-xs flex flex-col items-center justify-center gap-3 text-sky-200"
         >
-          <RefreshCw class="w-8 h-8 text-zinc-400 animate-spin" />
+          <RefreshCw class="w-8 h-8 text-cyan-400 animate-spin" />
           <p class="text-xs font-medium font-prompt">กำลังโหลดระบบ SAT PASS PLANNER...</p>
         </div>
 

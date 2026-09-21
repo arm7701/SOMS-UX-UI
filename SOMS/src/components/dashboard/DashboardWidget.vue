@@ -464,18 +464,18 @@ const widgetStyle = computed(() => {
   display: flex;
   flex-direction: column;
   border-radius: 14px;
-  border: 1px solid rgba(71, 95, 130, var(--widget-border-opacity, 0.8));
-  border-top: 1px solid rgba(148, 190, 235, 0.4);
-  background: linear-gradient(180deg, rgba(22, 36, 58, var(--widget-background-opacity, 0.96)) 0%, rgba(15, 24, 40, var(--widget-background-opacity, 0.96)) 100%);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(35, 84, 146, var(--widget-border-opacity, 0.8));
+  border-top: 1px solid rgba(56, 189, 248, 0.45);
+  background: linear-gradient(180deg, rgba(19, 53, 96, var(--widget-background-opacity, 0.95)) 0%, rgba(10, 35, 66, var(--widget-background-opacity, 0.98)) 100%);
+  box-shadow: 0 10px 30px -5px rgba(2, 6, 23, 0.5), 0 0 15px rgba(2, 132, 199, 0.2);
   backdrop-filter: blur(16px);
   transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   overflow: hidden;
 }
 
 .dashboard-widget:hover {
-  border-color: rgba(56, 189, 248, 0.5);
-  box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.7);
+  box-shadow: 0 12px 35px -5px rgba(2, 6, 23, 0.6), 0 0 20px rgba(56, 189, 248, 0.35);
 }
 
 .dashboard-widget.is-compact {
@@ -504,8 +504,8 @@ const widgetStyle = computed(() => {
   flex: none;
   min-height: 44px;
   padding: 8px 14px 8px 18px;
-  background: linear-gradient(90deg, #16263e 0%, #1c2f4d 100%);
-  border-bottom: 1px solid rgba(65, 88, 120, var(--widget-border-opacity, 0.8));
+  background: linear-gradient(90deg, #133560 0%, #1a4175 100%);
+  border-bottom: 1px solid rgba(35, 84, 146, var(--widget-border-opacity, 0.8));
   display: flex;
   align-items: center;
 }

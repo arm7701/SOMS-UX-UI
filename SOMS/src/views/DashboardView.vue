@@ -728,10 +728,10 @@ const getChartData = (widgetId) => {
       <div class="flex flex-wrap items-center gap-3 pt-1">
         <!-- Widget Picker Dropdown -->
         <div class="flex items-center gap-1.5">
-          <span class="text-slate-200 text-xs font-bold whitespace-nowrap">วิดเจ็ต:</span>
+          <span class="text-sky-200 text-xs font-bold whitespace-nowrap">วิดเจ็ต:</span>
           <select
             v-model="selectedWidgetId"
-            class="px-3 py-1.5 text-xs sm:text-sm rounded-xl border border-space-700 bg-[#090b0f] text-white font-semibold font-prompt focus:outline-none focus:border-cyan-500 min-w-[200px]"
+            class="px-3 py-1.5 text-xs sm:text-sm rounded-xl border border-sky-500/40 bg-[#1a4175] text-white font-semibold font-prompt focus:outline-none focus:border-cyan-400 min-w-[200px]"
           >
             <option
               v-for="w in activeWidgetList"
@@ -747,7 +747,7 @@ const getChartData = (widgetId) => {
         <button
           type="button"
           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-colors cursor-pointer text-xs sm:text-sm font-semibold"
-          :class="currentSelectedWidget?.locked ? 'bg-amber-950/80 border-amber-500 text-amber-300 shadow-xs' : 'bg-zinc-800 border-zinc-700 text-slate-100 hover:text-white'"
+          :class="currentSelectedWidget?.locked ? 'bg-amber-950/80 border-amber-500 text-amber-300 shadow-xs' : 'bg-[#1a4175] border-sky-500/40 text-sky-100 hover:text-white'"
           @click="toggleLockSelectedWidget"
         >
           <Lock v-if="currentSelectedWidget?.locked" class="w-3.5 h-3.5 text-amber-400" />
@@ -756,10 +756,10 @@ const getChartData = (widgetId) => {
         </button>
 
         <!-- Bring to Front / Send to Back -->
-        <div class="inline-flex rounded-xl bg-[#090b0f] p-0.5 border border-space-700">
+        <div class="inline-flex rounded-xl bg-[#0e2b50] p-0.5 border border-sky-600/40">
           <button
             type="button"
-            class="px-2.5 py-1 text-xs font-bold text-slate-100 hover:text-white transition-colors cursor-pointer"
+            class="px-2.5 py-1 text-xs font-bold text-sky-100 hover:text-white transition-colors cursor-pointer"
             title="นำการ์ดขึ้นมาอยู่หน้าสุด"
             @click="bringToFront"
           >
@@ -767,7 +767,7 @@ const getChartData = (widgetId) => {
           </button>
           <button
             type="button"
-            class="px-2.5 py-1 text-xs font-bold text-slate-100 hover:text-white transition-colors cursor-pointer"
+            class="px-2.5 py-1 text-xs font-bold text-sky-100 hover:text-white transition-colors cursor-pointer"
             title="ส่งการ์ดไปอยู่หลังสุด"
             @click="sendToBack"
           >
@@ -776,10 +776,10 @@ const getChartData = (widgetId) => {
         </div>
 
         <!-- Opacity Sliders (Background, Content, Border) เหมือนต้นฉบับ -->
-        <div v-if="currentSelectedWidget" class="flex items-center gap-4 bg-[#090b0f] px-3 py-1.5 rounded-xl border border-space-700">
+        <div v-if="currentSelectedWidget" class="flex items-center gap-4 bg-[#0e2b50] px-3 py-1.5 rounded-xl border border-sky-600/40">
           <!-- Background Opacity -->
           <div class="flex items-center gap-2">
-            <span class="text-xs text-slate-200 font-bold whitespace-nowrap">
+            <span class="text-xs text-sky-200 font-bold whitespace-nowrap">
               พื้นหลัง: {{ currentSelectedWidget.backgroundOpacity ?? 94 }}%
             </span>
             <input
@@ -794,7 +794,7 @@ const getChartData = (widgetId) => {
 
           <!-- Content Opacity -->
           <div class="flex items-center gap-2">
-            <span class="text-xs text-slate-200 font-bold whitespace-nowrap">
+            <span class="text-xs text-sky-200 font-bold whitespace-nowrap">
               เนื้อหา: {{ currentSelectedWidget.contentOpacity ?? 100 }}%
             </span>
             <input
@@ -809,7 +809,7 @@ const getChartData = (widgetId) => {
 
           <!-- Border Opacity -->
           <div class="flex items-center gap-2">
-            <span class="text-xs text-slate-200 font-bold whitespace-nowrap">
+            <span class="text-xs text-sky-200 font-bold whitespace-nowrap">
               ขอบ: {{ currentSelectedWidget.borderOpacity ?? 100 }}%
             </span>
             <input
@@ -824,11 +824,11 @@ const getChartData = (widgetId) => {
         </div>
 
         <!-- Snap to Grid Checkbox -->
-        <label class="flex items-center gap-1.5 cursor-pointer text-slate-200 hover:text-white">
+        <label class="flex items-center gap-1.5 cursor-pointer text-sky-200 hover:text-white">
           <input
             v-model="snapToGrid"
             type="checkbox"
-            class="rounded border-zinc-700 bg-zinc-800 text-cyan-400 w-3.5 h-3.5"
+            class="rounded border-sky-500/40 bg-[#1a4175] text-cyan-400 w-3.5 h-3.5"
           />
           <span class="text-xs font-semibold">Snap to grid (8px)</span>
         </label>
@@ -836,7 +836,7 @@ const getChartData = (widgetId) => {
         <!-- Reset Appearance Button -->
         <button
           type="button"
-          class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-slate-200 hover:text-white border border-zinc-700 transition-colors cursor-pointer text-xs font-semibold"
+          class="px-3 py-1.5 rounded-xl bg-[#1a4175] hover:bg-[#20518f] text-sky-200 hover:text-white border border-sky-500/40 transition-colors cursor-pointer text-xs font-semibold"
           @click="resetAppearance"
         >
           รีเซ็ตรูปลักษณ์
@@ -857,12 +857,12 @@ const getChartData = (widgetId) => {
         <!-- Satellite Target Selector for Satellite-based Widgets -->
         <div
           v-if="currentSelectedWidget && ['satellite-summary', 'altitude'].includes(currentSelectedWidget.baseType || currentSelectedWidget.id.split('-instance-')[0])"
-          class="flex items-center gap-2 bg-[#090b0f] px-3 py-1.5 rounded-xl border border-space-700"
+          class="flex items-center gap-2 bg-[#0e2b50] px-3 py-1.5 rounded-xl border border-sky-600/40"
         >
-          <span class="text-xs text-slate-300 font-bold whitespace-nowrap">ดาวเทียมเป้าหมาย:</span>
+          <span class="text-xs text-sky-200 font-bold whitespace-nowrap">ดาวเทียมเป้าหมาย:</span>
           <select
             v-model="currentSelectedWidget.satelliteId"
-            class="bg-[#0f1522] text-xs text-cyan-300 font-bold rounded-lg px-2 py-1 border border-space-700 focus:outline-none focus:border-cyan-500 cursor-pointer font-prompt"
+            class="bg-[#1a4175] text-xs text-cyan-300 font-bold rounded-lg px-2 py-1 border border-sky-500/40 focus:outline-none focus:border-cyan-400 cursor-pointer font-prompt"
           >
             <option value="all">ทั้งหมด (All Satellites)</option>
             <option value="46320">NAPA-1 N (46320)</option>

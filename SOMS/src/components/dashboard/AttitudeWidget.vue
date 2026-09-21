@@ -38,7 +38,7 @@ const attitudeData = {
 
 <template>
   <div class="w-full h-full flex flex-col flex-1 min-h-0 bg-transparent overflow-hidden">
-    <div class="px-4 py-3 bg-[#0d1117] border-b border-space-700/80 flex items-center justify-between gap-2">
+    <div class="px-4 py-3 bg-[#0e2b50] border-b border-sky-700/50 flex items-center justify-between gap-2">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-lg bg-amber-950/60 border border-amber-500/60 flex items-center justify-center text-amber-400 flex-shrink-0">
           <Compass class="w-4 h-4" />
@@ -47,7 +47,7 @@ const attitudeData = {
           <h3 class="text-sm sm:text-base font-bold font-prompt text-white">
             Spacecraft Attitude
           </h3>
-          <p class="text-xs text-slate-300 font-prompt font-medium">
+          <p class="text-xs text-sky-200 font-prompt font-medium">
             ท่าทางการทรงตัวและการหันหน้าของยานอวกาศ
           </p>
         </div>
@@ -55,7 +55,7 @@ const attitudeData = {
 
       <select
         v-model="selectedSat"
-        class="px-2.5 py-1 text-xs sm:text-sm font-semibold rounded-lg border border-space-700 bg-[#090b0f] text-slate-100 font-prompt focus:outline-none"
+        class="px-2.5 py-1 text-xs sm:text-sm font-semibold rounded-lg border border-sky-500/40 bg-[#1a4175] text-sky-100 font-prompt focus:outline-none"
       >
         <option value="48963">NAPA-2 N</option>
         <option value="46320">NAPA-1 N</option>
@@ -63,9 +63,9 @@ const attitudeData = {
     </div>
 
     <div class="p-4 flex-1 flex flex-col justify-between space-y-3 font-prompt">
-      <div class="flex items-center justify-between pb-2 border-b border-space-700/60">
+      <div class="flex items-center justify-between pb-2 border-b border-sky-600/30">
         <div>
-          <span class="text-xs sm:text-sm font-semibold text-slate-300">โหมดการควบคุมท่าทาง (ADCS Mode)</span>
+          <span class="text-xs sm:text-sm font-semibold text-sky-200">โหมดการควบคุมท่าทาง (ADCS Mode)</span>
           <p class="text-base sm:text-lg font-bold text-emerald-400 mt-0.5">
             {{ attitudeData[selectedSat]?.mode }}
           </p>
@@ -78,23 +78,23 @@ const attitudeData = {
 
       <!-- Roll Pitch Yaw Grid -->
       <div class="grid grid-cols-3 gap-2.5 text-center">
-        <div class="p-2.5 rounded-xl bg-[#0d1117] border border-space-700">
-          <span class="text-slate-300 text-xs font-semibold block">Roll (เอียงข้าง)</span>
+        <div class="p-2.5 rounded-xl bg-[#1a4175] border border-sky-600/40">
+          <span class="text-sky-200 text-xs font-semibold block">Roll (เอียงข้าง)</span>
           <p class="font-mono text-cyan-300 font-black text-base sm:text-lg mt-1">{{ attitudeData[selectedSat]?.roll }}</p>
         </div>
-        <div class="p-2.5 rounded-xl bg-[#0d1117] border border-space-700">
-          <span class="text-slate-300 text-xs font-semibold block">Pitch (ก้ม-เงย)</span>
+        <div class="p-2.5 rounded-xl bg-[#1a4175] border border-sky-600/40">
+          <span class="text-sky-200 text-xs font-semibold block">Pitch (ก้ม-เงย)</span>
           <p class="font-mono text-cyan-300 font-black text-base sm:text-lg mt-1">{{ attitudeData[selectedSat]?.pitch }}</p>
         </div>
-        <div class="p-2.5 rounded-xl bg-[#0d1117] border border-space-700">
-          <span class="text-slate-300 text-xs font-semibold block">Yaw (หันซ้าย-ขวา)</span>
+        <div class="p-2.5 rounded-xl bg-[#1a4175] border border-sky-600/40">
+          <span class="text-sky-200 text-xs font-semibold block">Yaw (หันซ้าย-ขวา)</span>
           <p class="font-mono text-cyan-300 font-black text-base sm:text-lg mt-1">{{ attitudeData[selectedSat]?.yaw }}</p>
         </div>
       </div>
 
-      <div class="flex justify-between items-center text-xs text-slate-300 font-medium pt-1">
+      <div class="flex justify-between items-center text-xs text-sky-200 font-medium pt-1">
         <span>ระบบทรงตัว: {{ attitudeData[selectedSat]?.stabilization }}</span>
-        <span class="font-mono text-slate-200">Sync: {{ attitudeData[selectedSat]?.lastSync }}</span>
+        <span class="font-mono text-sky-100">Sync: {{ attitudeData[selectedSat]?.lastSync }}</span>
       </div>
     </div>
   </div>

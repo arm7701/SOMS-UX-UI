@@ -70,7 +70,7 @@ const handleLinkClick = () => {
         <nav class="flex-1 overflow-y-auto p-3 space-y-6">
           <!-- Group 1: Operations -->
           <div>
-            <h4 class="px-3 text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 font-prompt">
+            <h4 class="px-3 text-xs font-bold text-sky-300 uppercase tracking-wider mb-2.5 font-prompt">
               ระบบปฏิบัติการดาวเทียม
             </h4>
             <div class="space-y-1.5">
@@ -80,14 +80,14 @@ const handleLinkClick = () => {
                 :to="item.path"
                 class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 font-prompt group"
                 :class="isActive(item.path)
-                  ? 'bg-[#1b2b44] text-white font-bold border border-cyan-400/60 shadow-md shadow-cyan-950/40'
-                  : 'text-slate-200 hover:bg-space-800 hover:text-white'"
+                  ? 'bg-[#1a4175] text-white font-bold border border-cyan-400/80 shadow-md shadow-sky-950/40'
+                  : 'text-sky-100 hover:bg-[#1a4175]/60 hover:text-white'"
                 @click="handleLinkClick"
               >
                 <component
                   :is="item.icon"
                   class="w-4.5 h-4.5 flex-shrink-0 transition-colors"
-                  :class="isActive(item.path) ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'"
+                  :class="isActive(item.path) ? 'text-cyan-300' : 'text-sky-300 group-hover:text-white'"
                 />
                 <span>{{ item.label }}</span>
               </router-link>
@@ -96,7 +96,7 @@ const handleLinkClick = () => {
 
           <!-- Group 2: System Logs & Audit -->
           <div>
-            <h4 class="px-3 text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 font-prompt">
+            <h4 class="px-3 text-xs font-bold text-sky-300 uppercase tracking-wider mb-2.5 font-prompt">
               ประวัติและตรวจสอบ
             </h4>
             <div class="space-y-1.5">
@@ -106,14 +106,14 @@ const handleLinkClick = () => {
                 :to="item.path"
                 class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 font-prompt group"
                 :class="isActive(item.path)
-                  ? 'bg-[#1b2b44] text-white font-bold border border-cyan-400/60 shadow-md shadow-cyan-950/40'
-                  : 'text-slate-200 hover:bg-space-800 hover:text-white'"
+                  ? 'bg-[#1a4175] text-white font-bold border border-cyan-400/80 shadow-md shadow-sky-950/40'
+                  : 'text-sky-100 hover:bg-[#1a4175]/60 hover:text-white'"
                 @click="handleLinkClick"
               >
                 <component
                   :is="item.icon"
                   class="w-4.5 h-4.5 flex-shrink-0 transition-colors"
-                  :class="isActive(item.path) ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'"
+                  :class="isActive(item.path) ? 'text-cyan-300' : 'text-sky-300 group-hover:text-white'"
                 />
                 <span>{{ item.label }}</span>
               </router-link>
@@ -122,7 +122,7 @@ const handleLinkClick = () => {
 
           <!-- Group 3: Administrator (Only for Admin role) -->
           <div v-if="authStore.isAdmin">
-            <h4 class="px-3 text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 font-prompt">
+            <h4 class="px-3 text-xs font-bold text-sky-300 uppercase tracking-wider mb-2.5 font-prompt">
               ผู้ดูแลระบบ (ADMIN)
             </h4>
             <div class="space-y-1.5">
@@ -132,14 +132,14 @@ const handleLinkClick = () => {
                 :to="item.path"
                 class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 font-prompt group"
                 :class="isActive(item.path)
-                  ? 'bg-[#1b2b44] text-white font-bold border border-cyan-400/60 shadow-md shadow-cyan-950/40'
-                  : 'text-slate-200 hover:bg-space-800 hover:text-white'"
+                  ? 'bg-[#1a4175] text-white font-bold border border-cyan-400/80 shadow-md shadow-sky-950/40'
+                  : 'text-sky-100 hover:bg-[#1a4175]/60 hover:text-white'"
                 @click="handleLinkClick"
               >
                 <component
                   :is="item.icon"
                   class="w-4.5 h-4.5 flex-shrink-0 transition-colors"
-                  :class="isActive(item.path) ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'"
+                  :class="isActive(item.path) ? 'text-cyan-300' : 'text-sky-300 group-hover:text-white'"
                 />
                 <span>{{ item.label }}</span>
               </router-link>
@@ -151,7 +151,7 @@ const handleLinkClick = () => {
         <div class="p-3 border-t border-space-700 bg-space-950/60">
           <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-space-850 border border-space-700 text-[11px]">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-slate-200 font-medium">เชื่อมต่อศูนย์ควบคุม</span>
+            <span class="text-sky-100 font-medium">เชื่อมต่อศูนย์ควบคุม</span>
           </div>
         </div>
       </div>

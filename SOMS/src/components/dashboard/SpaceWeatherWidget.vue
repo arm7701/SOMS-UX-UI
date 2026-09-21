@@ -38,14 +38,14 @@ const getScaleInfo = (val) => {
 
 <template>
   <div class="p-4 h-full flex flex-col justify-between">
-    <div class="flex items-center justify-between pb-2.5 border-b border-slate-750">
+    <div class="flex items-center justify-between pb-2.5 border-b border-sky-600/30">
       <div class="flex items-center gap-2">
         <Sun class="w-4.5 h-4.5 text-amber-400" />
         <h4 class="text-sm sm:text-base font-bold font-prompt text-white">
           สภาวะอวกาศ (Space Weather)
         </h4>
       </div>
-      <span class="text-xs text-slate-300 font-mono font-bold">
+      <span class="text-xs text-sky-200 font-mono font-bold">
         {{ weather?.spaceweather_date || 'วันนี้' }}
       </span>
     </div>
@@ -87,7 +87,7 @@ const getScaleInfo = (val) => {
     </div>
 
     <!-- Notes -->
-    <div v-if="weather?.spaceweather_note" class="text-xs sm:text-sm text-slate-100 bg-space-900/80 p-3 rounded-xl border border-space-700 flex items-start gap-2.5 font-prompt">
+    <div v-if="weather?.spaceweather_note" class="text-xs sm:text-sm text-sky-100 bg-[#1a4175]/80 p-3 rounded-xl border border-sky-600/40 flex items-start gap-2.5 font-prompt">
       <Info class="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
       <span class="leading-relaxed font-medium">{{ weather.spaceweather_note }}</span>
     </div>

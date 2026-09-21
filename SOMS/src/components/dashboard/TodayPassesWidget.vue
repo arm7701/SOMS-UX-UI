@@ -32,9 +32,9 @@ const isDayPass = (timeStr) => {
   <div class="p-4 h-full flex flex-col justify-between space-y-4">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
       <!-- NAPA-1 Passes -->
-      <div class="bg-[#132238]/95 rounded-xl p-4 border border-slate-600/60 flex flex-col justify-between shadow-xs">
+      <div class="bg-[#133560]/95 rounded-xl p-4 border border-sky-600/40 flex flex-col justify-between shadow-xs">
         <div>
-          <div class="flex items-center justify-between pb-2.5 border-b border-slate-700/60">
+          <div class="flex items-center justify-between pb-2.5 border-b border-sky-600/30">
             <div class="flex items-center gap-2 min-w-0">
               <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#38bdf8] flex-shrink-0"></span>
               <h4 class="text-sm sm:text-base font-bold font-prompt text-white truncate">
@@ -50,7 +50,7 @@ const isDayPass = (timeStr) => {
             </router-link>
           </div>
 
-          <div class="mt-2.5 divide-y divide-slate-700/50">
+          <div class="mt-2.5 divide-y divide-sky-700/30">
             <div
               v-for="(p, i) in getPassesForSat(46320)"
               :key="p.id || i"
@@ -63,7 +63,7 @@ const isDayPass = (timeStr) => {
                   <span class="font-bold text-white font-prompt whitespace-nowrap text-xs sm:text-sm">
                     {{ isDayPass(p.aos_time_utc) ? `DayPass-${i + 1}` : `NightPass-${i + 1}` }}
                   </span>
-                  <span class="text-slate-300 font-mono font-medium text-xs whitespace-nowrap">
+                  <span class="text-sky-200 font-mono font-medium text-xs whitespace-nowrap">
                     {{ p.aos_time_utc }} – {{ p.los_time_utc }}
                   </span>
                 </div>
@@ -81,7 +81,7 @@ const isDayPass = (timeStr) => {
               </div>
             </div>
 
-            <div v-if="getPassesForSat(46320).length === 0" class="py-6 text-center text-slate-400 text-xs font-prompt font-medium">
+            <div v-if="getPassesForSat(46320).length === 0" class="py-6 text-center text-sky-300 text-xs font-prompt font-medium">
               ไม่มีรอบพาสผ่านในวันนี้
             </div>
           </div>
@@ -89,9 +89,9 @@ const isDayPass = (timeStr) => {
       </div>
 
       <!-- NAPA-2 Passes -->
-      <div class="bg-[#132238]/95 rounded-xl p-4 border border-slate-600/60 flex flex-col justify-between shadow-xs">
+      <div class="bg-[#133560]/95 rounded-xl p-4 border border-sky-600/40 flex flex-col justify-between shadow-xs">
         <div>
-          <div class="flex items-center justify-between pb-2.5 border-b border-slate-700/60">
+          <div class="flex items-center justify-between pb-2.5 border-b border-sky-600/30">
             <div class="flex items-center gap-2 min-w-0">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399] flex-shrink-0"></span>
               <h4 class="text-sm sm:text-base font-bold font-prompt text-white truncate">
@@ -107,7 +107,7 @@ const isDayPass = (timeStr) => {
             </router-link>
           </div>
 
-          <div class="mt-2.5 divide-y divide-slate-700/50">
+          <div class="mt-2.5 divide-y divide-sky-700/30">
             <div
               v-for="(p, i) in getPassesForSat(48963)"
               :key="p.id || i"
@@ -120,7 +120,7 @@ const isDayPass = (timeStr) => {
                   <span class="font-bold text-white font-prompt whitespace-nowrap text-xs sm:text-sm">
                     {{ isDayPass(p.aos_time_utc) ? `DayPass-${i + 1}` : `NightPass-${i + 1}` }}
                   </span>
-                  <span class="text-slate-300 font-mono font-medium text-xs whitespace-nowrap">
+                  <span class="text-sky-200 font-mono font-medium text-xs whitespace-nowrap">
                     {{ p.aos_time_utc }} – {{ p.los_time_utc }}
                   </span>
                 </div>
@@ -138,7 +138,7 @@ const isDayPass = (timeStr) => {
               </div>
             </div>
 
-            <div v-if="getPassesForSat(48963).length === 0" class="py-6 text-center text-slate-400 text-xs font-prompt font-medium">
+            <div v-if="getPassesForSat(48963).length === 0" class="py-6 text-center text-sky-300 text-xs font-prompt font-medium">
               ไม่มีรอบพาสผ่านในวันนี้
             </div>
           </div>

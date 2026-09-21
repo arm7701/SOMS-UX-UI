@@ -105,7 +105,7 @@ const refreshTle = () => {
 <template>
   <div class="w-full h-full flex flex-col flex-1 min-h-0 bg-transparent overflow-hidden">
     <!-- Header -->
-    <div class="px-4 py-3 bg-[#0d1117] border-b border-space-700/80 flex items-center justify-between gap-2">
+    <div class="px-4 py-3 bg-[#0e2b50] border-b border-sky-700/50 flex items-center justify-between gap-2">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-500/60 flex items-center justify-center text-emerald-400 flex-shrink-0">
           <ArrowUp class="w-4 h-4" />
@@ -114,7 +114,7 @@ const refreshTle = () => {
           <h3 class="text-sm sm:text-base font-bold font-prompt text-white">
             Altitude & Orbital Stats
           </h3>
-          <p class="text-xs text-slate-300 font-prompt font-medium">
+          <p class="text-xs text-sky-200 font-prompt font-medium">
             ระดับความสูงและพารามิเตอร์วงโคจร TLE
           </p>
         </div>
@@ -123,7 +123,7 @@ const refreshTle = () => {
       <div class="flex items-center gap-2">
         <select
           v-model="selectedSatId"
-          class="px-2.5 py-1 text-xs sm:text-sm font-semibold rounded-lg border border-space-700 bg-[#090b0f] text-slate-100 font-prompt focus:outline-none"
+          class="px-2.5 py-1 text-xs sm:text-sm font-semibold rounded-lg border border-sky-500/40 bg-[#1a4175] text-sky-100 font-prompt focus:outline-none"
         >
           <option value="48963">NAPA-2 N</option>
           <option value="46320">NAPA-1 N</option>
@@ -134,7 +134,7 @@ const refreshTle = () => {
           type="button"
           :disabled="isRefreshing"
           title="ดึงข้อมูล TLE ล่าสุด"
-          class="p-1.5 rounded-lg bg-[#090b0f] border border-space-700 text-slate-200 hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+          class="p-1.5 rounded-lg bg-[#1a4175] border border-sky-500/40 text-sky-200 hover:text-white transition-colors cursor-pointer disabled:opacity-50"
           @click="refreshTle"
         >
           <RefreshCw class="w-4 h-4" :class="isRefreshing ? 'animate-spin' : ''" />
@@ -147,7 +147,7 @@ const refreshTle = () => {
       <!-- Main Altitude Readout -->
       <div class="flex items-center justify-between gap-4">
         <div>
-          <span class="text-xs sm:text-sm font-semibold text-slate-300 font-prompt">ระดับความสูงปัจจุบัน (Predicted Altitude)</span>
+          <span class="text-xs sm:text-sm font-semibold text-sky-200 font-prompt">ระดับความสูงปัจจุบัน (Predicted Altitude)</span>
           <div class="flex items-baseline gap-2 mt-0.5">
             <span class="text-3xl sm:text-4xl font-mono font-black text-white tracking-tight">
               {{ currentSat.altitudeKm.toFixed(2) }}
@@ -165,33 +165,33 @@ const refreshTle = () => {
             <CheckCircle2 class="w-3.5 h-3.5 text-emerald-400" />
             <span>TLE สดใหม่ ({{ currentSat.ageHours }} ชม.)</span>
           </span>
-          <p class="text-xs text-slate-300 font-mono mt-1 font-medium">
+          <p class="text-xs text-sky-200 font-mono mt-1 font-medium">
             Epoch: {{ currentSat.tleEpoch }}
           </p>
         </div>
       </div>
 
       <!-- Orbital Elements Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-space-700/60 text-xs font-prompt">
-        <div class="p-2.5 rounded-xl bg-[#0d1117] border border-space-700">
-          <span class="text-slate-300 text-xs font-semibold block">Apogee (จุดสูงสุด)</span>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-sky-600/30 text-xs font-prompt">
+        <div class="p-2.5 rounded-xl bg-[#1a4175] border border-sky-600/40">
+          <span class="text-sky-200 text-xs font-semibold block">Apogee (จุดสูงสุด)</span>
           <p class="font-mono text-white font-black text-base mt-1">{{ currentSat.apogeeKm }} km</p>
         </div>
-        <div class="p-2.5 rounded-xl bg-[#0d1117] border border-space-700">
-          <span class="text-slate-300 text-xs font-semibold block">Perigee (จุดต่ำสุด)</span>
+        <div class="p-2.5 rounded-xl bg-[#1a4175] border border-sky-600/40">
+          <span class="text-sky-200 text-xs font-semibold block">Perigee (จุดต่ำสุด)</span>
           <p class="font-mono text-white font-black text-base mt-1">{{ currentSat.perigeeKm }} km</p>
         </div>
-        <div class="p-2.5 rounded-xl bg-[#0d1117] border border-space-700">
-          <span class="text-slate-300 text-xs font-semibold block">ความเร็วในวงโคจร</span>
+        <div class="p-2.5 rounded-xl bg-[#1a4175] border border-sky-600/40">
+          <span class="text-sky-200 text-xs font-semibold block">ความเร็วในวงโคจร</span>
           <p class="font-mono text-cyan-300 font-black text-base mt-1">{{ currentSat.velocityKmS }} km/s</p>
         </div>
-        <div class="p-2.5 rounded-xl bg-[#0d1117] border border-space-700">
-          <span class="text-slate-300 text-xs font-semibold block">มุมเอียง (Inclination)</span>
+        <div class="p-2.5 rounded-xl bg-[#1a4175] border border-sky-600/40">
+          <span class="text-sky-200 text-xs font-semibold block">มุมเอียง (Inclination)</span>
           <p class="font-mono text-amber-300 font-black text-base mt-1">{{ currentSat.inclinationDeg }}°</p>
         </div>
       </div>
 
-      <div class="flex items-center justify-between text-xs font-prompt text-slate-300 pt-1 font-medium">
+      <div class="flex items-center justify-between text-xs font-prompt text-sky-200 pt-1 font-medium">
         <span>แหล่งข้อมูล: {{ currentSat.tleSource }}</span>
         <span v-if="refreshSuccess" class="text-emerald-400 flex items-center gap-1 font-bold">
           <CheckCircle2 class="w-3.5 h-3.5" /> อัปเดตข้อมูล TLE สำเร็จ

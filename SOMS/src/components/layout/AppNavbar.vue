@@ -23,6 +23,7 @@ import {
   Bell,
   BellOff
 } from 'lucide-vue-next'
+import SomsLogo from '@/components/common/SomsLogo.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -105,21 +106,8 @@ const handleLogout = async () => {
           <Menu class="w-5 h-5" />
         </button>
 
-        <router-link to="/dashboard" class="flex items-center gap-2.5 group">
-          <img
-            src="/src/assets/png-isr.png"
-            alt="ISR Logo"
-            class="h-8 w-auto object-contain transition-transform group-hover:scale-105"
-            onerror="this.style.display='none'"
-          />
-          <div>
-            <span class="text-base sm:text-lg font-bold font-prompt bg-gradient-to-r from-white via-slate-100 to-zinc-300 bg-clip-text text-transparent tracking-tight block leading-tight">
-              SOIS
-            </span>
-            <span class="hidden md:block text-xs uppercase tracking-wider text-slate-300 font-semibold font-prompt">
-              Satellite Operations Information System
-            </span>
-          </div>
+        <router-link to="/dashboard" class="flex items-center group flex-shrink-0">
+          <SomsLogo variant="full" />
         </router-link>
       </div>
 

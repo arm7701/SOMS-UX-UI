@@ -4,30 +4,30 @@
 
 /* ==========================================================================
    CSS Variables & Global Theme Styles (Satellite Operations Information System)
-   ธีมโทนดำเทาไททาเนียม (Obsidian Charcoal & Titanium Slate Theme)
-   ฟอนต์ระบบทั้งหมด: Prompt (คอนทราสต์คมชัด สบายตา ไม่กลืนกับพื้นหลัง)
+   ธีมไล่ฟ้าสว่าง (Bright Sky & Celestial Azure Gradient)
+   ฟอนต์ระบบทั้งหมด: Prompt (จัดระยะบรรทัดและช่องไฟตัวอักษรให้อ่านง่าย สบายตา)
    ========================================================================== */
 
 :root, .dark {
-  /* โทนแอโรสเปซเนวีสว่างขึ้น สบายตา มีมิติ สวยงาม คมชัด ไม่มืดทึบ */
-  --bg-app: #0c1728;
-  --bg-surface: #132238;
-  --bg-surface-elevated: #1a2c47;
-  --border-color: #2b4162;
+  /* โทนมืดฟ้าไล่สว่าง สว่างขึ้น มีมิติและโปร่งสบายตา */
+  --bg-app: #0a2342;
+  --bg-surface: #133560;
+  --bg-surface-elevated: #1a4175;
+  --border-color: #235492;
   --border-focus: #38bdf8;
 
   --text-primary: #ffffff;
-  --text-secondary: #f1f5f9;
-  --text-muted: #94a3b8;
+  --text-secondary: #e0f2fe;
+  --text-muted: #93c5fd;
 
   --brand-primary: #38bdf8;
   --brand-hover: #7dd3fc;
 
-  --shadow-card: 0 8px 30px 0 rgba(0, 0, 0, 0.45);
-  --shadow-elevated: 0 14px 44px 0 rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 4px 20px 0 rgba(2, 132, 199, 0.22);
+  --shadow-elevated: 0 8px 32px 0 rgba(14, 165, 233, 0.30);
 }
 
-/* Global Font & Spacing Overrides (ปรับช่องไฟและขนาดตัวอักษรให้อ่านง่าย สบายตา สวยงามทุกมุมมอง) */
+/* Global Font & Spacing Overrides (ใช้ฟอนต์ Prompt ทั้งระบบ พร้อมปรับระยะบรรทัดและช่องไฟ) */
 * {
   font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
@@ -39,7 +39,7 @@ html, body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0c1728;
+  background-color: #0a2342;
   color: #f1f5f9;
 }
 
@@ -62,40 +62,44 @@ p, span, div, td, th, label, input, button, select, textarea {
   font-family: 'Prompt', sans-serif !important;
 }
 
-/* Custom Titanium Gradient Utilities */
-.bg-gradient-titanium {
-  background: linear-gradient(135deg, #374151 0%, #1f2937 50%, #111827 100%);
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif !important;
 }
 
-.bg-gradient-titanium-button {
-  background: linear-gradient(135deg, #4b5563 0%, #374151 50%, #1f2937 100%);
+/* Custom Utilities for Bright Sky Theme */
+.bg-gradient-sky {
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 50%, #38bdf8 100%);
 }
 
-.bg-gradient-titanium-button:hover {
-  background: linear-gradient(135deg, #6b7280 0%, #4b5563 50%, #374151 100%);
+.bg-gradient-sky-subtle {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.15) 0%, rgba(14, 165, 233, 0.08) 100%);
 }
 
-.titanium-gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #94a3b8 100%);
+.sky-gradient-text {
+  background: linear-gradient(135deg, #38bdf8 0%, #7dd3fc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* ==========================================================================
-   Tactile Command Console Panels & 2.5D Aerospace Surfaces
-   ========================================================================== */
+.dark .sky-gradient-text {
+  background: linear-gradient(135deg, #38bdf8 0%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Tactile Command Console Panels & 2.5D Aerospace Surfaces */
 .command-panel {
-  background: linear-gradient(180deg, rgba(23, 33, 50, 0.94) 0%, rgba(13, 19, 31, 0.97) 100%);
-  border: 1px solid rgba(71, 85, 105, 0.55);
-  border-top: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(15, 23, 42, 0.4);
+  background: linear-gradient(180deg, rgba(19, 53, 96, 0.95) 0%, rgba(10, 35, 66, 0.98) 100%);
+  border: 1px solid rgba(35, 84, 146, 0.7);
+  border-top: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.5), 0 0 20px rgba(14, 165, 233, 0.2);
   backdrop-filter: blur(16px);
 }
 
 .command-panel-subtle {
-  background: linear-gradient(180deg, rgba(20, 29, 44, 0.85) 0%, rgba(11, 16, 26, 0.92) 100%);
-  border: 1px solid rgba(51, 65, 85, 0.5);
-  border-top: 1px solid rgba(100, 116, 139, 0.3);
+  background: linear-gradient(180deg, rgba(19, 53, 96, 0.85) 0%, rgba(10, 35, 66, 0.92) 100%);
+  border: 1px solid rgba(35, 84, 146, 0.5);
+  border-top: 1px solid rgba(56, 189, 248, 0.3);
 }
 
 /* High-Visibility Widget Category Themes */
@@ -106,47 +110,40 @@ p, span, div, td, th, label, input, button, select, textarea {
 .cat-weather { --cat-color: #f97316; --cat-glow: rgba(249, 115, 22, 0.45); }
 .cat-altitude { --cat-color: #34d399; --cat-glow: rgba(52, 211, 153, 0.45); }
 .cat-attitude { --cat-color: #fbbf24; --cat-glow: rgba(251, 191, 36, 0.45); }
-.cat-passes { --cat-color: #3b82f6; --cat-glow: rgba(59, 130, 246, 0.45); }
+.cat-passes { --cat-color: #38bdf8; --cat-glow: rgba(56, 189, 248, 0.45); }
 .cat-operators { --cat-color: #a855f7; --cat-glow: rgba(168, 85, 247, 0.45); }
 .cat-chart { --cat-color: #818cf8; --cat-glow: rgba(129, 140, 248, 0.45); }
 
-/* Video Wall Mode (โหมดผนังจอห้องควบคุม 10+ จอต่อกัน) */
-.video-wall-mode {
-  letter-spacing: 0.025em;
-}
-
-.video-wall-mode .widget-header-title {
-  font-size: 1.15rem !important;
-  font-weight: 900 !important;
-}
-
-.video-wall-mode .stat-value {
-  font-size: 2.35rem !important;
-  font-weight: 900 !important;
-}
-
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #090b0f;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2d3543;
+  background: #bae6fd;
   border-radius: 9999px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #15335e;
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
+  background: #7dd3fc;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #1e4273;
 }
 
 /* Table Utilities */
 .table-container {
-  @apply overflow-x-auto rounded-xl border border-space-700 bg-space-850 shadow-sm;
+  @apply overflow-x-auto rounded-xl border border-sky-800/40 bg-[#133560]/95 shadow-sm;
 }
 
 /* Transitions */
@@ -160,67 +157,55 @@ p, span, div, td, th, label, input, button, select, textarea {
   opacity: 0;
 }
 
-/* ==========================================================================
-   High-Contrast Typography Overrides (ป้องกันฟอนต์กลืนกับพื้นหลัง 100%)
-   ========================================================================== */
+/* High-Contrast Typography Overrides (แก้ปัญหาสีฟอนต์กลืนกับพื้นหลัง 100%) */
+.dark .text-slate-400,
+.dark .text-slate-500,
 .text-slate-400,
-.dark .text-slate-400 {
-  color: #94a3b8 !important; /* เทาเงินสว่าง Titanium อ่านง่าย คอนทราสต์สูง */
+.text-slate-500 {
+  color: #bae6fd !important; /* สีนภาสว่าง (Luminous Sky Blue) สบายตา คมชัด */
 }
 
-.text-slate-500,
-.dark .text-slate-500 {
-  color: #cbd5e1 !important; /* แพลตินัมสว่าง ชัดเจน ไม่มืดทึบ */
-}
-
-.text-slate-600,
 .dark .text-slate-600 {
-  color: #e2e8f0 !important; /* เทาเงินสว่างมาก */
+  color: #e0f2fe !important; /* สีฟ้าสว่างใส */
 }
 
-.text-slate-700,
-.text-slate-800,
 .dark .text-slate-700,
 .dark .text-slate-800 {
-  color: #f8fafc !important; /* ขาวนวล คมชัดเด่น */
+  color: #f8fafc !important; /* ขาวนวล คมชัด */
 }
 
 /* ปรับสีหัวตารางและข้อความกำกับให้อ่านได้ทันที */
-thead th,
-.dark thead th {
-  color: #f1f5f9 !important;
+.dark thead th,
+thead th {
+  color: #bae6fd !important;
   font-weight: 600 !important;
-  background-color: #1a202b;
 }
 
-tbody td,
 .dark tbody td {
   color: #f1f5f9 !important;
 }
 
-label,
 .dark label {
-  color: #e2e8f0 !important;
-  font-weight: 500;
+  color: #e0f2fe !important;
 }
 
 /* ปรับสี Placeholder และ Input */
 ::placeholder {
-  color: #94a3b8 !important;
-  opacity: 0.85;
+  color: #7dd3fc !important;
+  opacity: 0.75;
 }
 
 input, select, textarea {
-  background-color: #10141b;
+  background-color: #102d52;
   color: #ffffff;
+  border-color: #235492;
 }
 
-/* ป้องกันเบราว์เซอร์ (Chrome, Edge) บังคับพื้นหลังขาวเวลา Autofill */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #12141a inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #102d52 inset !important;
   -webkit-text-fill-color: #ffffff !important;
   caret-color: #ffffff !important;
   transition: background-color 5000s ease-in-out 0s;
