@@ -1026,7 +1026,7 @@ onUnmounted(() => {
       />
       <div class="flex flex-col">
         <span class="text-[12px] font-bold tracking-wider text-cyan-300 uppercase font-orbitron">SOMS • RTAF</span>
-        <span class="text-[10px] font-semibold text-sky-100 tracking-wide font-prompt">ศูนย์ปฏิบัติการทางอวกาศ กองทัพอากาศ</span>
+        <span class="text-[10px] font-semibold text-sky-100 tracking-wide font-prompt">Satellite Operations Management System</span>
       </div>
     </div>
 
@@ -1049,12 +1049,12 @@ onUnmounted(() => {
             <!-- Glowing Aura Behind Logo -->
             <div class="absolute -inset-1.5 bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500 animate-pulse-slow"></div>
 
-            <!-- Logo Pedestal Badge -->
-            <div class="relative px-6 py-4 rounded-2xl bg-gradient-to-b from-[#0e2c52] via-[#091f3a] to-[#051426] border-2 border-sky-400/60 shadow-xl shadow-sky-950/80 flex items-center justify-center">
+            <!-- Logo Pedestal Badge (ใหญ่พอดีช่องกรอบ สมส่วนกับกล่อง) -->
+            <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-b from-[#0e2c52] via-[#091f3a] to-[#051426] border-2 border-sky-400/60 shadow-xl shadow-sky-950/80 flex items-center justify-center p-2 sm:p-2.5">
               <img
                 src="/src/assets/soms-logo.png"
-                alt="SPACE ISR Emblem"
-                class="h-20 sm:h-24 w-auto object-contain filter drop-shadow-[0_4px_16px_rgba(56,189,248,0.6)] transition-transform duration-300 group-hover:scale-105"
+                alt="SOMS Emblem"
+                class="w-full h-full object-contain filter drop-shadow-[0_4px_16px_rgba(56,189,248,0.6)] transition-transform duration-300 group-hover:scale-105"
                 onerror="this.style.display='none'"
               />
             </div>
@@ -1163,15 +1163,7 @@ onUnmounted(() => {
           </button>
         </form>
 
-        <!-- Footer Notice -->
-        <div class="mt-7 pt-5 border-t border-sky-400/30 text-center">
-          <p class="text-xs sm:text-sm font-bold tracking-[0.14em] text-cyan-200 uppercase">
-            Space Intelligence Surveillance and Reconnaissance
-          </p>
-          <p class="text-sm sm:text-base text-white font-semibold mt-1.5 tracking-wide">
-            ศูนย์ปฏิบัติการทางอวกาศ กองทัพอากาศ
-          </p>
-        </div>
+
       </div>
     </div>
 
